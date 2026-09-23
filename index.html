@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kort Kenarı — Maç Takip</title>
+<title>Courtside — Maç Takip</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#14212B">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Kort Kenarı">
+<meta name="apple-mobile-web-app-title" content="Courtside">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1177,8 +1177,8 @@
   "use strict";
 
   // ---------- Persistence ----------
-  var STORAGE_KEY = "kort-kenari-mac-v1";
-  var QUICKMODE_KEY = "kort-kenari-quickmode-v1";
+  var STORAGE_KEY = "courtside-match-v1";
+  var QUICKMODE_KEY = "courtside-quickmode-v1";
   function saveState() {
     // Arşivden açılmış bir maça bakarken canlı kaydın üzerine yazma.
     if (viewingArchived) return;
@@ -1199,7 +1199,7 @@
   }
 
   // ---------- Maç arşivi ----------
-  var ARCHIVE_KEY = "kort-kenari-arsiv-v1";
+  var ARCHIVE_KEY = "courtside-archive-v1";
   var ARCHIVE_MAX = 60;
   function loadArchive() {
     try {
@@ -1991,7 +1991,7 @@
     }
     var d = new Date(m.startedAt || Date.now());
     var stamp = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
-    return "kort-kenari-" + slug(m.names.a) + "-vs-" + slug(m.names.b) + "-" + stamp + ".csv";
+    return "courtside-" + slug(m.names.a) + "-vs-" + slug(m.names.b) + "-" + stamp + ".csv";
   }
   // Artifact sandbox'ında doğrudan indirme engellenebiliyor; bu yüzden CSV'yi
   // gerçek bir üst düzey sekmede açıp indirme/kopyalama oradan yapılıyor.
@@ -2327,7 +2327,7 @@
     app.innerHTML =
       '<div class="setup">' +
         '<div>' +
-          '<h1>🎾 Kort Kenarı</h1>' +
+          '<h1>🎾 Courtside</h1>' +
           '<p class="lede">Maçı izlerken puan puan takip et: her puanın nasıl kazanıldığını ve ralliyi işle, otomatik skor ve istatistik sana kalsın.</p>' +
         '</div>' +
         knownNamesHtml +
@@ -3106,7 +3106,7 @@
     return (
       '<!doctype html><html lang="tr"><head><meta charset="UTF-8">' +
       '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-      '<title>Kort Kenarı — Maç Raporu</title>' +
+      '<title>Courtside — Maç Raporu</title>' +
       '<link rel="preconnect" href="https://fonts.googleapis.com">' +
       '<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">' +
       '<style>' +
@@ -3125,7 +3125,7 @@
         '.pr-hint{font-size:12px;color:#8a8378;margin-top:24px;padding-top:12px;border-top:1px solid #e2dccd;}' +
         '@media print{ .pr-hint{ display:none; } body{ padding:0; } }' +
       '</style></head><body>' +
-      '<h1>Kort Kenarı — Maç Raporu</h1>' +
+      '<h1>Courtside — Maç Raporu</h1>' +
       '<div class="pr-sub">' + dateStr + ' · ' + ruleTxt + '</div>' +
       '<div class="pr-score">' + escapeHtml(m.names.a) + ' vs ' + escapeHtml(m.names.b) + '</div>' +
       '<div class="pr-sets">' + (scoreTxt || "—") + ' — ' + winnerTxt + '</div>' +
@@ -3137,7 +3137,7 @@
         '</tbody>' +
       '</table>' +
       chartHtml +
-      '<div class="pr-footer">Kort Kenarı ile oluşturuldu</div>' +
+      '<div class="pr-footer">Courtside ile oluşturuldu</div>' +
       '<div class="pr-hint">Yazdırma penceresi açılmadıysa, bu sekmeyi kendi tarayıcı menünden yazdırıp "PDF olarak kaydet"i seçebilirsin.</div>' +
       '<script>window.onload=function(){ setTimeout(function(){ try{ window.print(); }catch(e){} }, 250); };<\/script>' +
       '</body></html>'

@@ -1,4 +1,4 @@
-// Kort Kenarı — offline app-shell cache.
+// Courtside — offline app-shell cache.
 // Everything the app needs (HTML/CSS/JS) is inlined in index.html, so caching
 // that one file is enough for full offline use after the first load.
 //
@@ -6,7 +6,7 @@
 // cache-first for everything, which meant an installed (home-screen) copy kept
 // serving the old HTML forever and never picked up a new release. Static assets
 // (icons, manifest) stay cache-first since they rarely change.
-var CACHE_NAME = "kort-kenari-v2";
+var CACHE_NAME = "courtside-v1";
 var APP_SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", function (event) {
