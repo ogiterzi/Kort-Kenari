@@ -1167,6 +1167,70 @@
     margin-top: 6px;
   }
 
+  /* ---- Maç paylaşma / içe aktarma ---- */
+  .share-link {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 11px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+  }
+  textarea.share-link { min-height: 92px; resize: vertical; font-size: 14px; line-height: 1.45; }
+  .share-link:focus { outline: 2px solid var(--brass); outline-offset: 1px; }
+  .share-meta, .share-note { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+  .share-note { border-top: 1px solid var(--hairline); padding-top: 9px; }
+  .share-status { font-size: 13px; text-align: center; min-height: 18px; color: var(--grass); }
+  .share-status.err { color: var(--clay); }
+  .share-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px;
+  }
+  .share-summary {
+    background: var(--panel-2);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .share-summary .names { font-weight: 600; font-size: 15px; line-height: 1.4; }
+  .share-summary .score {
+    font-family: 'Fraunces', Georgia, serif;
+    font-variant-numeric: tabular-nums;
+    color: var(--brass);
+    font-size: 18px;
+    margin: 4px 0 2px;
+  }
+  .file-pick {
+    display: block;
+    text-align: center;
+    border: 1px dashed var(--hairline);
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .file-pick input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+  .or-sep { text-align: center; font-size: 12px; color: var(--text-dim); }
+  .archived-bar .bar-end { margin-left: auto; }
+  .lang-switch { display: flex; gap: 6px; justify-content: flex-end; }
+  .lang-switch button {
+    background: none;
+    border: 1px solid var(--hairline);
+    color: var(--text-dim);
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-family: inherit;
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+  .lang-switch button[aria-pressed="true"] { color: var(--brass); border-color: var(--brass); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -1175,6 +1239,302 @@
 <script>
 (function () {
   "use strict";
+
+  // ---------- Dil (i18n) ----------
+  // Tüm arayüz metinleri buradan gelir. {ad} biçimindeki yer tutucular t() ile doldurulur.
+  // Yeni metin eklerken iki dile de eklemeyi unutma; eksik anahtar Türkçeye, o da yoksa anahtarın kendisine düşer.
+  var LANG_KEY = "courtside-lang-v1";
+  var I18N = {
+    tr: {
+      docTitle: "Courtside — Maç Takip",
+      playerA: "Oyuncu A", playerB: "Oyuncu B",
+      decidingPoint: "Karar Puanı",
+      netLabel: "F İ L E",
+      ariaHalfCourt: "Oyuncunun kort yarısı, fileden uzaklığa göre beş bölge",
+      ariaCourt: "Tenis kortu, fileden uzaklığa göre dört bölge",
+      zone1: "Vole bölgesi", zone2: "Mini kort", zone3: "Kort ortası", zone4: "Baseline önü", zone5: "Baseline arkası",
+      zoneAbl1: "vole bölgesinden", zoneAbl2: "mini korttan", zoneAbl3: "kort ortasından", zoneAbl4: "baseline önünden", zoneAbl5: "baseline arkasından",
+      zoneN: "{z}. bölge",
+      locLabel: "{z}. bölge ({name} tarafı)",
+      durLess1: "<1 dk", durHM: "{h} sa {m} dk", durM: "{m} dk",
+      mSavedMP: "<b>{name}</b> maç sayısı kurtardı",
+      mSavedSP: "<b>{name}</b> set sayısı kurtardı",
+      mBreak: "<b>{name}</b> servis kırdı",
+      mSet: "<b>{name}</b> {n}. seti aldı",
+      mStreak: "<b>{name}</b> üst üste {n} puan aldı",
+      mRally: "En uzun ralli — <b>{name}</b> kazandı",
+      mRallySub: "{n} vuruş · Set {s}",
+      superTB: "Süper TB",
+      csvHead: ["Sira", "Set", "OyunSkoru", "PuanSkoru", "Servis", "PuaniKazanan", "Sonuc", "Vurus", "Ralli", "IkinciServis", "BreakPoint", "Bolge", "BolgeAdi", "BolgeTaraf", "OyunuKazanan", "SetiKazanan"],
+      yes: "Evet", no: "Hayir",
+      fileSlug: "oyuncu",
+      csvDocTitle: "{a} vs {b} — puan akışı (CSV)",
+      csvDocHelp: "Excel veya Google E-Tablolar'da açmak için indir. Ayırıcı noktalı virgül (;), kodlama UTF-8.",
+      csvDownload: "CSV indir", copyClipboard: "Panoya kopyala", copied: "Kopyalandı",
+      popupBlockedShort: "Yeni sekme engellendi — pop-up izni ver",
+      csvBtn: "Puan akışını CSV olarak indir", csvSaved: "CSV kaydedildi ✓",
+      errNoCompress: "Tarayıcın bu linki açamıyor. Tarayıcını güncelle ya da maçı dosya olarak iste.",
+      errBadLink: "Maç okunamadı. Linkin tamamını kopyaladığından emin ol.",
+      errLinkBuild: "Link hazırlanamadı. Dosya olarak paylaşmayı dene.",
+      shareTextLine: "Maçın tüm istatistikleri Courtside'da:",
+      fileSaved: "Dosya kaydedildi ✓", fileSaveFail: "Dosya kaydedilemedi.", fileShared: "Dosya paylaşıldı ✓",
+      fileDownloaded: "Dosya indirildi ✓", fileDownloadFail: "Dosya indirilemedi.",
+      errNotLink: "Bu bir Courtside maç linkine benzemiyor.", errFileBig: "Dosya çok büyük.", errFileRead: "Dosya okunamadı.",
+      linkPreparing: "Link hazırlanıyor…", shareMeta: "{n} puan · link {kb} KB",
+      copyLink: "Linki kopyala", shareNative: "Paylaş…", shareTitle: "Maçı paylaş",
+      shareSub: "Linki açan kişi maçın skorunu, puan akışını ve tüm istatistiklerini kendi Courtside'ına ekler. Maç linkin içinde taşınır, hiçbir sunucuya yüklenmez.",
+      saveAsFile: "Dosya olarak kaydet ({ext})",
+      previewNote: "Bu önizlemede oluşan link önizleme adresini gösterir. Arkadaşlarına göndereceğin linki telefonundaki Courtside'dan oluştur.",
+      close: "Kapat", cancel: "Vazgeç",
+      importTitle: "Paylaşılan maçı ekle", importSub: "Sana gönderilen Courtside linkini yapıştır ya da {ext} dosyasını seç.",
+      reading: "Okunuyor…", addFromLink: "Linkten ekle", orSep: "ya da", pickFile: "📄 Dosya seç",
+      sharedMatch: "Paylaşılan maç", matchOpening: "Maç açılıyor…",
+      wonBy: "{name} kazandı", unfinishedMatch: "Yarım kalmış maç", nPoints: "{n} puan",
+      matchSentToYou: "Sana bir maç gönderildi",
+      alreadyInArchive: "Bu maç arşivinde zaten var; eklersen güncellenir.",
+      iosNote: "iPhone'da ana ekrana eklediğin Courtside, Safari'den ayrı bir hafıza kullanır. Maçı oraya eklemek için bu sayfanın linkini değil, sana gelen linki kopyala ve uygulamada <b>Geçmiş maçlar → İçe aktar</b>'a yapıştır.",
+      addToArchive: "Arşive ekle",
+      linkCopiedLong: "Link kopyalandı ✓ WhatsApp'a ya da mesaja yapıştırabilirsin.",
+      copyFail: "Kopyalanamadı — kutudaki linki basılı tutup kopyala.",
+      shared: "Paylaşıldı ✓", linkCopied: "Link kopyalandı ✓",
+      oAce: "⚡ Ace", oDouble: "✕ Çift Hata", oWinner: "🎯 Winner", oForced: "↩ Forced Error", oUnforced: "✕ Basit Hata",
+      whoServesFirst: "Maça kim servisle başlıyor?", tossHint: "Kurayı kazanan servis atacaksa onu seç.",
+      zqWinner: "{name} winner vuruşunu nereden yaptı?", zqForced: "{name} forced error'ı nerede yaptı?",
+      zqUnforced: "{name} basit hatayı nerede yaptı?", zqGeneric: "Vuruş nereden yapıldı?",
+      tapSpot: "Vuruşu yaptığı noktaya dokun", zoneSub: "{name} kendi yarısında — vuruşu yaptığı noktaya dokun.",
+      saveNoZone: "Bölgesiz kaydet", save: "Kaydet",
+      backArchive: "← Arşiv", viewingArchived: "Arşivden görüntüleniyor · {date}",
+      tabMatches: "Maçlar", tabPlayers: "Oyuncular",
+      archiveEmpty: "Arşiv boş.<br>Bir maçı bitirdiğinde ya da yeni maça geçtiğinde buraya otomatik kaydedilir.",
+      unfinished: "Yarım kaldı", fromShare: "paylaşımdan", open: "Aç", del: "Sil",
+      h2hTitle: "Karşılıklı geçmiş", tied: "berabere", ahead: "{name} önde",
+      playerTotals: "Oyuncu toplamları (tamamlanan + yarım maçlar)",
+      thPlayer: "Oyuncu", thMatches: "Maç", thWL: "G–M", thSets: "Set", thAce: "Ace", thWin: "Win", thErr: "Hata",
+      back: "← Geri", matchArchive: "Maç arşivi", importBtn: "📥 İçe aktar",
+      lede: "Maçı izlerken puan puan takip et: her puanın nasıl kazanıldığını ve ralliyi işle, otomatik skor ve istatistik sana kalsın.",
+      phA: "Örn. Elif", phB: "Örn. Bora",
+      matchFormat: "Maç formatı", fmtStandard: "Standart",
+      deuceRule: "40-40 (deuce) durumunda kural", ruleAd: "Avantajlı", ruleNoAd: "Karar Puanı",
+      ruleHelp: "Avantajlı: deuce'tan sonra oyunu kazanmak için 2 puan fark gerekir. Karar puanı (no-ad): 40-40'ta bir sonraki puan oyunu bitirir.",
+      setsQ: "Kaç set üzerinden oynanacak?", sets3: "3 Set (2 kazanan)", sets5: "5 Set (3 kazanan)",
+      finalSetQ: "Setler eşitlenip son sete (belirleyici sete) kalırsa", finalNormal: "Normal Set", finalSuperTB: "10'lu Süper Tie-break",
+      startMatch: "Maçı başlat", pastMatches: "🗂 Geçmiş maçlar ({n})", addShared: "📥 Paylaşılan maçı ekle",
+      momentumStrip: "{n} puan üst üste kazandı",
+      matchOver: "Maç bitti", liveTracking: "Canlı takip", ruleNoAdShort: "Karar puanı", ruleAdShort: "Avantajlı",
+      nSets: "{n} set", finalSTBShort: " · son set süper TB", pointsLogged: "{n} puan kaydedildi",
+      tabLive: "Canlı", tabLog: "Puan Akışı", tabStats: "İstatistik",
+      shareMatchBtn: "🔗 Maçı paylaş", pdfBtn: "Maçı PDF olarak kaydet", pdfHint: "Açılan pencerede \"PDF olarak kaydet\"i seç.",
+      matchDone: "Maç tamamlandı. Puan akışı ve istatistik sekmelerinden detayları inceleyebilirsin.",
+      serving: "Servis atıyor", returning: "Karşılıyor",
+      howEnded: "Puan nasıl bitti?", shot: "Vuruş",
+      aqWinner: "Winner’ı kim vurdu?", aqForced: "Forced error’ı kim yaptı?", aqUnforced: "Basit hatayı kim yaptı?",
+      quickMode: "⚡ Hızlı mod", on: "Açık", off: "Kapalı",
+      isServing: "{name} servis atıyor", serve1: "1. Servis", serve2: "2. Servis",
+      rallyHint: "Ralli — her vuruşta dokun", rallyUnit: "vuruş",
+      whoWon: "Puanı kim kazandı?", logPoint: "Puanı kaydet", undo: "Son puanı geri al",
+      logEmpty: "Henüz puan kaydedilmedi.<br>Canlı sekmesinden ilk puanı işleyebilirsin.",
+      tagSet: "SET", tagGame: "OYUN",
+      secondServe: "2. servis", rallyMeta: "🎾 {n} vuruşluk ralli",
+      sAce: "Ace", sDouble: "Çift hata", sWinners: "Vuruşla kazanılan (winner)", sForced: "Forced error", sUnforced: "Basit hata",
+      sFH: "Forehand (kazanılan/hata)", sBH: "Backhand (kazanılan/hata)", sBPWon: "Break point kazanılan", sBPFaced: "Break point yenilen",
+      s1st: "1. servis puan kazanma", s2nd: "2. servis puan kazanma",
+      momNotEnough: "Henüz yeterli puan yok — birkaç puan kaydedince grafik burada oluşur.",
+      momSub: "Kümülatif fark — dokun ya da sürükle, her puanı incele",
+      start: "Başlangıç", tipPoint: "Puan {i} · <b>{name}</b> kazandı<br>{g} ({s}) → Fark: {d}",
+      wholeMatch: "Tüm maç", setN: "{n}. set",
+      shotmapSub: "Puanı bitiren vuruşun yapıldığı yer; şeridin koyuluğu o bölgedeki yoğunluğu gösterir. ",
+      shotmapBoth: "Üst yarı {a}, alt yarı {b}.", shotmapOnly: "Sadece {name}’in kendi yarısı.",
+      bothPlayers: "İki oyuncu", allN: "Tümü ({n})", fWinner: "Winner", fError: "Hata",
+      zoneTableHead: "Vuruşun yapıldığı bölge", zoneTableNote: "Her hücre <b>winner / hata</b> sayısı.",
+      insightErr: "hatalarının <b>%{pct}</b>’i {zone} ({n}/{total})",
+      insightBest: "en verimli bölgesi <b>{zone}</b> ({w} winner / {e} hata)",
+      momentsMore: "… ve {n} an daha",
+      totalPoints: "{name} — toplam puan", setDur: "{n}. set süresi", matchDur: "Maç süresi",
+      longestStreakBy: "En uzun seri — {name}", longestStreak: "En uzun puan serisi",
+      avgRally: "Ortalama ralli uzunluğu (vuruş)", longestRallyBy: "En uzun ralli — {name} kazandı", longestRally: "En uzun ralli",
+      secMomentum: "Puan bazlı momentum", secMomentumSub: "Kümülatif fark grafiği", notEnough: "Henüz yeterli puan yok",
+      secShotmap: "Vuruş haritası", nShotLocs: "{n} vuruşun yeri", noZoneData: "Bölge kaydı yok",
+      secMoments: "Dönüm noktaları", nMoments: "{n} an",
+      pdfReportBtn: "Maç raporunu PDF olarak kaydet", archiveBtn: "🗂 Maç arşivi",
+      resetQ: "Mevcut kayıt silinsin mi?", resetYes: "Evet, yeni maç", newMatch: "Yeni maç başlat",
+      stillPlaying: "Maç devam ediyor", reportTitle: "Courtside — Maç Raporu", statsTitle: "İstatistikler",
+      reportFooter: "Courtside ile oluşturuldu",
+      reportHint: "Yazdırma penceresi açılmadıysa, bu sekmeyi kendi tarayıcı menünden yazdırıp \"PDF olarak kaydet\"i seçebilirsin.",
+      areYouSure: "Emin misin?",
+      popupBlocked: "Yeni sekme engellendi — tarayıcı ayarlarından bu site için pop-up'lara izin verip tekrar dene.",
+      language: "Dil"
+    },
+    en: {
+      docTitle: "Courtside — Match Tracker",
+      playerA: "Player A", playerB: "Player B",
+      decidingPoint: "Deciding Point",
+      netLabel: "N E T",
+      ariaHalfCourt: "The player's half of the court, five zones by distance from the net",
+      ariaCourt: "Tennis court, zones by distance from the net",
+      zone1: "Volley zone", zone2: "Service box", zone3: "Mid-court", zone4: "Inside baseline", zone5: "Behind baseline",
+      zoneAbl1: "from the volley zone", zoneAbl2: "from the service box", zoneAbl3: "from mid-court", zoneAbl4: "from inside the baseline", zoneAbl5: "from behind the baseline",
+      zoneN: "Zone {z}",
+      locLabel: "Zone {z} ({name}'s side)",
+      durLess1: "<1 min", durHM: "{h} h {m} min", durM: "{m} min",
+      mSavedMP: "<b>{name}</b> saved a match point",
+      mSavedSP: "<b>{name}</b> saved a set point",
+      mBreak: "<b>{name}</b> broke serve",
+      mSet: "<b>{name}</b> won set {n}",
+      mStreak: "<b>{name}</b> won {n} points in a row",
+      mRally: "Longest rally — won by <b>{name}</b>",
+      mRallySub: "{n} shots · Set {s}",
+      superTB: "Super TB",
+      csvHead: ["No", "Set", "GameScore", "PointScore", "Server", "PointWinner", "Outcome", "Shot", "Rally", "SecondServe", "BreakPoint", "Zone", "ZoneName", "ZoneSide", "GameWinner", "SetWinner"],
+      yes: "Yes", no: "No",
+      fileSlug: "player",
+      csvDocTitle: "{a} vs {b} — point log (CSV)",
+      csvDocHelp: "Download to open in Excel or Google Sheets. Separator is a semicolon (;), encoding UTF-8.",
+      csvDownload: "Download CSV", copyClipboard: "Copy to clipboard", copied: "Copied",
+      popupBlockedShort: "New tab blocked — allow pop-ups",
+      csvBtn: "Download point log as CSV", csvSaved: "CSV saved ✓",
+      errNoCompress: "Your browser can't open this link. Update your browser or ask for the match as a file.",
+      errBadLink: "Couldn't read the match. Make sure you copied the whole link.",
+      errLinkBuild: "Couldn't create the link. Try sharing as a file instead.",
+      shareTextLine: "Full match stats on Courtside:",
+      fileSaved: "File saved ✓", fileSaveFail: "Couldn't save the file.", fileShared: "File shared ✓",
+      fileDownloaded: "File downloaded ✓", fileDownloadFail: "Couldn't download the file.",
+      errNotLink: "This doesn't look like a Courtside match link.", errFileBig: "The file is too large.", errFileRead: "Couldn't read the file.",
+      linkPreparing: "Preparing link…", shareMeta: "{n} points · link {kb} KB",
+      copyLink: "Copy link", shareNative: "Share…", shareTitle: "Share match",
+      shareSub: "Whoever opens the link adds the score, point log and all stats to their own Courtside. The match travels inside the link and is never uploaded to a server.",
+      saveAsFile: "Save as file ({ext})",
+      previewNote: "Links made in this preview point to the preview address. Create the link you send to friends from Courtside on your phone.",
+      close: "Close", cancel: "Cancel",
+      importTitle: "Add a shared match", importSub: "Paste the Courtside link you received, or choose a {ext} file.",
+      reading: "Reading…", addFromLink: "Add from link", orSep: "or", pickFile: "📄 Choose file",
+      sharedMatch: "Shared match", matchOpening: "Opening match…",
+      wonBy: "{name} won", unfinishedMatch: "Unfinished match", nPoints: "{n} points",
+      matchSentToYou: "Someone sent you a match",
+      alreadyInArchive: "This match is already in your archive; adding it will update it.",
+      iosNote: "On iPhone, Courtside on your home screen keeps its own storage, separate from Safari. To add the match there, copy the link you received (not this page's link) and paste it in the app under <b>Past matches → Import</b>.",
+      addToArchive: "Add to archive",
+      linkCopiedLong: "Link copied ✓ Paste it into WhatsApp or a message.",
+      copyFail: "Couldn't copy — press and hold the link in the box to copy it.",
+      shared: "Shared ✓", linkCopied: "Link copied ✓",
+      oAce: "⚡ Ace", oDouble: "✕ Double Fault", oWinner: "🎯 Winner", oForced: "↩ Forced Error", oUnforced: "✕ Unforced Error",
+      whoServesFirst: "Who serves first?", tossHint: "If the toss winner chose to serve, pick them.",
+      zqWinner: "Where did {name} hit the winner from?", zqForced: "Where did {name} make the forced error?",
+      zqUnforced: "Where did {name} make the unforced error?", zqGeneric: "Where was the shot hit from?",
+      tapSpot: "Tap where the shot was hit", zoneSub: "{name}'s half of the court — tap where the shot was hit.",
+      saveNoZone: "Save without zone", save: "Save",
+      backArchive: "← Archive", viewingArchived: "Viewing from archive · {date}",
+      tabMatches: "Matches", tabPlayers: "Players",
+      archiveEmpty: "The archive is empty.<br>Matches are saved here automatically when you finish one or start a new one.",
+      unfinished: "Unfinished", fromShare: "shared", open: "Open", del: "Delete",
+      h2hTitle: "Head to head", tied: "tied", ahead: "{name} leads",
+      playerTotals: "Player totals (finished + unfinished matches)",
+      thPlayer: "Player", thMatches: "Played", thWL: "W–L", thSets: "Sets", thAce: "Aces", thWin: "Win", thErr: "UE",
+      back: "← Back", matchArchive: "Match archive", importBtn: "📥 Import",
+      lede: "Track the match point by point as you watch: log how each point was won and the rally, and get the score and stats automatically.",
+      phA: "e.g. Emma", phB: "e.g. Leo",
+      matchFormat: "Match format", fmtStandard: "Standard",
+      deuceRule: "Rule at 40-40 (deuce)", ruleAd: "Advantage", ruleNoAd: "Deciding Point",
+      ruleHelp: "Advantage: after deuce you need a 2-point lead to win the game. Deciding point (no-ad): at 40-40 the next point wins the game.",
+      setsQ: "Best of how many sets?", sets3: "Best of 3", sets5: "Best of 5",
+      finalSetQ: "If sets are level going into the deciding set", finalNormal: "Full set", finalSuperTB: "10-point match tie-break",
+      startMatch: "Start match", pastMatches: "🗂 Past matches ({n})", addShared: "📥 Add a shared match",
+      momentumStrip: "won {n} points in a row",
+      matchOver: "Match over", liveTracking: "Live", ruleNoAdShort: "Deciding point", ruleAdShort: "Advantage",
+      nSets: "{n} sets", finalSTBShort: " · final-set super TB", pointsLogged: "{n} points logged",
+      tabLive: "Live", tabLog: "Point Log", tabStats: "Stats",
+      shareMatchBtn: "🔗 Share match", pdfBtn: "Save match as PDF", pdfHint: "Choose \"Save as PDF\" in the window that opens.",
+      matchDone: "Match complete. See the Point Log and Stats tabs for details.",
+      serving: "Serving", returning: "Returning",
+      howEnded: "How did the point end?", shot: "Shot",
+      aqWinner: "Who hit the winner?", aqForced: "Who made the forced error?", aqUnforced: "Who made the unforced error?",
+      quickMode: "⚡ Quick mode", on: "On", off: "Off",
+      isServing: "{name} is serving", serve1: "1st Serve", serve2: "2nd Serve",
+      rallyHint: "Rally — tap on every shot", rallyUnit: "shots",
+      whoWon: "Who won the point?", logPoint: "Log point", undo: "Undo last point",
+      logEmpty: "No points logged yet.<br>Log the first point from the Live tab.",
+      tagSet: "SET", tagGame: "GAME",
+      secondServe: "2nd serve", rallyMeta: "🎾 {n}-shot rally",
+      sAce: "Aces", sDouble: "Double faults", sWinners: "Winners", sForced: "Forced errors", sUnforced: "Unforced errors",
+      sFH: "Forehand (winners/errors)", sBH: "Backhand (winners/errors)", sBPWon: "Break points won", sBPFaced: "Breaks conceded",
+      s1st: "1st serve points won", s2nd: "2nd serve points won",
+      momNotEnough: "Not enough points yet — the chart appears after a few points.",
+      momSub: "Cumulative point difference — tap or drag to inspect each point",
+      start: "Start", tipPoint: "Point {i} · won by <b>{name}</b><br>{g} ({s}) → Diff: {d}",
+      wholeMatch: "Whole match", setN: "Set {n}",
+      shotmapSub: "Where the point-ending shot was hit; darker bands mean more shots in that zone. ",
+      shotmapBoth: "Top half {a}, bottom half {b}.", shotmapOnly: "Only {name}'s half.",
+      bothPlayers: "Both players", allN: "All ({n})", fWinner: "Winner", fError: "Error",
+      zoneTableHead: "Zone the shot was hit from", zoneTableNote: "Each cell shows <b>winners / errors</b>.",
+      insightErr: "<b>{pct}%</b> of errors came {zone} ({n}/{total})",
+      insightBest: "most effective zone: <b>{zone}</b> ({w} winners / {e} errors)",
+      momentsMore: "… and {n} more",
+      totalPoints: "{name} — total points", setDur: "Set {n} duration", matchDur: "Match duration",
+      longestStreakBy: "Longest streak — {name}", longestStreak: "Longest point streak",
+      avgRally: "Average rally length (shots)", longestRallyBy: "Longest rally — won by {name}", longestRally: "Longest rally",
+      secMomentum: "Point-by-point momentum", secMomentumSub: "Cumulative difference chart", notEnough: "Not enough points yet",
+      secShotmap: "Shot map", nShotLocs: "{n} shot locations", noZoneData: "No zones logged",
+      secMoments: "Key moments", nMoments: "{n} moments",
+      pdfReportBtn: "Save match report as PDF", archiveBtn: "🗂 Match archive",
+      resetQ: "Delete the current match?", resetYes: "Yes, new match", newMatch: "Start new match",
+      stillPlaying: "Match in progress", reportTitle: "Courtside — Match Report", statsTitle: "Statistics",
+      reportFooter: "Created with Courtside",
+      reportHint: "If the print dialog didn't open, print this tab from your browser menu and choose \"Save as PDF\".",
+      areYouSure: "Are you sure?",
+      popupBlocked: "New tab blocked — allow pop-ups for this site in your browser settings and try again.",
+      language: "Language"
+    }
+  };
+  function hasSavedData() {
+    try { return !!(localStorage.getItem("courtside-match-v1") || localStorage.getItem("courtside-archive-v1")); }
+    catch (e) { return false; }
+  }
+  function detectLang() {
+    try {
+      var saved = localStorage.getItem(LANG_KEY);
+      if (saved === "tr" || saved === "en") return saved;
+    } catch (e) {}
+    // Mevcut kullanıcılar (kayıtlı maçı olan) Türkçede kalsın; telefonları İngilizce olsa bile.
+    if (hasSavedData()) return "tr";
+    var list = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ""];
+    for (var i = 0; i < list.length; i++) {
+      if (/^tr\b/i.test(String(list[i] || ""))) return "tr";
+    }
+    return "en";
+  }
+  var LANG = detectLang();
+  function t(key, params) {
+    var dict = I18N[LANG] || I18N.tr;
+    var s = dict.hasOwnProperty(key) ? dict[key] : (I18N.tr.hasOwnProperty(key) ? I18N.tr[key] : key);
+    if (params && typeof s === "string") {
+      s = s.replace(/\{(\w+)\}/g, function (all, k) { return params.hasOwnProperty(k) ? params[k] : all; });
+    }
+    return s;
+  }
+  function locale() { return LANG === "tr" ? "tr-TR" : "en-GB"; }
+  function applyDocLang() {
+    try {
+      document.documentElement.lang = LANG;
+      document.title = t("docTitle");
+    } catch (e) {}
+  }
+  function setLang(l) {
+    if (l !== "tr" && l !== "en") return;
+    LANG = l;
+    try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
+    _momentsCache = { key: null, value: null };
+    applyDocLang();
+  }
+  // Kayıtlı puan skorları o anki dilde yazıldı; ekranda her zaman güncel dile çevrilir.
+  function localScore(s) {
+    if (s === "Karar Puanı" || s === "Deciding Point") return t("decidingPoint");
+    return s;
+  }
+  function langSwitchHtml(extraStyle) {
+    return '<div class="lang-switch"' + (extraStyle ? ' style="' + extraStyle + '"' : '') + ' role="group" aria-label="' + t("language") + '">' +
+      '<button data-lang="tr" aria-pressed="' + (LANG === "tr") + '" type="button">Türkçe</button>' +
+      '<button data-lang="en" aria-pressed="' + (LANG === "en") + '" type="button">English</button>' +
+      '</div>';
+  }
 
   // ---------- Persistence ----------
   var STORAGE_KEY = "courtside-match-v1";
@@ -1316,7 +1676,7 @@
     if (fmt.forceSingleSet) stp = 1;
     return {
       setup: true,
-      names: names || { a: "Oyuncu A", b: "Oyuncu B" },
+      names: names || { a: t("playerA"), b: t("playerB") },
       noAd: !!noAd,
       setsToPlay: stp,
       setsNeeded: Math.ceil(stp / 2),
@@ -1341,6 +1701,17 @@
       }
     };
   }
+  // Mevcut maçın format ayarları (yeniden oynatma için). Pro Set tek set olduğundan
+  // setsToPlay=1 ayrıca belirtilmeli; yoksa freshMatch onu 3 sete çevirir.
+  function formatOptsOf(m) {
+    return { setGamesTarget: m.setGamesTarget, setWinByTwo: m.setWinByTwo,
+             tbTriggerAt: m.tbTriggerAt, forceSingleSet: m.setsToPlay === 1 };
+  }
+  // Tie-break servis sırası: ilk puanı biri atar, sonra her iki puanda bir değişir
+  // (A, B B, A A, B B …). playedPoints = şimdiye kadar oynanan tie-break puanı.
+  function tiebreakServer(firstServer, playedPoints) {
+    return Math.floor((playedPoints + 1) / 2) % 2 === 0 ? firstServer : otherKey(firstServer);
+  }
   function blankStats() {
     return { aces: 0, doubleFaults: 0, winners: 0, forcedErrors: 0, unforcedErrors: 0,
               pointsWon: 0, breakPointsWon: 0, breakPointsFaced: 0,
@@ -1360,7 +1731,7 @@
     if (m.tiebreak) return m.tb.a + "–" + m.tb.b;
     var pa = m.points.a, pb = m.points.b;
     if (pa >= 3 && pb >= 3) {
-      if (pa === pb) return m.noAd ? "Karar Puanı" : "Deuce";
+      if (pa === pb) return m.noAd ? t("decidingPoint") : "Deuce";
       if (pa - pb === 1) return "Ad " + shortName(m, "a");
       if (pb - pa === 1) return "Ad " + shortName(m, "b");
     }
@@ -1422,6 +1793,9 @@
     var gameWonBy = null, setWonBy = null, tbSet = false;
 
     if (m.tiebreak) {
+      // Tie-break'i ilk puanda servis atan. Eski kayıtlarda alan yok; o sürümde
+      // servis tie-break boyunca değişmediği için m.server zaten ilk servis atandır.
+      var tbFirst = m.tbFirstServer || m.server;
       m.tb[pointWinnerKey]++;
       if (m.tb[pointWinnerKey] >= m.tbTarget && (m.tb[pointWinnerKey] - m.tb[otherKey(pointWinnerKey)]) >= 2) {
         gameWonBy = pointWinnerKey;
@@ -1434,7 +1808,12 @@
         setWonBy = pointWinnerKey; tbSet = true;
         m.games = { a: 0, b: 0 }; m.tb = { a: 0, b: 0 }; m.tiebreak = false;
         m.tbTarget = 7; m.superTBFinal = false;
-        m.server = otherKey(m.server);
+        // Sonraki setin ilk oyununu, tie-break'e karşılayarak başlayan oyuncu açar.
+        m.server = otherKey(tbFirst);
+        m.tbFirstServer = null;
+      } else {
+        m.tbFirstServer = tbFirst;
+        m.server = tiebreakServer(tbFirst, m.tb.a + m.tb.b);
       }
     } else {
       var preWin = m.points[pointWinnerKey], preOther = m.points[otherKey(pointWinnerKey)];
@@ -1457,6 +1836,7 @@
           m.games = { a: 0, b: 0 };
         } else if (m.games.a === m.tbTriggerAt && m.games.b === m.tbTriggerAt) {
           m.tiebreak = true;
+          m.tbFirstServer = m.server; // sırası gelen oyuncu tie-break'i açar
         }
       }
     }
@@ -1470,6 +1850,7 @@
         m.tiebreak = true;
         m.tbTarget = 10;
         m.superTBFinal = true;
+        m.tbFirstServer = m.server;
       }
     }
 
@@ -1504,10 +1885,12 @@
     var setsToPlay = state.setsToPlay;
     var finalSetSuperTB = state.finalSetSuperTB;
     var startedAt = state.startedAt;
-    var formatOpts = { setGamesTarget: state.setGamesTarget, setWinByTwo: state.setWinByTwo, tbTriggerAt: state.tbTriggerAt };
-    state = freshMatch(names, noAd, setsToPlay, finalSetSuperTB, formatOpts);
+    // Maça ilk servisi atan: log'un en eski kaydı.
+    var firstServer = state.log[state.log.length - 1].server || "a";
+    state = freshMatch(names, noAd, setsToPlay, finalSetSuperTB, formatOptsOf(state));
     state.setup = false;
     state.startedAt = startedAt;
+    state.server = firstServer;
     entries.forEach(function (e) {
       logPoint(state, e.pointWinner, e.outcome, e.hr, e.rally, e.secondServe, e.shotType, e.t, e.loc);
     });
@@ -1518,9 +1901,7 @@
   // Set/maç sayısı tespiti ve set bazlı istatistik kırılımı bunun üzerine kurulu.
   function replayMatch(m) {
     var chrono = m.log.slice().reverse();
-    var sim = freshMatch(m.names, m.noAd, m.setsToPlay, m.finalSetSuperTB, {
-      setGamesTarget: m.setGamesTarget, setWinByTwo: m.setWinByTwo, tbTriggerAt: m.tbTriggerAt
-    });
+    var sim = freshMatch(m.names, m.noAd, m.setsToPlay, m.finalSetSuperTB, formatOptsOf(m));
     sim.setup = false;
     sim.server = chrono.length ? chrono[0].server : m.server;
     var steps = [];
@@ -1529,7 +1910,8 @@
       var setIdx = sim.sets.length + 1;
       var before = JSON.parse(JSON.stringify({
         points: sim.points, games: sim.games, sets: sim.sets, tiebreak: sim.tiebreak,
-        tb: sim.tb, tbTarget: sim.tbTarget, superTBFinal: sim.superTBFinal, server: sim.server
+        tb: sim.tb, tbTarget: sim.tbTarget, superTBFinal: sim.superTBFinal, server: sim.server,
+        tbFirstServer: sim.tbFirstServer || null
       }));
       var statsBefore = JSON.parse(JSON.stringify(sim.stats));
       steps.push({ entry: e, setIndex: setIdx, before: before, sim: sim });
@@ -1546,9 +1928,7 @@
 
   // Bu puan, verilen oyuncu için set/maç sayısı mı? (durumu klonlayıp bir puan oynatarak sınar)
   function pointImportance(beforeState, m, key) {
-    var clone = freshMatch(m.names, m.noAd, m.setsToPlay, m.finalSetSuperTB, {
-      setGamesTarget: m.setGamesTarget, setWinByTwo: m.setWinByTwo, tbTriggerAt: m.tbTriggerAt
-    });
+    var clone = freshMatch(m.names, m.noAd, m.setsToPlay, m.finalSetSuperTB, formatOptsOf(m));
     clone.setup = false;
     clone.points = { a: beforeState.points.a, b: beforeState.points.b };
     clone.games = { a: beforeState.games.a, b: beforeState.games.b };
@@ -1558,6 +1938,7 @@
     clone.tbTarget = beforeState.tbTarget;
     clone.superTBFinal = beforeState.superTBFinal;
     clone.server = beforeState.server;
+    clone.tbFirstServer = beforeState.tbFirstServer || null;
     var setsBefore = clone.sets.length;
     logPoint(clone, key, null, null, 0, false, null);
     return { setPoint: clone.sets.length > setsBefore, matchPoint: !!clone.matchOver };
@@ -1579,15 +1960,16 @@
     yBaseTop: 60, yMidTop: 114.9, ySvcTop: 169.7, yVolTop: 233.7,
     yVolBot: 361.7, ySvcBot: 425.7, yMidBot: 480.5, yBaseBot: 535.4
   };
-  var ZONE_NAME = {
-    1: "Vole bölgesi", 2: "Mini kort", 3: "Kort ortası",
-    4: "Baseline önü", 5: "Baseline arkası"
-  };
+  // Dil değişince güncel kalsın diye nesne yerine okuma anında çözülür.
+  var ZONE_NAME = {};
+  [1, 2, 3, 4, 5].forEach(function (z) {
+    Object.defineProperty(ZONE_NAME, z, { get: function () { return t("zone" + z); }, enumerable: true });
+  });
   // -den hâli; Türkçe ek uyumu kurala bağlanmasın diye açıkça yazıldı.
-  var ZONE_ABL = {
-    1: "vole bölgesinden", 2: "mini korttan", 3: "kort ortasından",
-    4: "baseline önünden", 5: "baseline arkasından"
-  };
+  var ZONE_ABL = {};
+  [1, 2, 3, 4, 5].forEach(function (z) {
+    Object.defineProperty(ZONE_ABL, z, { get: function () { return t("zoneAbl" + z); }, enumerable: true });
+  });
   var ZONE_BOUNDS_M = [3.2, 6.40, 9.14, 11.885]; // fileden uzaklık eşikleri
 
   // Kort üzerindeki bir noktayı bölgeye çevirir. side = noktanın hangi oyuncunun yarısında olduğu.
@@ -1673,7 +2055,7 @@
       '<line class="cnet" x1="0" y1="2.5" x2="' + HCRT.W + '" y2="2.5"></line>';
 
     var labels =
-      '<text class="cnetlabel" x="' + (HCRT.W / 2) + '" y="19" text-anchor="middle">F İ L E</text>' +
+      '<text class="cnetlabel" x="' + (HCRT.W / 2) + '" y="19" text-anchor="middle">' + t("netLabel") + '</text>' +
       '<text class="cname" x="10" y="' + (HCRT.H - 11) + '" text-anchor="start">' + escapeHtml(shortName(m, actorSide)) + '</text>';
 
     var marksHtml = (o.marks || []).map(function (mk) {
@@ -1690,7 +2072,7 @@
       (o.interactive ? ' id="zoneCourt"' : '') +
       ' width="' + HCRT.W + '" height="' + HCRT.H + '" ' +
       'viewBox="0 0 ' + HCRT.W + ' ' + HCRT.H + '" preserveAspectRatio="xMidYMid meet" role="img" ' +
-      'aria-label="Oyuncunun kort yarısı, fileden uzaklığa göre beş bölge">' +
+      'aria-label="' + escapeAttr(t("ariaHalfCourt")) + '">' +
       '<rect class="csurface" x="0" y="0" width="' + HCRT.W + '" height="' + HCRT.H + '"></rect>' +
       bands + lines + labels + marksHtml + pickHtml +
       '</svg>';
@@ -1729,7 +2111,7 @@
 
   function locLabel(m, loc) {
     if (!loc || !loc.zone) return "";
-    return loc.zone + ". bölge (" + shortName(m, loc.side) + " tarafı)";
+    return t("locLabel", { z: loc.zone, name: shortName(m, loc.side) });
   }
 
   // Ortak kort çizimi. opts: {interactive, marks, names, showZoneLabels, pick}
@@ -1807,7 +2189,7 @@
     return '<svg class="court' + (o.interactive ? " court-tap" : "") + '" id="' + (o.id || "courtSvg") + '" ' +
       'width="' + CRT.W + '" height="' + CRT.H + '" ' +
       'viewBox="0 0 ' + CRT.W + ' ' + CRT.H + '" preserveAspectRatio="xMidYMid meet" role="img" ' +
-      'aria-label="Tenis kortu, fileden uzaklığa göre dört bölge">' +
+      'aria-label="' + escapeAttr(t("ariaCourt")) + '">' +
       '<rect class="csurface" x="0" y="0" width="' + CRT.W + '" height="' + CRT.H + '"></rect>' +
       bands + lines + nameTxt + dimHtml + marksHtml + pickHtml +
       '</svg>';
@@ -1825,9 +2207,9 @@
     // Uygulama açık unutulmuş / araya gün girmiş kayıtlarda anlamsız süre gösterme.
     if (ms > 12 * 3600 * 1000) return "—";
     var totalMin = Math.round(ms / 60000);
-    if (totalMin < 1) return "<1 dk";
+    if (totalMin < 1) return t("durLess1");
     var h = Math.floor(totalMin / 60), mnt = totalMin % 60;
-    return h ? (h + " sa " + mnt + " dk") : (mnt + " dk");
+    return h ? t("durHM", { h: h, m: mnt }) : t("durM", { m: mnt });
   }
   function matchDuration(m) {
     if (!m.log || !m.log.length) return null;
@@ -1853,7 +2235,7 @@
   function fmtDateTR(ts) {
     if (!ts) return "—";
     try {
-      return new Date(ts).toLocaleDateString("tr-TR", { day: "2-digit", month: "short", year: "numeric" });
+      return new Date(ts).toLocaleDateString(locale(), { day: "2-digit", month: "short", year: "numeric" });
     } catch (e) { return new Date(ts).toISOString().slice(0, 10); }
   }
   function setsScoreText(m) {
@@ -1889,24 +2271,24 @@
       var imp = pointImportance(step.before, m, loser); // kaybeden için fırsat mıydı?
       if (imp.matchPoint) {
         moments.push({ i: i, type: "saved-mp", setIndex: step.setIndex,
-          text: "<b>" + escapeHtml(shortName(m, e.pointWinner)) + "</b> maç sayısı kurtardı",
-          sub: "Set " + step.setIndex + " · " + e.preGames + " (" + e.preScore + ")" });
+          text: t("mSavedMP", { name: escapeHtml(shortName(m, e.pointWinner)) }),
+          sub: "Set " + step.setIndex + " · " + e.preGames + " (" + localScore(e.preScore) + ")" });
       } else if (imp.setPoint) {
         moments.push({ i: i, type: "saved-sp", setIndex: step.setIndex,
-          text: "<b>" + escapeHtml(shortName(m, e.pointWinner)) + "</b> set sayısı kurtardı",
-          sub: "Set " + step.setIndex + " · " + e.preGames + " (" + e.preScore + ")" });
+          text: t("mSavedSP", { name: escapeHtml(shortName(m, e.pointWinner)) }),
+          sub: "Set " + step.setIndex + " · " + e.preGames + " (" + localScore(e.preScore) + ")" });
       }
       if (e.breakPoint && e.gameWonBy === e.pointWinner) {
         moments.push({ i: i, type: "break", setIndex: step.setIndex,
-          text: "<b>" + escapeHtml(shortName(m, e.pointWinner)) + "</b> servis kırdı",
-          sub: "Set " + step.setIndex + " · " + e.preGames + " (" + e.preScore + ")" });
+          text: t("mBreak", { name: escapeHtml(shortName(m, e.pointWinner)) }),
+          sub: "Set " + step.setIndex + " · " + e.preGames + " (" + localScore(e.preScore) + ")" });
       }
       if (e.setWonBy) {
         var sIdx = step.setIndex - 1;
         var s = m.sets[sIdx];
         moments.push({ i: i, type: "set", setIndex: step.setIndex,
-          text: "<b>" + escapeHtml(shortName(m, e.setWonBy)) + "</b> " + step.setIndex + ". seti aldı",
-          sub: s ? (s.superTB ? "Süper TB " + s.a + "–" + s.b : s.a + "–" + s.b + (s.tb ? " (TB " + s.tb.a + "–" + s.tb.b + ")" : "")) : "" });
+          text: t("mSet", { name: escapeHtml(shortName(m, e.setWonBy)), n: step.setIndex }),
+          sub: s ? (s.superTB ? t("superTB") + " " + s.a + "–" + s.b : s.a + "–" + s.b + (s.tb ? " (TB " + s.tb.a + "–" + s.tb.b + ")" : "")) : "" });
       }
       if (e.rally && e.rally > longest.rally) longest = { rally: e.rally, entry: e, idx: i, setIndex: step.setIndex };
       if (e.pointWinner === streakKey) { streakLen++; }
@@ -1919,7 +2301,7 @@
     function pushStreak() {
       if (streakLen < 6 || !streakKey) return;
       streaks.push({ i: streakStart, type: "streak", len: streakLen, setIndex: replay.steps[streakStart].setIndex,
-        text: "<b>" + escapeHtml(shortName(m, streakKey)) + "</b> üst üste " + streakLen + " puan aldı",
+        text: t("mStreak", { name: escapeHtml(shortName(m, streakKey)), n: streakLen }),
         sub: "Set " + replay.steps[streakStart].setIndex });
     }
     // Seriler çok sık olabiliyor — sadece en uzun birkaçı gösterilir.
@@ -1928,8 +2310,8 @@
 
     if (longest.entry) {
       moments.push({ i: longest.idx, type: "rally", setIndex: longest.setIndex,
-        text: "En uzun ralli — <b>" + escapeHtml(shortName(m, longest.entry.pointWinner)) + "</b> kazandı",
-        sub: longest.rally + " vuruş · Set " + longest.setIndex });
+        text: t("mRally", { name: escapeHtml(shortName(m, longest.entry.pointWinner)) }),
+        sub: t("mRallySub", { n: longest.rally, s: longest.setIndex }) });
     }
     moments.sort(function (x, y) { return x.i - y.i; });
     return moments;
@@ -1955,9 +2337,7 @@
     return s;
   }
   function buildCSV(m) {
-    var head = ["Sira", "Set", "OyunSkoru", "PuanSkoru", "Servis", "PuaniKazanan",
-                "Sonuc", "Vurus", "Ralli", "IkinciServis", "BreakPoint", "Bolge", "BolgeAdi",
-                "BolgeTaraf", "OyunuKazanan", "SetiKazanan"];
+    var head = t("csvHead");
     var rows = [head.map(csvCell).join(";")];
     var chrono = m.log.slice().reverse();
     chrono.forEach(function (e, i) {
@@ -1965,14 +2345,14 @@
         i + 1,
         e.setIndex,
         e.preGames,
-        e.preScore,
+        localScore(e.preScore),
         m.names[e.server] || e.server,
         m.names[e.pointWinner] || e.pointWinner,
-        e.outcome ? (OUTCOME_LABEL[e.outcome] || e.outcome).replace(/^[^\w\uFFFD\u00C0-\u024F]+\s*/, "") : "",
+        e.outcome ? (outcomeLabel(e.outcome) || e.outcome).replace(/^[^\w\uFFFD\u00C0-\u024F]+\s*/, "") : "",
         e.shotType === "forehand" ? "Forehand" : (e.shotType === "backhand" ? "Backhand" : ""),
         e.rally || "",
-        e.secondServe ? "Evet" : "Hayir",
-        e.breakPoint ? "Evet" : "Hayir",
+        e.secondServe ? t("yes") : t("no"),
+        e.breakPoint ? t("yes") : t("no"),
         e.loc && e.loc.zone ? e.loc.zone : "",
         e.loc && e.loc.zone ? ZONE_NAME[e.loc.zone] : "",
         e.loc && e.loc.side ? (m.names[e.loc.side] || e.loc.side) : "",
@@ -1984,10 +2364,10 @@
   }
   function csvFileName(m) {
     function slug(s) {
-      return (s || "oyuncu").toLowerCase()
+      return (s || t("fileSlug")).toLowerCase()
         .replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u")
         .replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c")
-        .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 20) || "oyuncu";
+        .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 20) || t("fileSlug");
     }
     var d = new Date(m.startedAt || Date.now());
     var stamp = d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
@@ -1998,7 +2378,7 @@
   function buildCSVDocHTML(m) {
     var csv = buildCSV(m);
     var fname = csvFileName(m);
-    return '<!doctype html><html lang="tr"><head><meta charset="utf-8">' +
+    return '<!doctype html><html lang="' + LANG + '"><head><meta charset="utf-8">' +
       '<meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<title>' + escapeHtml(fname) + '</title><style>' +
       'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;margin:0;padding:24px;background:#14212B;color:#F4F1E8;}' +
@@ -2008,9 +2388,9 @@
       'button.ghost{background:none;color:#F4F1E8;border:1px solid #34495A;}' +
       'pre{background:#1C2C38;border:1px solid #34495A;border-radius:10px;padding:14px;overflow:auto;font-size:12px;line-height:1.7;max-height:60vh;white-space:pre;}' +
       '</style></head><body>' +
-      '<h1>' + escapeHtml(m.names.a) + ' vs ' + escapeHtml(m.names.b) + ' — puan akışı (CSV)</h1>' +
-      '<p>Excel veya Google E-Tablolar\'da açmak için indir. Ayırıcı noktalı virgül (;), kodlama UTF-8.</p>' +
-      '<div class="row"><button id="dl">CSV indir</button><button class="ghost" id="cp">Panoya kopyala</button></div>' +
+      '<h1>' + t("csvDocTitle", { a: escapeHtml(m.names.a), b: escapeHtml(m.names.b) }) + '</h1>' +
+      '<p>' + escapeHtml(t("csvDocHelp")) + '</p>' +
+      '<div class="row"><button id="dl">' + escapeHtml(t("csvDownload")) + '</button><button class="ghost" id="cp">' + escapeHtml(t("copyClipboard")) + '</button></div>' +
       '<pre id="csv">' + escapeHtml(csv) + '</pre>' +
       '<script>(function(){' +
       // HTML metin düğümü CR karakterlerini yutuyor; Excel uyumu için geri ekle.
@@ -2020,8 +2400,8 @@
       'var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=' + JSON.stringify(fname) + ';' +
       'document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},1000);};' +
       'document.getElementById("cp").onclick=function(){var b=this;' +
-      'navigator.clipboard.writeText(txt).then(function(){b.textContent="Kopyalandı";' +
-      'setTimeout(function(){b.textContent="Panoya kopyala";},1600);}).catch(function(){' +
+      'navigator.clipboard.writeText(txt).then(function(){b.textContent=' + JSON.stringify(t("copied")) + ';' +
+      'setTimeout(function(){b.textContent=' + JSON.stringify(t("copyClipboard")) + ';},1600);}).catch(function(){' +
       'var r=document.createRange();r.selectNode(document.getElementById("csv"));' +
       'window.getSelection().removeAllRanges();window.getSelection().addRange(r);});};' +
       '})();<\/script></body></html>';
@@ -2050,24 +2430,552 @@
       win.document.write(docHtml);
       win.document.close();
     } else if (btn) {
-      btn.textContent = "Yeni sekme engellendi — pop-up izni ver";
+      btn.textContent = t("popupBlockedShort");
     }
   }
 
   function exportCSV(btn) {
     function resetLabel() {
-      setTimeout(function () { btn.textContent = "Puan akışını CSV olarak indir"; }, 2200);
+      setTimeout(function () { btn.textContent = t("csvBtn"); }, 2200);
     }
     if (!downloadsCap) { openCSVFallbackTab(btn); return; }
     // Excel'in UTF-8'i doğru okuması için BOM ekle (Türkçe karakterler).
     downloadsCap.save({ filename: csvFileName(state), data: "﻿" + buildCSV(state) })
       .then(function () {
-        btn.textContent = "CSV kaydedildi ✓";
+        btn.textContent = t("csvSaved");
         resetLabel();
       }, function (err) {
         if (err && err.code === "declined") return; // kullanıcı vazgeçti
         openCSVFallbackTab(btn);
       });
+  }
+
+  // ---------- Maç paylaşma ve içe aktarma ----------
+  // Maç, linkin "#m=" kısmına sıkıştırılarak gömülür: sunucu gerekmez, veri hiçbir
+  // yere yüklenmez (# sonrası tarayıcıdan dışarı gönderilmez).
+  // Yalnızca ham puan kayıtları taşınır; skor, setler ve istatistikler alıcıda puan
+  // puan yeniden hesaplanır. Böylece bozuk ya da elle değiştirilmiş veri uygulamayı bozamaz.
+  // Her puanın saati de taşınır: ileride sağlık verisi (nabız) bu saatlerle eşleşecek.
+  var SHARE_PREFIX = "m=";
+  var FILE_EXT = ".courtside";
+  var OUTCOMES_ALL = ["ace", "double_fault", "winner", "forced_error", "unforced_error"];
+  var SHOTS_ALL = ["forehand", "backhand"];
+
+  // Paylaşım biçimi (v1), kısa tutmak için dizi tabanlı:
+  // { v, n:[adA, adB], f:[noAd, setSayısı, sonSetSüperTB, setOyunHedefi, ikiFark, tbEşiği],
+  //   t0: başlangıç (ms), fs: ilk servis, p: [[saniye, kazanan, sonuç, ralli, 2.servis, vuruş, konum?, nabız?], ...] }
+  function packMatch(m) {
+    var chrono = m.log.slice().reverse();
+    var t0 = m.startedAt || (chrono.length ? chrono[0].t : Date.now());
+    return {
+      v: 1,
+      n: [m.names.a, m.names.b],
+      f: [m.noAd ? 1 : 0, m.setsToPlay, m.finalSetSuperTB ? 1 : 0, m.setGamesTarget, m.setWinByTwo ? 1 : 0, m.tbTriggerAt],
+      t0: t0,
+      fs: chrono.length ? chrono[0].server : m.server,
+      p: chrono.map(function (e) {
+        var row = [
+          Math.max(0, Math.round(((e.t || t0) - t0) / 1000)),
+          e.pointWinner === "b" ? 1 : 0,
+          e.outcome ? OUTCOMES_ALL.indexOf(e.outcome) + 1 : 0,
+          e.rally || 0,
+          e.secondServe ? 1 : 0,
+          e.shotType ? SHOTS_ALL.indexOf(e.shotType) + 1 : 0
+        ];
+        var hasHr = e.hr !== null && e.hr !== undefined;
+        if (e.loc && e.loc.zone) {
+          row.push([e.loc.zone, e.loc.side === "b" ? 1 : 0, Math.round(e.loc.x * 1000), Math.round(e.loc.y * 1000)]);
+        } else if (hasHr) {
+          row.push(0);
+        }
+        if (hasHr) row.push(e.hr);
+        return row;
+      })
+    };
+  }
+
+  function cleanName(s, fallback) {
+    var v = String(s === null || s === undefined ? "" : s).replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 40);
+    return v || fallback;
+  }
+  function clamp01(n) { n = Number(n); return isFinite(n) ? Math.max(0, Math.min(1, n)) : 0.5; }
+
+  function unpackMatch(o) {
+    if (!o || o.v !== 1 || !Array.isArray(o.p) || !Array.isArray(o.n) || !Array.isArray(o.f)) throw new Error("bad");
+    if (!o.p.length || o.p.length > 3000) throw new Error("bad");
+    var f = o.f;
+    var stp = Number(f[1]), gt = Number(f[3]), tbt = Number(f[5]);
+    if ([1, 3, 5].indexOf(stp) === -1 || !(gt >= 1 && gt <= 12) || !(tbt >= 1 && tbt <= 12)) throw new Error("bad");
+    var m = freshMatch(
+      { a: cleanName(o.n[0], t("playerA")), b: cleanName(o.n[1], t("playerB")) },
+      !!f[0], stp, !!f[2],
+      { setGamesTarget: gt, setWinByTwo: !!f[4], tbTriggerAt: tbt, forceSingleSet: stp === 1 }
+    );
+    m.setup = false;
+    var t0 = Number(o.t0);
+    if (!isFinite(t0) || t0 <= 0) t0 = Date.now();
+    m.startedAt = t0;
+    m.server = o.fs === "b" ? "b" : "a";
+    o.p.forEach(function (r) {
+      if (!Array.isArray(r) || m.matchOver) return;
+      var off = Math.max(0, Math.min(86400, Number(r[0]) || 0));
+      var loc = null;
+      if (Array.isArray(r[6])) {
+        var z = r[6][0] | 0;
+        if (z >= 1 && z <= 5) {
+          loc = { zone: z, side: r[6][1] === 1 ? "b" : "a", x: clamp01(r[6][2] / 1000), y: clamp01(r[6][3] / 1000) };
+        }
+      }
+      var hr = (r.length > 7 && isFinite(Number(r[7])) && Number(r[7]) > 0 && Number(r[7]) < 260) ? Math.round(Number(r[7])) : null;
+      logPoint(m,
+        r[1] === 1 ? "b" : "a",
+        OUTCOMES_ALL[(r[2] | 0) - 1] || null,
+        hr,
+        Math.max(0, Math.min(999, r[3] | 0)),
+        r[4] === 1,
+        SHOTS_ALL[(r[5] | 0) - 1] || null,
+        t0 + off * 1000,
+        loc);
+    });
+    if (!m.log.length) throw new Error("bad");
+    m.imported = true;
+    return m;
+  }
+
+  function b64urlFromBytes(bytes) {
+    var s = "";
+    for (var i = 0; i < bytes.length; i += 0x8000) {
+      s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function bytesFromB64url(str) {
+    str = str.replace(/-/g, "+").replace(/_/g, "/");
+    while (str.length % 4) str += "=";
+    var bin = atob(str);
+    var out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  function canCompress() {
+    return typeof CompressionStream === "function" && typeof DecompressionStream === "function" && typeof Response === "function";
+  }
+  function pipeBytes(bytes, stream) {
+    return new Response(new Blob([bytes]).stream().pipeThrough(stream)).arrayBuffer()
+      .then(function (buf) { return new Uint8Array(buf); });
+  }
+
+  // "z" = sıkıştırılmış, "j" = düz (sıkıştırmayı desteklemeyen eski tarayıcılar için).
+  function encodeMatch(m) {
+    var raw = new TextEncoder().encode(JSON.stringify(packMatch(m)));
+    var plain = "j" + b64urlFromBytes(raw);
+    if (!canCompress()) return Promise.resolve(plain);
+    return pipeBytes(raw, new CompressionStream("deflate-raw"))
+      .then(function (z) { return "z" + b64urlFromBytes(z); }, function () { return plain; });
+  }
+  function decodeMatch(code) {
+    return Promise.resolve().then(function () {
+      code = String(code || "").replace(/\s+/g, "");
+      var kind = code.charAt(0);
+      var bytes = bytesFromB64url(code.slice(1));
+      if (kind === "j") return bytes;
+      if (kind === "z") {
+        if (!canCompress()) throw new Error("nocompress");
+        return pipeBytes(bytes, new DecompressionStream("deflate-raw"));
+      }
+      throw new Error("bad");
+    }).then(function (bytes) {
+      return unpackMatch(JSON.parse(new TextDecoder().decode(bytes)));
+    });
+  }
+
+  // Yapıştırılan metinden (tam link ya da sadece kod) paylaşım kodunu ayıklar.
+  function extractShareCode(text) {
+    text = String(text || "").trim();
+    var i = text.indexOf("#" + SHARE_PREFIX);
+    if (i >= 0) return text.slice(i + 1 + SHARE_PREFIX.length).split(/[\s&#]/)[0];
+    if (text.indexOf(SHARE_PREFIX) === 0) return text.slice(SHARE_PREFIX.length).split(/[\s&#]/)[0];
+    return null;
+  }
+  // .courtside dosyası: okunabilir JSON. İçine yanlışlıkla link yapıştırılmışsa onu da kabul eder.
+  function matchFromFileText(text) {
+    var obj = null;
+    try { obj = JSON.parse(text); } catch (e) { obj = null; }
+    if (obj && obj.courtside && obj.match) return Promise.resolve().then(function () { return unpackMatch(obj.match); });
+    var code = extractShareCode(text);
+    if (code) return decodeMatch(code);
+    return Promise.reject(new Error("bad"));
+  }
+
+  function importErrorText(err) {
+    if (err && err.message === "nocompress") {
+      return t("errNoCompress");
+    }
+    return t("errBadLink");
+  }
+
+  function shareBaseUrl() { return location.href.split("#")[0]; }
+  function inPreviewFrame() {
+    try { return window.self !== window.top; } catch (e) { return true; }
+  }
+  // iPhone'da ana ekrana eklenen uygulama Safari'den ayrı bir hafıza kullanır.
+  function isIOSBrowserNotApp() {
+    var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var standalone = navigator.standalone === true ||
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+    return ios && !standalone;
+  }
+
+  var shareOpen = false;     // paylaş penceresi açık mı
+  var shareLink = null;      // hazırlanan link (hazırlanırken null)
+  var shareError = null;
+  var importOpen = false;    // içe aktar penceresi açık mı
+  var importError = null;
+  var importBusy = false;
+  var importDraft = "";      // yapıştırılan metin, yeniden çizimde kaybolmasın
+  var pendingImport = null;  // onay bekleyen maç: {match, fromLink} ya da {loading:true} / {error}
+
+  function openShare() {
+    shareOpen = true; shareLink = null; shareError = null;
+    render();
+    var m = state;
+    encodeMatch(m).then(function (code) {
+      if (!shareOpen) return;
+      shareLink = shareBaseUrl() + "#" + SHARE_PREFIX + code;
+      render();
+    }, function () {
+      shareError = t("errLinkBuild");
+      render();
+    });
+  }
+  function setShareStatus(msg, isErr) {
+    var el = document.getElementById("shareStatus");
+    if (!el) return;
+    el.textContent = msg;
+    el.className = "share-status" + (isErr ? " err" : "");
+  }
+  function copyText(text, inputEl) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text, inputEl); });
+    }
+    return legacyCopy(text, inputEl);
+  }
+  function legacyCopy(text, inputEl) {
+    return new Promise(function (resolve, reject) {
+      try {
+        var el = inputEl;
+        if (!el) {
+          el = document.createElement("textarea");
+          el.value = text;
+          el.setAttribute("readonly", "");
+          el.style.position = "absolute"; el.style.left = "-9999px";
+          document.body.appendChild(el);
+        }
+        el.focus(); el.select();
+        try { el.setSelectionRange(0, text.length); } catch (e) {}
+        var ok = document.execCommand("copy");
+        if (!inputEl) document.body.removeChild(el);
+        if (ok) resolve(); else reject(new Error("copy"));
+      } catch (e) { reject(e); }
+    });
+  }
+  function shareTitle(m) { return m.names.a + " vs " + m.names.b + " — Courtside"; }
+  function shareText(m) {
+    var score = setsScoreText(m);
+    return "🎾 " + m.names.a + " vs " + m.names.b + (score ? " · " + score : "") +
+      "\n" + t("shareTextLine");
+  }
+
+  function buildMatchFileText(m) {
+    return JSON.stringify({ courtside: 1, app: "Courtside", exportedAt: new Date().toISOString(), match: packMatch(m) });
+  }
+  function matchFileName(m) { return csvFileName(m).replace(/\.csv$/, FILE_EXT); }
+
+  function saveMatchFile() {
+    var m = state;
+    var text = buildMatchFileText(m);
+    var name = matchFileName(m);
+    // 1) Artifact önizlemesindeki indirme yeteneği
+    if (downloadsCap) {
+      downloadsCap.save({ filename: name, data: text }).then(function () {
+        setShareStatus(t("fileSaved"));
+      }, function (err) {
+        if (err && err.code === "declined") return;
+        setShareStatus(t("fileSaveFail"), true);
+      });
+      return;
+    }
+    // 2) Telefonda paylaşım menüsü (WhatsApp, AirDrop…) dosyayı doğrudan gönderebiliyorsa
+    try {
+      var file = new File([text], name, { type: "application/json" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: shareTitle(m) }).then(function () {
+          setShareStatus(t("fileShared"));
+        }, function (err) {
+          if (err && err.name === "AbortError") return;
+          downloadBlob(text, name);
+        });
+        return;
+      }
+    } catch (e) {}
+    // 3) Düz indirme
+    downloadBlob(text, name);
+  }
+  function downloadBlob(text, name) {
+    try {
+      var url = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+      var a = document.createElement("a");
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      setShareStatus(t("fileDownloaded"));
+    } catch (e) {
+      setShareStatus(t("fileDownloadFail"), true);
+    }
+  }
+
+  function startImportFromText(text) {
+    importDraft = text || "";
+    var code = extractShareCode(text);
+    if (!code) { importError = t("errNotLink"); render(); return; }
+    importBusy = true; importError = null; render();
+    decodeMatch(code).then(function (m) {
+      importBusy = false; importOpen = false;
+      pendingImport = { match: m, fromLink: false };
+      render();
+    }, function (err) {
+      importBusy = false; importError = importErrorText(err); render();
+    });
+  }
+  function startImportFromFile(file) {
+    if (!file) return;
+    if (file.size > 2000000) { importError = t("errFileBig"); render(); return; }
+    importBusy = true; importError = null; render();
+    var reader = new FileReader();
+    reader.onload = function () {
+      matchFromFileText(String(reader.result || "")).then(function (m) {
+        importBusy = false; importOpen = false;
+        pendingImport = { match: m, fromLink: false };
+        render();
+      }, function (err) {
+        importBusy = false; importError = importErrorText(err); render();
+      });
+    };
+    reader.onerror = function () { importBusy = false; importError = t("errFileRead"); render(); };
+    reader.readAsText(file);
+  }
+
+  function confirmImport() {
+    var m = pendingImport && pendingImport.match;
+    if (!m) return;
+    pendingImport = null;
+    archiveMatch(m);
+    // Canlı maç (varsa) kaybolmasın: arşive yazılır ve kenarda bekletilir.
+    if (!viewingArchived) {
+      if (!state.setup && state.log && state.log.length) archiveMatch(state);
+      stashedState = state;
+    }
+    viewingArchived = true;
+    archiveOpen = false;
+    state = JSON.parse(JSON.stringify(m));
+    state.archiveId = m.startedAt;
+    activeTab = "stats";
+    statsSetFilter = "all";
+    importDraft = "";
+    render();
+  }
+
+  // Açılışta link bir maç taşıyorsa onay penceresi göster.
+  function checkLaunchLink() {
+    var code = extractShareCode(location.hash);
+    if (!code) return;
+    // Adres çubuğundan kodu temizle: sayfa yenilenince tekrar sorulmasın.
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    pendingImport = { loading: true, fromLink: true };
+    decodeMatch(code).then(function (m) {
+      pendingImport = { match: m, fromLink: true };
+      render();
+    }, function (err) {
+      pendingImport = { error: importErrorText(err), fromLink: true };
+      render();
+    });
+  }
+
+  function renderShareModal() {
+    var m = state;
+    var canNative = !!navigator.share && !inPreviewFrame();
+    var body;
+    if (shareError) {
+      body = '<div class="share-status err">' + escapeHtml(shareError) + '</div>';
+    } else if (!shareLink) {
+      body = '<div class="zone-readout">' + t("linkPreparing") + '</div>';
+    } else {
+      var kb = Math.max(1, Math.round(shareLink.length / 1024));
+      body =
+        '<input class="share-link" id="shareLinkInput" type="text" readonly value="' + escapeAttr(shareLink) + '">' +
+        '<div class="share-meta">' + t("shareMeta", { n: m.log.length, kb: kb }) + '</div>' +
+        '<div class="zone-actions">' +
+          '<button id="shareCopy" type="button"' + (canNative ? '' : ' class="primary"') + '>' + t("copyLink") + '</button>' +
+          (canNative ? '<button id="shareNative" class="primary" type="button">' + t("shareNative") + '</button>' : '') +
+        '</div>';
+    }
+    return (
+      '<div class="zone-modal" id="shareModal">' +
+        '<div class="zone-card">' +
+          '<div class="zone-title">' + t("shareTitle") + '</div>' +
+          '<div class="zone-sub">' + escapeHtml(t("shareSub")) + '</div>' +
+          body +
+          '<button class="csv-btn" id="shareFile" type="button" style="margin-top:0;">' + t("saveAsFile", { ext: FILE_EXT }) + '</button>' +
+          (inPreviewFrame()
+            ? '<div class="share-note">' + escapeHtml(t("previewNote")) + '</div>'
+            : '') +
+          '<div class="share-status" id="shareStatus"></div>' +
+          '<button class="share-close" id="shareClose" type="button">' + t("close") + '</button>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderImportModal() {
+    return (
+      '<div class="zone-modal" id="importModal">' +
+        '<div class="zone-card">' +
+          '<div class="zone-title">' + t("importTitle") + '</div>' +
+          '<div class="zone-sub">' + t("importSub", { ext: FILE_EXT }) + '</div>' +
+          '<textarea class="share-link" id="importText" placeholder="https://…#m=…" autocapitalize="off" autocorrect="off" spellcheck="false">' + escapeHtml(importDraft) + '</textarea>' +
+          '<div class="zone-actions"><button id="importGo" class="primary" type="button"' + (importBusy ? ' disabled' : '') + '>' +
+            (importBusy ? t("reading") : t("addFromLink")) + '</button></div>' +
+          '<div class="or-sep">' + t("orSep") + '</div>' +
+          '<label class="file-pick">' + t("pickFile") + '<input id="importFile" type="file" accept="' + FILE_EXT + ',.json,application/json,text/plain"></label>' +
+          '<div class="share-status err">' + (importError ? escapeHtml(importError) : '') + '</div>' +
+          '<button class="share-close" id="importClose" type="button">' + t("cancel") + '</button>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderImportConfirm() {
+    var p = pendingImport;
+    var inner;
+    if (p.loading) {
+      inner = '<div class="zone-title">' + t("sharedMatch") + '</div><div class="zone-readout">' + t("matchOpening") + '</div>';
+    } else if (p.error) {
+      inner = '<div class="zone-title">' + t("sharedMatch") + '</div>' +
+        '<div class="share-status err">' + escapeHtml(p.error) + '</div>' +
+        '<button class="share-close" id="importCancel" type="button">' + t("close") + '</button>';
+    } else {
+      var m = p.match;
+      var exists = loadArchive().some(function (r) { return r.archiveId === m.startedAt; });
+      var result = m.matchOver ? '🏆 ' + t("wonBy", { name: escapeHtml(m.names[m.winner]) }) : t("unfinishedMatch");
+      var dur = matchDuration(m);
+      var meta = [fmtDateTR(m.startedAt), t("nPoints", { n: m.log.length })];
+      if (dur !== null) meta.push(fmtDuration(dur));
+      inner =
+        '<div class="zone-title">' + t("matchSentToYou") + '</div>' +
+        '<div class="share-summary">' +
+          '<div class="names">' + escapeHtml(m.names.a) + ' <span class="arc-vs">vs</span> ' + escapeHtml(m.names.b) + '</div>' +
+          '<div class="score">' + escapeHtml(setsScoreText(m) || "—") + '</div>' +
+          '<div class="arc-meta">' + result + ' · ' + escapeHtml(meta.join(" · ")) + '</div>' +
+        '</div>' +
+        (exists ? '<div class="share-meta">' + t("alreadyInArchive") + '</div>' : '') +
+        (p.fromLink && isIOSBrowserNotApp()
+          ? '<div class="share-note">' + t("iosNote") + '</div>'
+          : '') +
+        '<div class="zone-actions">' +
+          '<button id="importCancel" type="button">' + t("cancel") + '</button>' +
+          '<button id="importConfirm" class="primary" type="button">' + t("addToArchive") + '</button>' +
+        '</div>';
+    }
+    return '<div class="zone-modal" id="importConfirmModal"><div class="zone-card">' + inner + '</div></div>';
+  }
+
+  // Açık olan paylaşım/içe aktarma penceresi (en fazla biri).
+  function renderShareOverlays() {
+    if (pendingImport) return renderImportConfirm();
+    if (importOpen) return renderImportModal();
+    if (shareOpen) return renderShareModal();
+    return "";
+  }
+
+  function bindLangEvents() {
+    var btns = app.querySelectorAll("[data-lang]");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].onclick = function () {
+        var l = this.getAttribute("data-lang");
+        if (l === LANG) return;
+        // Kurulum ekranında yazılmış isimler kaybolmasın.
+        var na = document.getElementById("nameA"), nb = document.getElementById("nameB");
+        var keepA = na ? na.value : null, keepB = nb ? nb.value : null;
+        setLang(l);
+        render();
+        na = document.getElementById("nameA"); nb = document.getElementById("nameB");
+        if (na && keepA !== null) na.value = keepA;
+        if (nb && keepB !== null) nb.value = keepB;
+      };
+    }
+  }
+
+  function bindShareEvents() {
+    bindLangEvents();
+    var el;
+    var openers = app.querySelectorAll("[data-share]");
+    for (var i = 0; i < openers.length; i++) openers[i].onclick = function () { openShare(); };
+    var importers = app.querySelectorAll("[data-import]");
+    for (var j = 0; j < importers.length; j++) {
+      importers[j].onclick = function () { importOpen = true; importError = null; render(); };
+    }
+
+    if ((el = document.getElementById("shareClose"))) el.onclick = function () { shareOpen = false; render(); };
+    if ((el = document.getElementById("shareModal"))) {
+      el.onclick = function (ev) { if (ev.target === this) { shareOpen = false; render(); } };
+    }
+    if ((el = document.getElementById("shareCopy"))) {
+      el.onclick = function () {
+        copyText(shareLink, document.getElementById("shareLinkInput")).then(function () {
+          setShareStatus(t("linkCopiedLong"));
+        }, function () {
+          setShareStatus(t("copyFail"), true);
+        });
+      };
+    }
+    if ((el = document.getElementById("shareLinkInput"))) {
+      el.onfocus = function () { try { this.select(); } catch (e) {} };
+    }
+    if ((el = document.getElementById("shareNative"))) {
+      el.onclick = function () {
+        navigator.share({ title: shareTitle(state), text: shareText(state), url: shareLink }).then(function () {
+          setShareStatus(t("shared"));
+        }, function (err) {
+          if (err && err.name === "AbortError") return;
+          copyText(shareLink).then(function () { setShareStatus(t("linkCopied")); }, function () {});
+        });
+      };
+    }
+    if ((el = document.getElementById("shareFile"))) el.onclick = function () { saveMatchFile(); };
+
+    if ((el = document.getElementById("importClose"))) el.onclick = function () { importOpen = false; importError = null; render(); };
+    if ((el = document.getElementById("importModal"))) {
+      el.onclick = function (ev) { if (ev.target === this && !importBusy) { importOpen = false; importError = null; render(); } };
+    }
+    if ((el = document.getElementById("importGo"))) {
+      el.onclick = function () {
+        var ta = document.getElementById("importText");
+        startImportFromText(ta ? ta.value : "");
+      };
+    }
+    if ((el = document.getElementById("importText"))) {
+      el.oninput = function () {
+        importDraft = this.value;
+        var err = app.querySelector("#importModal .share-status");
+        if (err) err.textContent = "";
+      };
+    }
+    if ((el = document.getElementById("importFile"))) {
+      el.onchange = function () { startImportFromFile(this.files && this.files[0]); };
+    }
+    if ((el = document.getElementById("importCancel"))) el.onclick = function () { pendingImport = null; render(); };
+    if ((el = document.getElementById("importConfirm"))) el.onclick = function () { confirmImport(); };
   }
 
   // ---------- App state ----------
@@ -2113,13 +3021,8 @@
     else { pulseFlag = "point"; vibrate(12); }
   }
 
-  var OUTCOME_LABEL = {
-    ace: "⚡ Ace",
-    double_fault: "✕ Çift Hata",
-    winner: "🎯 Winner",
-    forced_error: "↩ Forced Error",
-    unforced_error: "✕ Basit Hata"
-  };
+  var OUTCOME_KEY = { ace: "oAce", double_fault: "oDouble", winner: "oWinner", forced_error: "oForced", unforced_error: "oUnforced" };
+  function outcomeLabel(o) { return OUTCOME_KEY[o] ? t(OUTCOME_KEY[o]) : ""; }
   var OUTCOME_POLARITY = {
     ace: "pos",
     winner: "pos",
@@ -2137,13 +3040,12 @@
     // 2+ vuruşluk ralli varsa ace ya da çift hata olamaz — o seçenekler kalkar.
     var rallyExcludes = (rally || 0) >= 2;
     var opts = [];
-    // Tie-break'te servis sırası takip edilmediği için ace/çift hata sorulmuyor.
-    if (!m.tiebreak && !rallyExcludes) opts.push("ace");
+    if (!rallyExcludes) opts.push("ace");
     opts.push("winner");
     opts.push("forced_error");
     opts.push("unforced_error");
     // Çift hata sadece ikinci servis de kaçırılınca olur.
-    if (!m.tiebreak && secondServe && !rallyExcludes) opts.push("double_fault");
+    if (secondServe && !rallyExcludes) opts.push("double_fault");
     return opts;
   }
 
@@ -2161,8 +3063,14 @@
   var app = document.getElementById("app");
 
   function render() {
-    if (archiveOpen) { app.innerHTML = renderArchiveScreen(); bindEvents(); return; }
-    if (state.setup) { renderSetup(); return; }
+    if (archiveOpen) { app.innerHTML = renderArchiveScreen() + renderShareOverlays(); bindEvents(); bindShareEvents(); return; }
+    if (state.setup) {
+      renderSetup();
+      var overlays = renderShareOverlays();
+      if (overlays) app.insertAdjacentHTML("beforeend", overlays);
+      bindShareEvents();
+      return;
+    }
     var m = state;
     var html = "";
     if (viewingArchived) html += renderArchivedBar(m);
@@ -2177,8 +3085,10 @@
     // Servis sorusu her şeyin önünde: cevaplanmadan puan girilmemeli.
     if (m.needsServer) html += renderServerModal(m);
     else if (zonePrompt) html += renderZoneModal(m);
+    html += renderShareOverlays();
     app.innerHTML = html;
     bindEvents();
+    bindShareEvents();
     if (activeTab === "stats") initMomentumChartInteraction(m);
   }
 
@@ -2187,8 +3097,8 @@
     return (
       '<div class="zone-modal" id="serverModal">' +
         '<div class="zone-card">' +
-          '<p class="actor-q" style="margin-top:6px;">Maça kim servisle başlıyor?</p>' +
-          '<div class="zone-sub" style="text-align:center;margin-top:-6px;">Kurayı kazanan servis atacaksa onu seç.</div>' +
+          '<p class="actor-q" style="margin-top:6px;">' + t("whoServesFirst") + '</p>' +
+          '<div class="zone-sub" style="text-align:center;margin-top:-6px;">' + t("tossHint") + '</div>' +
           '<div class="winner-pick actor-pick" style="margin-top:14px;margin-bottom:0;">' +
             ["a", "b"].map(function (k) {
               return '<button data-firstserver="' + k + '" type="button">' +
@@ -2206,27 +3116,27 @@
     var actor = pointActor(p.winner, p.outcome);
     var actorName = shortName(m, actor);
     var title;
-    if (p.outcome === "winner") title = actorName + " winner vuruşunu nereden yaptı?";
-    else if (p.outcome === "forced_error") title = actorName + " forced error'ı nerede yaptı?";
-    else if (p.outcome === "unforced_error") title = actorName + " basit hatayı nerede yaptı?";
-    else title = "Vuruş nereden yapıldı?";
+    if (p.outcome === "winner") title = t("zqWinner", { name: actorName });
+    else if (p.outcome === "forced_error") title = t("zqForced", { name: actorName });
+    else if (p.outcome === "unforced_error") title = t("zqUnforced", { name: actorName });
+    else title = t("zqGeneric");
 
     var readout = zonePick
-      ? '<b>' + zonePick.zone + '. bölge</b> · ' + escapeHtml(ZONE_NAME[zonePick.zone])
-      : 'Vuruşu yaptığı noktaya dokun';
+      ? '<b>' + t("zoneN", { z: zonePick.zone }) + '</b> · ' + escapeHtml(ZONE_NAME[zonePick.zone])
+      : t("tapSpot");
 
     return (
       '<div class="zone-modal" id="zoneModal">' +
         '<div class="zone-card">' +
           '<div class="zone-title">' + escapeHtml(title) + '</div>' +
-          '<div class="zone-sub">' + escapeHtml(actorName) + ' kendi yarısında — vuruşu yaptığı noktaya dokun.</div>' +
+          '<div class="zone-sub">' + escapeHtml(t("zoneSub", { name: actorName })) + '</div>' +
           '<div class="zone-courtwrap">' +
             halfCourtSVG(m, actor, { interactive: true, pick: zonePick }) +
           '</div>' +
           '<div class="zone-readout">' + readout + '</div>' +
           '<div class="zone-actions">' +
-            '<button id="zoneSkip" type="button">Bölgesiz kaydet</button>' +
-            '<button id="zoneSave" class="primary" type="button"' + (zonePick ? "" : " disabled") + '>Kaydet</button>' +
+            '<button id="zoneSkip" type="button">' + t("saveNoZone") + '</button>' +
+            '<button id="zoneSave" class="primary" type="button"' + (zonePick ? "" : " disabled") + '>' + t("save") + '</button>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -2248,8 +3158,8 @@
 
   function renderArchivedBar(m) {
     return '<div class="archived-bar">' +
-      '<button id="backToArchive" type="button">← Arşiv</button>' +
-      '<span>Arşivden görüntüleniyor · ' + escapeHtml(fmtDateTR(m.archiveId || m.startedAt)) + '</span>' +
+      '<button id="backToArchive" type="button">' + t("backArchive") + '</button>' +
+      '<span>' + escapeHtml(t("viewingArchived", { date: fmtDateTR(m.archiveId || m.startedAt) })) + '</span>' +
       '</div>';
   }
 
@@ -2257,22 +3167,23 @@
   function renderArchiveScreen() {
     var arr = loadArchive();
     var tabsHtml = '<nav class="tabs">' +
-      '<button data-arctab="matches" class="' + (archiveTab === "matches" ? "active" : "") + '">Maçlar' + (arr.length ? " (" + arr.length + ")" : "") + '</button>' +
-      '<button data-arctab="players" class="' + (archiveTab === "players" ? "active" : "") + '">Oyuncular</button>' +
+      '<button data-arctab="matches" class="' + (archiveTab === "matches" ? "active" : "") + '">' + t("tabMatches") + (arr.length ? " (" + arr.length + ")" : "") + '</button>' +
+      '<button data-arctab="players" class="' + (archiveTab === "players" ? "active" : "") + '">' + t("tabPlayers") + '</button>' +
       '</nav>';
     var body;
     if (!arr.length) {
-      body = '<div class="empty-state">Arşiv boş.<br>Bir maçı bitirdiğinde ya da yeni maça geçtiğinde buraya otomatik kaydedilir.</div>';
+      body = '<div class="empty-state">' + t("archiveEmpty") + '</div>';
     } else if (archiveTab === "matches") {
       body = arr.map(function (r) {
         var winTxt = r.matchOver
           ? '🏆 ' + escapeHtml(r.names[r.winner] || "—")
-          : '<span class="arc-unfinished">Yarım kaldı</span>';
+          : '<span class="arc-unfinished">' + t("unfinished") + '</span>';
         var dur = matchDuration(r);
         var meta = [fmtDateTR(r.archiveId || r.startedAt)];
         if (formatLabel(r)) meta.push(formatLabel(r));
-        meta.push(r.log.length + " puan");
+        meta.push(t("nPoints", { n: r.log.length }));
         if (dur !== null) meta.push(fmtDuration(dur));
+        if (r.imported) meta.push(t("fromShare"));
         return '<div class="arc-item">' +
           '<div class="arc-main">' +
             '<div class="arc-names">' + escapeHtml(r.names.a || "A") + ' <span class="arc-vs">vs</span> ' + escapeHtml(r.names.b || "B") + '</div>' +
@@ -2280,8 +3191,8 @@
             '<div class="arc-meta">' + winTxt + ' · ' + escapeHtml(meta.join(" · ")) + '</div>' +
           '</div>' +
           '<div class="arc-actions">' +
-            '<button data-arcopen="' + r.archiveId + '" type="button">Aç</button>' +
-            '<button data-arcdel="' + r.archiveId + '" class="arc-del" type="button">Sil</button>' +
+            '<button data-arcopen="' + r.archiveId + '" type="button">' + t("open") + '</button>' +
+            '<button data-arcdel="' + r.archiveId + '" class="arc-del" type="button">' + t("del") + '</button>' +
           '</div>' +
         '</div>';
       }).join("");
@@ -2289,17 +3200,17 @@
       var totals = computePlayerTotals(arr);
       var h2h = computeHeadToHead(arr);
       var h2hHtml = h2h.length
-        ? '<p class="section-label" style="margin-top:22px;">Karşılıklı geçmiş</p>' +
+        ? '<p class="section-label" style="margin-top:22px;">' + t("h2hTitle") + '</p>' +
           h2h.map(function (p) {
-            var lead = p.w1 === p.w2 ? "berabere" : (p.w1 > p.w2 ? escapeHtml(p.p1) + " önde" : escapeHtml(p.p2) + " önde");
+            var lead = p.w1 === p.w2 ? t("tied") : t("ahead", { name: escapeHtml(p.w1 > p.w2 ? p.p1 : p.p2) });
             return '<div class="h2h-row"><span class="h2h-names">' + escapeHtml(p.p1) + ' — ' + escapeHtml(p.p2) + '</span>' +
               '<span class="h2h-score scorefont">' + p.w1 + '–' + p.w2 + '</span>' +
               '<span class="h2h-lead">' + lead + '</span></div>';
           }).join("")
         : "";
-      body = '<p class="section-label">Oyuncu toplamları (tamamlanan + yarım maçlar)</p>' +
+      body = '<p class="section-label">' + t("playerTotals") + '</p>' +
         '<div class="arc-table-wrap"><table class="stat-table arc-table">' +
-        '<thead><tr><th>Oyuncu</th><th>Maç</th><th>G–M</th><th>Set</th><th>Ace</th><th>Win</th><th>Hata</th></tr></thead><tbody>' +
+        '<thead><tr><th>' + t("thPlayer") + '</th><th>' + t("thMatches") + '</th><th>' + t("thWL") + '</th><th>' + t("thSets") + '</th><th>' + t("thAce") + '</th><th>' + t("thWin") + '</th><th>' + t("thErr") + '</th></tr></thead><tbody>' +
         totals.map(function (p) {
           return '<tr><td>' + escapeHtml(p.name) + '</td>' +
             '<td class="num">' + p.matches + '</td>' +
@@ -2311,7 +3222,8 @@
         }).join("") +
         '</tbody></table></div>' + h2hHtml;
     }
-    return '<div class="archived-bar"><button id="archiveBack" type="button">← Geri</button><span>Maç arşivi</span></div>' +
+    return '<div class="archived-bar"><button id="archiveBack" type="button">' + t("back") + '</button><span>' + t("matchArchive") + '</span>' +
+      '<button class="bar-end" data-import="1" type="button">' + t("importBtn") + '</button></div>' +
       tabsHtml + '<main>' + body + '</main>';
   }
 
@@ -2326,50 +3238,51 @@
     var archiveCount = loadArchive().length;
     app.innerHTML =
       '<div class="setup">' +
+        langSwitchHtml() +
         '<div>' +
           '<h1>🎾 Courtside</h1>' +
-          '<p class="lede">Maçı izlerken puan puan takip et: her puanın nasıl kazanıldığını ve ralliyi işle, otomatik skor ve istatistik sana kalsın.</p>' +
+          '<p class="lede">' + t("lede") + '</p>' +
         '</div>' +
         knownNamesHtml +
-        '<div class="field"><label>Oyuncu A</label><input id="nameA" type="text" placeholder="Örn. Elif" maxlength="24"' + nameListAttr + '></div>' +
-        '<div class="field"><label>Oyuncu B</label><input id="nameB" type="text" placeholder="Örn. Bora" maxlength="24"' + nameListAttr + '></div>' +
+        '<div class="field"><label>' + t("playerA") + '</label><input id="nameA" type="text" placeholder="' + escapeAttr(t("phA")) + '" maxlength="24"' + nameListAttr + '></div>' +
+        '<div class="field"><label>' + t("playerB") + '</label><input id="nameB" type="text" placeholder="' + escapeAttr(t("phB")) + '" maxlength="24"' + nameListAttr + '></div>' +
         '<div class="field">' +
-          '<label>Maç formatı</label>' +
+          '<label>' + t("matchFormat") + '</label>' +
           '<div class="server-pick">' +
-            '<button id="fmtStandard" aria-pressed="true" type="button">Standart</button>' +
+            '<button id="fmtStandard" aria-pressed="true" type="button">' + t("fmtStandard") + '</button>' +
             '<button id="fmtFast4" aria-pressed="false" type="button">Fast4</button>' +
             '<button id="fmtProSet" aria-pressed="false" type="button">Pro Set</button>' +
           '</div>' +
         '</div>' +
         '<div class="field">' +
-          '<label>40-40 (deuce) durumunda kural</label>' +
+          '<label>' + t("deuceRule") + '</label>' +
           '<div class="server-pick">' +
-            '<button id="ruleAd" aria-pressed="true" type="button">Avantajlı</button>' +
-            '<button id="ruleNoAd" aria-pressed="false" type="button">Karar Puanı</button>' +
+            '<button id="ruleAd" aria-pressed="true" type="button">' + t("ruleAd") + '</button>' +
+            '<button id="ruleNoAd" aria-pressed="false" type="button">' + t("ruleNoAd") + '</button>' +
           '</div>' +
           '<p style="font-size:12.5px;color:var(--text-dim);margin:2px 0 0;line-height:1.5;">' +
-            'Avantajlı: deuce\'tan sonra oyunu kazanmak için 2 puan fark gerekir. ' +
-            'Karar puanı (no-ad): 40-40\'ta bir sonraki puan oyunu bitirir.' +
+            escapeHtml(t("ruleHelp")) +
           '</p>' +
         '</div>' +
         '<div class="field" id="setsField">' +
-          '<label>Kaç set üzerinden oynanacak?</label>' +
+          '<label>' + t("setsQ") + '</label>' +
           '<div class="server-pick">' +
-            '<button id="setsThree" aria-pressed="true" type="button">3 Set (2 kazanan)</button>' +
-            '<button id="setsFive" aria-pressed="false" type="button">5 Set (3 kazanan)</button>' +
+            '<button id="setsThree" aria-pressed="true" type="button">' + t("sets3") + '</button>' +
+            '<button id="setsFive" aria-pressed="false" type="button">' + t("sets5") + '</button>' +
           '</div>' +
         '</div>' +
         '<div class="field" id="finalSetField">' +
-          '<label>Setler eşitlenip son sete (belirleyici sete) kalırsa</label>' +
+          '<label>' + t("finalSetQ") + '</label>' +
           '<div class="server-pick">' +
-            '<button id="finalNormal" aria-pressed="true" type="button">Normal Set</button>' +
-            '<button id="finalSuperTB" aria-pressed="false" type="button">10\'lu Süper Tie-break</button>' +
+            '<button id="finalNormal" aria-pressed="true" type="button">' + t("finalNormal") + '</button>' +
+            '<button id="finalSuperTB" aria-pressed="false" type="button">' + escapeHtml(t("finalSuperTB")) + '</button>' +
           '</div>' +
         '</div>' +
-        '<button class="btn-primary" id="startBtn" type="button">Maçı başlat</button>' +
+        '<button class="btn-primary" id="startBtn" type="button">' + t("startMatch") + '</button>' +
         (archiveCount
-          ? '<div class="archive-entry"><button id="openArchiveSetup" type="button">🗂 Geçmiş maçlar (' + archiveCount + ')</button></div>'
+          ? '<div class="archive-entry"><button id="openArchiveSetup" type="button">' + t("pastMatches", { n: archiveCount }) + '</button></div>'
           : '') +
+        '<div class="archive-entry" style="margin-top:8px;"><button data-import="1" type="button">' + t("addShared") + '</button></div>' +
       '</div>';
 
     var noAdRule = false;
@@ -2429,8 +3342,8 @@
       openArcSetup.onclick = function () { openArchive(); };
     }
     document.getElementById("startBtn").onclick = function () {
-      var nA = document.getElementById("nameA").value.trim() || "Oyuncu A";
-      var nB = document.getElementById("nameB").value.trim() || "Oyuncu B";
+      var nA = document.getElementById("nameA").value.trim() || t("playerA");
+      var nB = document.getElementById("nameB").value.trim() || t("playerB");
       state = freshMatch({ a: nA, b: nB }, noAdRule, setsToPlayVal, finalSetSuperTBVal, FORMAT_OPTS[formatPreset]);
       state.setup = false;
       // Servisi kimin atacağı skor ekranında pop-up ile sorulur (kura genelde sonra belli olur).
@@ -2448,7 +3361,7 @@
     var momentum = !m.matchOver ? computeMomentum(m) : null;
     var momentumHtml = momentum
       ? '<div class="momentum-strip"><span class="dot" style="background:var(--momentum-' + momentum.key + ')"></span>' +
-        '🔥 <b>' + escapeHtml(shortName(m, momentum.key)) + '</b> ' + momentum.streak + ' puan üst üste kazandı</div>'
+        '🔥 <b>' + escapeHtml(shortName(m, momentum.key)) + '</b> ' + t("momentumStrip", { n: momentum.streak }) + '</div>'
       : '';
     var pulseClass = pulseFlag ? " pulse-" + pulseFlag : "";
     pulseFlag = null;
@@ -2464,8 +3377,8 @@
     return (
       '<header class="matchbar"><div class="matchbar-inner">' +
         '<div class="matchbar-top">' +
-          '<span class="live-dot"><span class="dot"></span>' + (m.matchOver ? "Maç bitti" : "Canlı takip") + '</span>' +
-          '<span>' + (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? "Karar puanı" : "Avantajlı") + ' · ' + m.setsToPlay + ' set' + (m.finalSetSuperTB ? " · son set süper TB" : "") + ' · ' + m.log.length + ' puan kaydedildi</span>' +
+          '<span class="live-dot"><span class="dot"></span>' + (m.matchOver ? t("matchOver") : t("liveTracking")) + '</span>' +
+          '<span>' + (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? t("ruleNoAdShort") : t("ruleAdShort")) + ' · ' + t("nSets", { n: m.setsToPlay }) + (m.finalSetSuperTB ? t("finalSTBShort") : "") + ' · ' + t("pointsLogged", { n: m.log.length }) + '</span>' +
         '</div>' +
         '<div class="players-row">' +
           '<div class="player-name">' + (m.server === "a" && !m.matchOver ? '<span class="serve-ball"></span>' : '') +
@@ -2492,31 +3405,32 @@
   }
 
   function renderTabs() {
-    function t(id, label) {
+    function tb(id, label) {
       return '<button data-tab="' + id + '" class="' + (activeTab === id ? "active" : "") + '">' + label + '</button>';
     }
     // Arşivden bakarken puan girişi anlamsız — "Canlı" sekmesi gizlenir.
-    return '<nav class="tabs">' + (viewingArchived ? "" : t("live", "Canlı")) + t("log", "Puan Akışı") + t("stats", "İstatistik") + '</nav>';
+    return '<nav class="tabs">' + (viewingArchived ? "" : tb("live", t("tabLive"))) + tb("log", t("tabLog")) + tb("stats", t("tabStats")) + '</nav>';
   }
 
   function renderMatchOverBanner(m) {
     return (
       '<div class="match-over-banner">' +
-        '<div class="win">🏆 ' + escapeHtml(m.names[m.winner]) + ' kazandı</div>' +
-        '<div class="sub">' + m.sets.map(function (s) { return s.superTB ? "[Süper TB " + s.a + "–" + s.b + "]" : (s.a + "–" + s.b + (s.tb ? " (TB " + Math.min(s.tb.a,s.tb.b) + ")" : "")); }).join(" · ") + '</div>' +
-        '<button class="pdf-btn" id="pdfBtnBanner" type="button">Maçı PDF olarak kaydet</button>' +
-        '<div class="pdf-hint">Açılan pencerede "PDF olarak kaydet"i seç.</div>' +
+        '<div class="win">🏆 ' + t("wonBy", { name: escapeHtml(m.names[m.winner]) }) + '</div>' +
+        '<div class="sub">' + m.sets.map(function (s) { return s.superTB ? "[" + t("superTB") + " " + s.a + "–" + s.b + "]" : (s.a + "–" + s.b + (s.tb ? " (TB " + Math.min(s.tb.a,s.tb.b) + ")" : "")); }).join(" · ") + '</div>' +
+        '<button class="pdf-btn" data-share="1" type="button">' + t("shareMatchBtn") + '</button>' +
+        '<button class="pdf-btn" id="pdfBtnBanner" type="button">' + t("pdfBtn") + '</button>' +
+        '<div class="pdf-hint">' + escapeHtml(t("pdfHint")) + '</div>' +
       '</div>'
     );
   }
 
   function renderLiveTab(m) {
     if (m.matchOver) {
-      return '<p class="empty-state">Maç tamamlandı. Puan akışı ve istatistik sekmelerinden detayları inceleyebilirsin.</p>' + renderResetRow();
+      return '<p class="empty-state">' + t("matchDone") + '</p>' + renderResetRow();
     }
     // Hızlı mod: tek soru — puanı kim aldı.
     var winnerPickHtml = ["a", "b"].map(function (k) {
-      var role = k === m.server ? "Servis atıyor" : "Karşılıyor";
+      var role = k === m.server ? t("serving") : t("returning");
       return (
         '<button data-winner="' + k + '" aria-pressed="' + (pendingWinner === k) + '" type="button">' +
           '<span class="who">' + escapeHtml(m.names[k]) + '</span>' +
@@ -2529,9 +3443,9 @@
     var outcomeHtml = "";
     if (!quickMode) {
       var opts = outcomeOptions(m, pendingSecondServe, pendingRally);
-      outcomeHtml = '<p class="section-label">Puan nasıl bitti?</p><div class="outcome-grid">' +
+      outcomeHtml = '<p class="section-label">' + t("howEnded") + '</p><div class="outcome-grid">' +
         opts.map(function (o) {
-          return '<button class="' + OUTCOME_POLARITY[o] + '" data-outcome="' + o + '" aria-pressed="' + (pendingOutcome === o) + '" type="button">' + OUTCOME_LABEL[o] + '</button>';
+          return '<button class="' + OUTCOME_POLARITY[o] + '" data-outcome="' + o + '" aria-pressed="' + (pendingOutcome === o) + '" type="button">' + outcomeLabel(o) + '</button>';
         }).join("") +
         '</div>';
     }
@@ -2540,7 +3454,7 @@
     if (!quickMode && SHOT_TYPE_OUTCOMES.indexOf(pendingOutcome) !== -1) {
       shotTypeHtml =
         '<div class="shot-type-row">' +
-          '<span class="lbl">Vuruş</span>' +
+          '<span class="lbl">' + t("shot") + '</span>' +
           '<div class="pills">' +
             '<button data-shot="forehand" aria-pressed="' + (pendingShotType === "forehand") + '" type="button">Forehand</button>' +
             '<button data-shot="backhand" aria-pressed="' + (pendingShotType === "backhand") + '" type="button">Backhand</button>' +
@@ -2550,9 +3464,9 @@
 
     // "Kim yaptı?" — her seçeneğin altında puanın kime gideceği yazılı.
     var ACTOR_Q = {
-      winner: "Winner’ı kim vurdu?",
-      forced_error: "Forced error’ı kim yaptı?",
-      unforced_error: "Basit hatayı kim yaptı?"
+      winner: t("aqWinner"),
+      forced_error: t("aqForced"),
+      unforced_error: t("aqUnforced")
     };
     // Ace ve çift hatada soru sorulmuyor: yapan her zaman servis atan.
     var actorHtml = "";
@@ -2573,25 +3487,25 @@
 
     var quickModeToggleHtml =
       '<div class="quickmode-row">' +
-        '<span class="quickmode-lbl">⚡ Hızlı mod</span>' +
-        '<button id="quickModeToggle" aria-pressed="' + quickMode + '" type="button">' + (quickMode ? "Açık" : "Kapalı") + '</button>' +
+        '<span class="quickmode-lbl">' + t("quickMode") + '</span>' +
+        '<button id="quickModeToggle" aria-pressed="' + quickMode + '" type="button">' + (quickMode ? t("on") : t("off")) + '</button>' +
       '</div>';
 
     var serveSectionHtml = quickMode ? "" : (
       '<div class="serve-row">' +
-        '<span class="serve-row-label">' + servingName + ' servis atıyor</span>' +
+        '<span class="serve-row-label">' + escapeHtml(t("isServing", { name: servingName })) + '</span>' +
         '<div class="serve-toggle">' +
-          '<button data-serve="1" aria-pressed="' + (!pendingSecondServe) + '" type="button">1. Servis</button>' +
-          '<button data-serve="2" aria-pressed="' + (pendingSecondServe) + '" type="button">2. Servis</button>' +
+          '<button data-serve="1" aria-pressed="' + (!pendingSecondServe) + '" type="button">' + t("serve1") + '</button>' +
+          '<button data-serve="2" aria-pressed="' + (pendingSecondServe) + '" type="button">' + t("serve2") + '</button>' +
         '</div>' +
       '</div>'
     );
 
     var rallySectionHtml = quickMode ? "" : (
-      '<p class="section-label">Ralli — her vuruşta dokun</p>' +
+      '<p class="section-label">' + t("rallyHint") + '</p>' +
       '<button class="rally-btn" id="rallyBtn" type="button">' +
         '<span class="rally-num" id="rallyNum">' + pendingRally + '</span>' +
-        '<span class="rally-lbl">vuruş</span>' +
+        '<span class="rally-lbl">' + t("rallyUnit") + '</span>' +
       '</button>'
     );
 
@@ -2600,45 +3514,61 @@
       rallySectionHtml +
       serveSectionHtml +
       (quickMode
-        ? '<p class="section-label">Puanı kim kazandı?</p><div class="winner-pick">' + winnerPickHtml + '</div>'
+        ? '<p class="section-label">' + t("whoWon") + '</p><div class="winner-pick">' + winnerPickHtml + '</div>'
         : outcomeHtml + shotTypeHtml + actorHtml) +
-      '<button class="log-point-btn" id="logBtn" type="button" ' + (canLog ? "" : "disabled") + '>Puanı kaydet</button>' +
-      (m.log.length ? '<div class="undo-row"><button id="undoBtn" type="button">Son puanı geri al</button></div>' : "")
+      '<button class="log-point-btn" id="logBtn" type="button" ' + (canLog ? "" : "disabled") + '>' + t("logPoint") + '</button>' +
+      (m.log.length ? '<div class="undo-row"><button id="undoBtn" type="button">' + t("undo") + '</button></div>' : "")
     );
   }
 
+  // Puan akışındaki cümle. Türkçede "3. bölgeden backhand basit hata" sırası, İngilizcede
+  // "made a backhand unforced error from zone 3" sırası doğal olduğu için dile göre ayrı kuruluyor.
+  function logDesc(e, winnerName, loserName) {
+    var z = e.loc && e.loc.zone ? e.loc.zone : null;
+    var shotW = e.shotType === "forehand" ? "forehand" : (e.shotType === "backhand" ? "backhand" : "");
+    if (LANG === "tr") {
+      var where = z ? z + ". bölgeden " : "";
+      var shot = shotW ? shotW + " " : "";
+      if (e.outcome === "ace") return '<b>' + winnerName + '</b> ace yaptı';
+      if (e.outcome === "double_fault") return '<b>' + loserName + '</b> çift hata yaptı';
+      if (e.outcome === "winner") return '<b>' + winnerName + '</b> ' + where + (shot ? shot + 'vuruşuyla bitirdi' : 'vuruşla puanı bitirdi');
+      if (e.outcome === "forced_error") return '<b>' + loserName + '</b> ' + where + shot + 'forced error yaptı';
+      if (e.outcome === "unforced_error") return '<b>' + loserName + '</b> ' + where + shot + 'basit hata yaptı';
+      return '<b>' + winnerName + '</b> ' + where + 'puanı kazandı';
+    }
+    var whereEn = z ? " from zone " + z : "";
+    function art(word) { var w = shotW ? shotW + " " + word : word; return (/^[aeiou]/i.test(w) ? "an " : "a ") + w; }
+    if (e.outcome === "ace") return '<b>' + winnerName + '</b> served an ace';
+    if (e.outcome === "double_fault") return '<b>' + loserName + '</b> double-faulted';
+    if (e.outcome === "winner") return '<b>' + winnerName + '</b> hit ' + art("winner") + whereEn;
+    if (e.outcome === "forced_error") return '<b>' + loserName + '</b> made ' + art("forced error") + whereEn;
+    if (e.outcome === "unforced_error") return '<b>' + loserName + '</b> made ' + art("unforced error") + whereEn;
+    return '<b>' + winnerName + '</b> won the point' + whereEn;
+  }
+
   function renderLogTab(m) {
-    if (!m.log.length) return '<p class="empty-state">Henüz puan kaydedilmedi.<br>Canlı sekmesinden ilk puanı işleyebilirsin.</p>';
+    if (!m.log.length) return '<p class="empty-state">' + t("logEmpty") + '</p>';
     return m.log.map(function (e) {
       var winnerName = shortName(m, e.pointWinner);
       var loserName = shortName(m, otherKey(e.pointWinner));
-      // "3. bölgeden backhand basit hata" biçiminde okunsun diye bölge ve vuruş cümleye giriyor.
-      var where = e.loc && e.loc.zone ? e.loc.zone + ". bölgeden " : "";
-      var shot = e.shotType === "forehand" ? "forehand " : (e.shotType === "backhand" ? "backhand " : "");
-      var desc;
-      if (e.outcome === "ace") desc = '<b>' + winnerName + '</b> ace yaptı';
-      else if (e.outcome === "double_fault") desc = '<b>' + loserName + '</b> çift hata yaptı';
-      else if (e.outcome === "winner") desc = '<b>' + winnerName + '</b> ' + where + (shot ? shot + 'vuruşuyla bitirdi' : 'vuruşla puanı bitirdi');
-      else if (e.outcome === "forced_error") desc = '<b>' + loserName + '</b> ' + where + shot + 'forced error yaptı';
-      else if (e.outcome === "unforced_error") desc = '<b>' + loserName + '</b> ' + where + shot + 'basit hata yaptı';
-      else desc = '<b>' + winnerName + '</b> ' + where + 'puanı kazandı';
+      var desc = logDesc(e, escapeHtml(winnerName), escapeHtml(loserName));
 
       var tagClass = (e.outcome === "double_fault" || e.outcome === "unforced_error" || e.outcome === "forced_error") ? "neg" : "pos";
-      var tag = e.setWonBy ? (e.pointWinner === e.setWonBy ? "SET " + winnerName : "") : (e.gameWonBy ? "OYUN " + winnerName : "");
+      var tag = e.setWonBy ? (e.pointWinner === e.setWonBy ? t("tagSet") + " " + escapeHtml(winnerName) : "") : (e.gameWonBy ? t("tagGame") + " " + escapeHtml(winnerName) : "");
       if (e.breakPoint && e.gameWonBy) tag = "BREAK · " + tag;
 
       var metaBits = [];
-      if (e.secondServe || e.outcome === "double_fault") metaBits.push("2. servis");
-      if (e.rally) metaBits.push("🎾 " + e.rally + " vuruşluk ralli");
+      if (e.secondServe || e.outcome === "double_fault") metaBits.push(t("secondServe"));
+      if (e.rally) metaBits.push(t("rallyMeta", { n: e.rally }));
       // Cümlede bölge geçmeyen sonuçlarda (ace, çift hata) bilgiyi burada göster.
       if (e.loc && e.loc.zone && (e.outcome === "ace" || e.outcome === "double_fault")) {
-        metaBits.push("📍 " + e.loc.zone + ". bölge");
+        metaBits.push("📍 " + t("zoneN", { z: e.loc.zone }));
       }
       if (e.hr !== null) metaBits.push("♥ " + e.hr + " bpm");
 
       return (
         '<div class="log-entry">' +
-          '<div class="log-score scorefont">' + e.preGames + '<br><span style="font-size:12px;opacity:.7">' + e.preScore + '</span></div>' +
+          '<div class="log-score scorefont">' + e.preGames + '<br><span style="font-size:12px;opacity:.7">' + escapeHtml(localScore(e.preScore)) + '</span></div>' +
           '<div class="log-body">' +
             '<div class="log-desc">' + desc + '</div>' +
             (tag ? '<span class="log-tag ' + tagClass + '">' + tag + '</span>' : '') +
@@ -2671,17 +3601,17 @@
     var sa = st.a, sb = st.b;
     var serve = computeServeStats(m, logArr);
     return [
-      ["Ace", sa.aces, sb.aces],
-      ["Çift hata", sa.doubleFaults, sb.doubleFaults],
-      ["Vuruşla kazanılan (winner)", sa.winners, sb.winners],
-      ["Forced error", sa.forcedErrors, sb.forcedErrors],
-      ["Basit hata", sa.unforcedErrors, sb.unforcedErrors],
-      ["Forehand (kazanılan/hata)", sa.fhWinners + " / " + sa.fhErrors, sb.fhWinners + " / " + sb.fhErrors],
-      ["Backhand (kazanılan/hata)", sa.bhWinners + " / " + sa.bhErrors, sb.bhWinners + " / " + sb.bhErrors],
-      ["Break point kazanılan", sa.breakPointsWon, sb.breakPointsWon],
-      ["Break point yenilen", sa.breakPointsFaced, sb.breakPointsFaced],
-      ["1. servis puan kazanma", fmtPct(serve.a.firstWon, serve.a.first), fmtPct(serve.b.firstWon, serve.b.first)],
-      ["2. servis puan kazanma", fmtPct(serve.a.secondWon, serve.a.second), fmtPct(serve.b.secondWon, serve.b.second)]
+      [t("sAce"), sa.aces, sb.aces],
+      [t("sDouble"), sa.doubleFaults, sb.doubleFaults],
+      [t("sWinners"), sa.winners, sb.winners],
+      [t("sForced"), sa.forcedErrors, sb.forcedErrors],
+      [t("sUnforced"), sa.unforcedErrors, sb.unforcedErrors],
+      [t("sFH"), sa.fhWinners + " / " + sa.fhErrors, sb.fhWinners + " / " + sb.fhErrors],
+      [t("sBH"), sa.bhWinners + " / " + sa.bhErrors, sb.bhWinners + " / " + sb.bhErrors],
+      [t("sBPWon"), sa.breakPointsWon, sb.breakPointsWon],
+      [t("sBPFaced"), sa.breakPointsFaced, sb.breakPointsFaced],
+      [t("s1st"), fmtPct(serve.a.firstWon, serve.a.first), fmtPct(serve.b.firstWon, serve.b.first)],
+      [t("s2nd"), fmtPct(serve.a.secondWon, serve.a.second), fmtPct(serve.b.secondWon, serve.b.second)]
     ];
   }
 
@@ -2751,20 +3681,20 @@
     if (points.length <= 1) {
       return (
         '<div class="momentum-card">' +
-          '<div class="momentum-card-sub">Henüz yeterli puan yok — birkaç puan kaydedince grafik burada oluşur.</div>' +
+          '<div class="momentum-card-sub">' + t("momNotEnough") + '</div>' +
         '</div>'
       );
     }
     return (
       '<div class="momentum-card">' +
-        '<div class="momentum-card-sub">Kümülatif fark — dokun ya da sürükle, her puanı incele</div>' +
+        '<div class="momentum-card-sub">' + t("momSub") + '</div>' +
         '<div class="momentum-chart-wrap">' +
           buildMomentumChartSVG(points) +
           '<div class="momentum-tooltip" id="momentumTooltip"></div>' +
         '</div>' +
         '<div class="momentum-legend">' +
-          '<span><span class="sw" style="background:var(--momentum-a)"></span>' + escapeHtml(shortName(m, "a")) + ' önde</span>' +
-          '<span><span class="sw" style="background:var(--momentum-b)"></span>' + escapeHtml(shortName(m, "b")) + ' önde</span>' +
+          '<span><span class="sw" style="background:var(--momentum-a)"></span>' + t("ahead", { name: escapeHtml(shortName(m, "a")) }) + '</span>' +
+          '<span><span class="sw" style="background:var(--momentum-b)"></span>' + t("ahead", { name: escapeHtml(shortName(m, "b")) }) + '</span>' +
         '</div>' +
       '</div>'
     );
@@ -2812,12 +3742,12 @@
 
       var label;
       if (idx === 0 || !p.entry) {
-        label = "Başlangıç";
+        label = t("start");
       } else {
         var e = p.entry;
         var wn = shortName(m, e.pointWinner);
         var diffTxt = (p.diff > 0 ? "+" : (p.diff < 0 ? "−" : "")) + Math.abs(p.diff);
-        label = "Puan " + idx + " · <b>" + escapeHtml(wn) + "</b> kazandı<br>" + e.preGames + " (" + e.preScore + ") → Fark: " + diffTxt;
+        label = t("tipPoint", { i: idx, name: escapeHtml(wn), g: e.preGames, s: escapeHtml(localScore(e.preScore)), d: diffTxt });
       }
       tooltip.innerHTML = label;
       tooltip.style.left = screenX + "px";
@@ -2841,9 +3771,9 @@
   function renderSetFilter(m) {
     var playedSets = m.sets.length + ((m.games.a || m.games.b || m.tiebreak || m.points.a || m.points.b) && !m.matchOver ? 1 : 0);
     if (playedSets < 2) return "";
-    var chips = ['<button data-setfilter="all" aria-pressed="' + (statsSetFilter === "all") + '" type="button">Tüm maç</button>'];
+    var chips = ['<button data-setfilter="all" aria-pressed="' + (statsSetFilter === "all") + '" type="button">' + t("wholeMatch") + '</button>'];
     for (var i = 1; i <= playedSets; i++) {
-      chips.push('<button data-setfilter="' + i + '" aria-pressed="' + (String(statsSetFilter) === String(i)) + '" type="button">' + i + '. set</button>');
+      chips.push('<button data-setfilter="' + i + '" aria-pressed="' + (String(statsSetFilter) === String(i)) + '" type="button">' + t("setN", { n: i }) + '</button>');
     }
     return '<div class="setfilter-row">' + chips.join("") + '</div>';
   }
@@ -2897,19 +3827,19 @@
     var nA = shortName(m, "a"), nB = shortName(m, "b");
 
     return '<div class="shotmap-card">' +
-      '<p class="shotmap-sub">Puanı bitiren vuruşun yapıldığı yer; şeridin koyuluğu o bölgedeki yoğunluğu gösterir. ' +
+      '<p class="shotmap-sub">' + t("shotmapSub") +
         (shotMapPlayer === "all"
-          ? 'Üst yarı ' + escapeHtml(nA) + ', alt yarı ' + escapeHtml(nB) + '.'
-          : 'Sadece ' + escapeHtml(shortName(m, shotMapPlayer)) + '’in kendi yarısı.') + '</p>' +
+          ? t("shotmapBoth", { a: escapeHtml(nA), b: escapeHtml(nB) })
+          : t("shotmapOnly", { name: escapeHtml(shortName(m, shotMapPlayer)) })) + '</p>' +
       '<div class="shotmap-filter">' +
-        chip("shotplayer", "all", shotMapPlayer, "İki oyuncu", "") +
+        chip("shotplayer", "all", shotMapPlayer, t("bothPlayers"), "") +
         chip("shotplayer", "a", shotMapPlayer, nA, "") +
         chip("shotplayer", "b", shotMapPlayer, nB, "") +
       '</div>' +
       '<div class="shotmap-filter">' +
-        chip("shotfilter", "all", shotMapFilter, "Tümü (" + shown.length + ")", "") +
-        chip("shotfilter", "win", shotMapFilter, "Winner", "win") +
-        chip("shotfilter", "err", shotMapFilter, "Hata", "err") +
+        chip("shotfilter", "all", shotMapFilter, t("allN", { n: shown.length }), "") +
+        chip("shotfilter", "win", shotMapFilter, t("fWinner"), "win") +
+        chip("shotfilter", "err", shotMapFilter, t("fError"), "err") +
       '</div>' +
       '<div class="shotmap-wrap' + (shotMapPlayer === "all" ? "" : " half") + '">' +
         (shotMapPlayer === "all"
@@ -2920,10 +3850,10 @@
             })) +
       '</div>' +
       '<table class="stat-table" style="margin-top:14px;">' +
-        '<thead><tr><th>Vuruşun yapıldığı bölge</th><th>' + escapeHtml(shortName(m, "a")) + '</th><th>' + escapeHtml(shortName(m, "b")) + '</th></tr></thead>' +
+        '<thead><tr><th>' + t("zoneTableHead") + '</th><th>' + escapeHtml(shortName(m, "a")) + '</th><th>' + escapeHtml(shortName(m, "b")) + '</th></tr></thead>' +
         '<tbody>' + rows + '</tbody>' +
       '</table>' +
-      '<p class="zone-table-note">Her hücre <b>winner / hata</b> sayısı.</p>' +
+      '<p class="zone-table-note">' + t("zoneTableNote") + '</p>' +
       renderZoneInsights(m, counts) +
       '</div>';
   }
@@ -2947,14 +3877,14 @@
         var topErr = byZone.slice().sort(function (x, y) { return y.e - x.e; })[0];
         var share = Math.round((topErr.e / errTotal) * 100);
         if (share >= 35 && topErr.e >= 3) {
-          bits.push('hatalarının <b>%' + share + '</b>’i ' + escapeHtml(ZONE_ABL[topErr.z]) + ' (' + topErr.e + '/' + errTotal + ')');
+          bits.push(t("insightErr", { pct: share, zone: escapeHtml(ZONE_ABL[topErr.z]), n: topErr.e, total: errTotal }));
         }
       }
       // En verimli bölge: winner'ın hataya açık ara üstün olduğu yer
       var best = byZone.slice().filter(function (c) { return c.w >= 3 && c.w > c.e; })
         .sort(function (x, y) { return (y.w - y.e) - (x.w - x.e); })[0];
       if (best) {
-        bits.push('en verimli bölgesi <b>' + escapeHtml(ZONE_NAME[best.z].toLowerCase()) + '</b> (' + best.w + ' winner / ' + best.e + ' hata)');
+        bits.push(t("insightBest", { zone: escapeHtml(ZONE_NAME[best.z].toLocaleLowerCase(locale())), w: best.w, e: best.e }));
       }
       if (bits.length) {
         lines.push('<li><b>' + escapeHtml(shortName(m, k)) + '</b> — ' + bits.join('; ') + '.</li>');
@@ -2977,7 +3907,7 @@
           (mo.sub ? '<div class="sub">' + escapeHtml(mo.sub) + '</div>' : "") +
           '</div></div>';
       }).join("") +
-      (moments.length > MAX ? '<div class="moments-more">… ve ' + (moments.length - MAX) + ' an daha</div>' : "") +
+      (moments.length > MAX ? '<div class="moments-more">' + t("momentsMore", { n: moments.length - MAX }) + '</div>' : "") +
       '</div>';
   }
 
@@ -3022,7 +3952,7 @@
     });
 
     var dur = filtered ? setDuration(m, setNo) : matchDuration(m);
-    var durLabel = filtered ? (setNo + ". set süresi") : "Maç süresi";
+    var durLabel = filtered ? t("setDur", { n: setNo }) : t("matchDur");
 
     var chartPoints = buildMomentumChartPoints(m, logArr);
     lastMomentumPoints = openSections.momentum ? chartPoints : null;
@@ -3034,12 +3964,12 @@
     return (
       renderSetFilter(m) +
       '<div class="stats-summary">' +
-        '<div class="card"><div class="n">' + totalA + '</div><div class="lbl">' + escapeHtml(m.names.a) + ' — toplam puan</div></div>' +
-        '<div class="card"><div class="n">' + totalB + '</div><div class="lbl">' + escapeHtml(m.names.b) + ' — toplam puan</div></div>' +
+        '<div class="card"><div class="n">' + totalA + '</div><div class="lbl">' + escapeHtml(t("totalPoints", { name: m.names.a })) + '</div></div>' +
+        '<div class="card"><div class="n">' + totalB + '</div><div class="lbl">' + escapeHtml(t("totalPoints", { name: m.names.b })) + '</div></div>' +
         '<div class="card"><div class="n">' + fmtDuration(dur) + '</div><div class="lbl">' + durLabel + '</div></div>' +
-        '<div class="card"><div class="n">' + (bestStreak > 1 ? bestStreak : "—") + '</div><div class="lbl">' + (bestKey && bestStreak > 1 ? "En uzun seri — " + escapeHtml(shortName(m, bestKey)) : "En uzun puan serisi") + '</div></div>' +
-        '<div class="card"><div class="n">' + (rallyAvg !== null ? rallyAvg : "—") + '</div><div class="lbl">Ortalama ralli uzunluğu (vuruş)</div></div>' +
-        '<div class="card"><div class="n">' + (rallyMaxEntry ? rallyMaxEntry.rally : "—") + '</div><div class="lbl">' + (rallyMaxEntry ? "En uzun ralli — " + escapeHtml(shortName(m, rallyMaxEntry.pointWinner)) + " kazandı" : "En uzun ralli") + '</div></div>' +
+        '<div class="card"><div class="n">' + (bestStreak > 1 ? bestStreak : "—") + '</div><div class="lbl">' + (bestKey && bestStreak > 1 ? t("longestStreakBy", { name: escapeHtml(shortName(m, bestKey)) }) : t("longestStreak")) + '</div></div>' +
+        '<div class="card"><div class="n">' + (rallyAvg !== null ? rallyAvg : "—") + '</div><div class="lbl">' + t("avgRally") + '</div></div>' +
+        '<div class="card"><div class="n">' + (rallyMaxEntry ? rallyMaxEntry.rally : "—") + '</div><div class="lbl">' + (rallyMaxEntry ? t("longestRallyBy", { name: escapeHtml(shortName(m, rallyMaxEntry.pointWinner)) }) : t("longestRally")) + '</div></div>' +
       '</div>' +
       '<table class="stat-table">' +
         '<thead><tr><th></th><th>' + escapeHtml(shortName(m,"a")) + '</th><th>' + escapeHtml(shortName(m,"b")) + '</th></tr></thead>' +
@@ -3050,21 +3980,23 @@
         '</tbody>' +
       '</table>' +
       '<div class="sec-group">' +
-        renderSection("momentum", "Puan bazlı momentum",
-          chartPoints.length > 1 ? "Kümülatif fark grafiği" : "Henüz yeterli puan yok",
+        renderSection("momentum", t("secMomentum"),
+          chartPoints.length > 1 ? t("secMomentumSub") : t("notEnough"),
           function () { return renderMomentumCard(m, chartPoints); }) +
-        renderSection("shotmap", "Vuruş haritası",
-          locCount ? locCount + " vuruşun yeri" : "Bölge kaydı yok",
+        renderSection("shotmap", t("secShotmap"),
+          locCount ? t("nShotLocs", { n: locCount }) : t("noZoneData"),
           function () { return renderShotMapCard(m, logArr); }) +
         (!filtered && momentCount
-          ? renderSection("moments", "Dönüm noktaları", momentCount + " an",
+          ? renderSection("moments", t("secMoments"), t("nMoments", { n: momentCount }),
               function () { return renderMomentsCard(m); })
           : "") +
       '</div>' +
-      (m.log.length ? '<button class="pdf-btn" id="pdfBtnStats" type="button">Maç raporunu PDF olarak kaydet</button><div class="pdf-hint">Açılan pencerede "PDF olarak kaydet"i seç.</div>' +
-        '<button class="csv-btn" id="csvBtn" type="button">Puan akışını CSV olarak indir</button>' : "") +
-      (viewingArchived ? "" : '<div class="archive-entry"><button id="openArchiveStats" type="button">🗂 Maç arşivi</button></div>') +
-      renderResetRow()
+      (m.log.length ? '<button class="pdf-btn" data-share="1" type="button">' + t("shareMatchBtn") + '</button>' +
+        '<button class="pdf-btn" id="pdfBtnStats" type="button">' + t("pdfReportBtn") + '</button><div class="pdf-hint">' + escapeHtml(t("pdfHint")) + '</div>' +
+        '<button class="csv-btn" id="csvBtn" type="button">' + t("csvBtn") + '</button>' : "") +
+      (viewingArchived ? "" : '<div class="archive-entry"><button id="openArchiveStats" type="button">' + t("archiveBtn") + '</button></div>') +
+      renderResetRow() +
+      langSwitchHtml("justify-content:center;margin-top:18px;")
     );
   }
   function fmtPct(won, total) {
@@ -3077,13 +4009,13 @@
     if (resetConfirmPending) {
       return (
         '<div class="reset-row reset-row-confirm">' +
-          '<span class="reset-confirm-txt">Mevcut kayıt silinsin mi?</span>' +
-          '<button id="resetConfirmYes" class="reset-yes" type="button">Evet, yeni maç</button>' +
-          '<button id="resetConfirmNo" class="reset-no" type="button">Vazgeç</button>' +
+          '<span class="reset-confirm-txt">' + t("resetQ") + '</span>' +
+          '<button id="resetConfirmYes" class="reset-yes" type="button">' + t("resetYes") + '</button>' +
+          '<button id="resetConfirmNo" class="reset-no" type="button">' + t("cancel") + '</button>' +
         '</div>'
       );
     }
-    return '<div class="reset-row"><button id="resetBtn" type="button">Yeni maç başlat</button></div>';
+    return '<div class="reset-row"><button id="resetBtn" type="button">' + t("newMatch") + '</button></div>';
   }
 
   // ---------- Maç sonu PDF (yazdırma) raporu ----------
@@ -3093,20 +4025,20 @@
   function buildPrintDocHTML(m) {
     var rows = buildStatRows(m);
     var chartPoints = buildMomentumChartPoints(m);
-    var dateStr = new Date().toLocaleDateString("tr-TR", { day: "2-digit", month: "long", year: "numeric" });
-    var ruleTxt = (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? "Karar puanı" : "Avantajlı") + " · " + m.setsToPlay + " set" + (m.finalSetSuperTB ? " · son set süper TB" : "");
+    var dateStr = new Date().toLocaleDateString(locale(), { day: "2-digit", month: "long", year: "numeric" });
+    var ruleTxt = (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? t("ruleNoAdShort") : t("ruleAdShort")) + " · " + t("nSets", { n: m.setsToPlay }) + (m.finalSetSuperTB ? t("finalSTBShort") : "");
     var scoreTxt = m.sets.map(function (s) {
-      return s.superTB ? "[Süper TB " + s.a + "–" + s.b + "]" : (s.a + "–" + s.b + (s.tb ? " (TB " + Math.min(s.tb.a, s.tb.b) + ")" : ""));
+      return s.superTB ? "[" + t("superTB") + " " + s.a + "–" + s.b + "]" : (s.a + "–" + s.b + (s.tb ? " (TB " + Math.min(s.tb.a, s.tb.b) + ")" : ""));
     }).join("   ");
-    var winnerTxt = m.matchOver ? escapeHtml(m.names[m.winner]) + " kazandı" : "Maç devam ediyor";
+    var winnerTxt = m.matchOver ? t("wonBy", { name: escapeHtml(m.names[m.winner]) }) : t("stillPlaying");
     var chartHtml = chartPoints.length > 1
-      ? '<h2>Puan bazlı momentum</h2><div style="max-width:520px">' + buildMomentumChartSVG(chartPoints) + '</div>'
+      ? '<h2>' + t("secMomentum") + '</h2><div style="max-width:520px">' + buildMomentumChartSVG(chartPoints) + '</div>'
       : '';
 
     return (
-      '<!doctype html><html lang="tr"><head><meta charset="UTF-8">' +
+      '<!doctype html><html lang="' + LANG + '"><head><meta charset="UTF-8">' +
       '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-      '<title>Courtside — Maç Raporu</title>' +
+      '<title>' + t("reportTitle") + '</title>' +
       '<link rel="preconnect" href="https://fonts.googleapis.com">' +
       '<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">' +
       '<style>' +
@@ -3125,11 +4057,11 @@
         '.pr-hint{font-size:12px;color:#8a8378;margin-top:24px;padding-top:12px;border-top:1px solid #e2dccd;}' +
         '@media print{ .pr-hint{ display:none; } body{ padding:0; } }' +
       '</style></head><body>' +
-      '<h1>Courtside — Maç Raporu</h1>' +
+      '<h1>' + t("reportTitle") + '</h1>' +
       '<div class="pr-sub">' + dateStr + ' · ' + ruleTxt + '</div>' +
       '<div class="pr-score">' + escapeHtml(m.names.a) + ' vs ' + escapeHtml(m.names.b) + '</div>' +
       '<div class="pr-sets">' + (scoreTxt || "—") + ' — ' + winnerTxt + '</div>' +
-      '<h2>İstatistikler</h2>' +
+      '<h2>' + t("statsTitle") + '</h2>' +
       '<table>' +
         '<thead><tr><th></th><th>' + escapeHtml(shortName(m, "a")) + '</th><th>' + escapeHtml(shortName(m, "b")) + '</th></tr></thead>' +
         '<tbody>' +
@@ -3137,8 +4069,8 @@
         '</tbody>' +
       '</table>' +
       chartHtml +
-      '<div class="pr-footer">Courtside ile oluşturuldu</div>' +
-      '<div class="pr-hint">Yazdırma penceresi açılmadıysa, bu sekmeyi kendi tarayıcı menünden yazdırıp "PDF olarak kaydet"i seçebilirsin.</div>' +
+      '<div class="pr-footer">' + t("reportFooter") + '</div>' +
+      '<div class="pr-hint">' + escapeHtml(t("reportHint")) + '</div>' +
       '<script>window.onload=function(){ setTimeout(function(){ try{ window.print(); }catch(e){} }, 250); };<\/script>' +
       '</body></html>'
     );
@@ -3210,7 +4142,7 @@
           render();
         } else {
           this.setAttribute("data-confirm", "1");
-          this.textContent = "Emin misin?";
+          this.textContent = t("areYouSure");
         }
       };
     }
@@ -3407,7 +4339,7 @@
       } else {
         // Yeni sekme engellendiyse kullanıcıyı bilgilendir.
         var hintEl = document.querySelector(".pdf-hint");
-        if (hintEl) hintEl.textContent = "Yeni sekme engellendi — tarayıcı ayarlarından bu site için pop-up'lara izin verip tekrar dene.";
+        if (hintEl) hintEl.textContent = t("popupBlocked");
       }
     };
     var pdfBtnBanner = document.getElementById("pdfBtnBanner");
@@ -3446,6 +4378,8 @@
     }
   }
 
+  applyDocLang();
+  checkLaunchLink();
   render();
 })();
 </script>
