@@ -1511,7 +1511,17 @@
   .ev-daycount { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 3px; border-radius: 999px; background: var(--panel-2); color: var(--text-dim); font-size: 11px; font-weight: 600; text-align: center; }
   .ev-daychip[aria-pressed="true"] .ev-daycount { background: var(--brass); color: var(--ink); }
   .ev-otherday { color: var(--text-dim); border-style: dashed; overflow: hidden; }
-  .ev-otherday input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; font-size: 16px; }
+  .cal-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .cal-head button { width: 42px; height: 42px; border-radius: 10px; border: 1px solid var(--hairline); background: var(--panel-2); color: var(--text); font-size: 20px; cursor: pointer; }
+  .cal-month { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; text-transform: capitalize; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-wd { text-align: center; font-size: 11px; color: var(--text-dim); padding: 4px 0; text-transform: uppercase; }
+  .cal-day { position: relative; aspect-ratio: 1; border-radius: 10px; border: 1px solid transparent; background: none; color: var(--text); font-family: inherit; font-size: 15px; cursor: pointer; }
+  .cal-day.past { color: var(--text-dim); }
+  .cal-day.today { border-color: var(--hairline); font-weight: 700; }
+  .cal-day.sel { background: var(--brass); color: var(--ink); font-weight: 700; }
+  .cal-day.has::after { content: ""; position: absolute; left: 50%; bottom: 5px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--brass); }
+  .cal-day.sel.has::after { background: var(--ink); }
   .ev-dayonly { margin: 0 0 6px; }
   .ev-tcard { display: flex; align-items: center; gap: 10px; }
   .ev-tmain { flex: 1; min-width: 0; }
@@ -5983,7 +5993,7 @@
       return '<button type="button" class="ev-daychip" ' + attr + '="' + d + '" aria-pressed="' + (d === cur) + '">' + escapeHtml(dayLabel(d)) +
         (n ? ' <span class="ev-daycount">' + n + '</span>' : '') + '</button>';
     }).join("") +
-      (withPicker ? '<span class="ev-daychip ev-otherday">' + t("evOtherDay") + '<input type="date" id="evDayPick" aria-label="' + escapeAttr(t("evOtherDay")) + '"></span>' : '') +
+      (withPicker ? '<button type="button" class="ev-daychip ev-otherday" id="evOtherDayBtn">' + t("evOtherDay") + '</button>' : '') +
     '</div>';
   }
 
@@ -6132,6 +6142,30 @@
         (md.kind === "edit" ? '<button class="live-share-again ev-del" id="evfDelete" type="button">' + t(md.delArm ? "evDeleteSure" : "evDelete") + '</button>' : '') +
       '</div></div>';
     }
+    if (md.kind === "day") {
+      var first = dayFromStr(md.ym + "-01"), y = first.getFullYear(), mo = first.getMonth();
+      var lead = (first.getDay() + 6) % 7; // Pazartesi ile başla
+      var nDays = new Date(y, mo + 1, 0).getDate(), today = todayStr();
+      var has = {}; eventState.matches.forEach(function (x) { has[x.date] = 1; });
+      var wd = "", cells = "";
+      for (var w = 0; w < 7; w++) {
+        var wdDate = new Date(2024, 0, 1 + w); // 1 Ocak 2024 Pazartesi
+        wd += '<div class="cal-wd">' + escapeHtml(wdDate.toLocaleDateString(locale(), { weekday: "short" }).replace(".", "")) + '</div>';
+      }
+      for (var e = 0; e < lead; e++) cells += '<div></div>';
+      for (var dd = 1; dd <= nDays; dd++) {
+        var ds = ymd(new Date(y, mo, dd));
+        cells += '<button type="button" class="cal-day' + (ds < today ? ' past' : '') + (ds === today ? ' today' : '') + (ds === evDay ? ' sel' : '') + (has[ds] ? ' has' : '') +
+          '" data-calday="' + ds + '">' + dd + '</button>';
+      }
+      var monthName = first.toLocaleDateString(locale(), { month: "long", year: "numeric" });
+      return '<div class="zone-modal" id="evCalModal"><div class="zone-card">' +
+        '<div class="cal-head"><button type="button" data-calnav="-1" aria-label="‹">‹</button><span class="cal-month">' + escapeHtml(monthName) + '</span>' +
+        '<button type="button" data-calnav="1" aria-label="›">›</button></div>' +
+        '<div class="cal-grid">' + wd + cells + '</div>' +
+        '<button class="share-close" id="evCalClose" type="button">' + t("close") + '</button>' +
+      '</div></div>';
+    }
     if (md.kind === "tb") {
       var mm = evFind(md.id); if (!mm) return "";
       var nm = shortName({ names: { a: mm.a, b: mm.b } }, md.winner);
@@ -6248,7 +6282,17 @@
     };
     list = app.querySelectorAll("[data-evday]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () { evDay = this.getAttribute("data-evday"); render(); };
-    if ((el = document.getElementById("evDayPick"))) el.onchange = function () { if (validDay(this.value)) { evDay = this.value; render(); } };
+    // Kendi takvimimiz: telefonun tarih tekerleği her değişimde ekran yenilenince kapanıyordu.
+    if ((el = document.getElementById("evOtherDayBtn"))) el.onclick = function () { evModal = { kind: "day", ym: evDay.slice(0, 7) }; render(); };
+    list = app.querySelectorAll("[data-calnav]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var d = dayFromStr(evModal.ym + "-01"); d.setMonth(d.getMonth() + (+this.getAttribute("data-calnav")));
+      evModal.ym = ymd(d).slice(0, 7); render();
+    };
+    list = app.querySelectorAll("[data-calday]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { evDay = this.getAttribute("data-calday"); evModal = null; render(); };
+    if ((el = document.getElementById("evCalModal"))) el.onclick = function (ev) { if (ev.target === this) { evModal = null; render(); } };
+    if ((el = document.getElementById("evCalClose"))) el.onclick = function () { evModal = null; render(); };
     if ((el = document.getElementById("evAddBtn"))) el.onclick = function () { evModal = { kind: "add" }; render(); var f = document.getElementById("evfTime"); if (f) f.focus(); };
     if ((el = document.getElementById("evGoLive"))) el.onclick = function () { startEventLive(); };
     if ((el = document.getElementById("evLivePill"))) el.onclick = function () { evModal = { kind: "stop" }; render(); };
