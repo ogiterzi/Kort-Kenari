@@ -92,6 +92,8 @@
     height: 100%;
     margin: 0;
   }
+  html { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  html.native button, html.native .rally-btn { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   body {
     background: var(--bg);
     color: var(--text);
@@ -175,23 +177,61 @@
   .btn-primary:active { transform: translateY(1px); }
 
   /* ---------- Header ---------- */
+  /* Sayfa kökü zaten güvenli alan kadar aşağıdan başlıyor; başlık ikinci kez
+     boşluk eklemesin. Kaydırınca çentik altında kalmasın diye oraya yapışır,
+     üstündeki şerit zemin rengiyle kapatılır. */
   header.matchbar {
     position: sticky;
-    top: 0;
-    padding-top: env(safe-area-inset-top, 0px);
+    top: env(safe-area-inset-top, 0px);
     background: var(--bg);
     z-index: 5;
     border-bottom: 1px solid var(--hairline);
   }
-  .matchbar-inner { padding: 12px 18px 10px; }
+  header.matchbar::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 100%;
+    height: env(safe-area-inset-top, 0px);
+    background: var(--bg);
+  }
+  .matchbar-inner { padding: 6px 16px 8px; }
   .matchbar-top {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 8px;
+    font-size: 11.5px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .matchbar-top .mb-left { min-width: 96px; white-space: nowrap; }
+  .matchbar-top .mb-right { min-width: 96px; display: flex; justify-content: flex-end; }
+  /* Skor tablosu: A | orta | B — iki yan sütun eşit genişlikte, her şey kendi sütununda ortalı. */
+  .board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: center;
+    column-gap: 10px;
+    row-gap: 2px;
+  }
+  .bd-name {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 19px;
+    font-weight: 500;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 10px;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
   }
+  .bd-name span.txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bd-name { position: relative; }
+  .bd-name .serve-ball { position: absolute; right: calc(100% + 6px); top: 50%; transform: translateY(-50%); }
+  .bd-games { display: flex; justify-content: center; min-height: 1px; }
+  .bd-sets { font-size: 12.5px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .bd-mid { display: flex; justify-content: center; }
   .live-dot { display: inline-flex; align-items: center; gap: 6px; }
   .live-dot .dot {
     width: 7px; height: 7px; border-radius: 50%;
@@ -232,18 +272,18 @@
   .game-count {
     font-family: 'Fraunces', Georgia, serif;
     font-variant-numeric: tabular-nums;
-    font-size: 17px;
+    font-size: 38px;
     font-weight: 600;
     line-height: 1;
     flex: none;
-    min-width: 24px;
+    min-width: 58px;
     text-align: center;
-    padding: 3px 0;
-    border-radius: 7px;
+    padding: 7px 8px 6px;
+    border-radius: 12px;
     background: var(--panel-2);
     color: var(--text-dim);
   }
-  .game-count.lead { color: var(--brass); }
+  .game-count.lead { color: var(--brass); box-shadow: inset 0 0 0 1.5px var(--brass-dim); }
 
   .scorepanel {
     display: flex;
@@ -266,12 +306,14 @@
   .sets-mini .set-chip.won { color: var(--brass); font-weight: 600; }
   .game-score {
     font-size: 46px;
+    text-align: center;
+    white-space: nowrap;
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1;
     display: inline-block;
   }
-  .game-score .dash { color: var(--text-dim); padding: 0 8px; font-weight: 400; }
+  .game-score .dash { color: var(--text-dim); padding: 0 5px; font-weight: 400; }
   /* Maç bitince tüm set skorları tek satırda yazılıyor; dar ekranda sarmasın diye küçülür. */
   .game-score.final { font-size: 34px; white-space: nowrap; }
   @media (max-width: 400px) { .game-score.final { font-size: 28px; } }
@@ -308,8 +350,9 @@
   .momentum-strip {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 7px;
-    padding: 7px 4px 2px;
+    padding: 5px 4px 0;
     font-size: 12.5px;
   }
   .momentum-strip .dot {
@@ -477,6 +520,8 @@
     justify-content: center;
     padding: 14px;
   }
+  .zone-modal.fading { opacity: 0; transition: opacity .3s ease; pointer-events: none; }
+  .zone-modal.fading .zone-card { transform: scale(.96); transition: transform .3s ease; }
   .zone-card {
     background: var(--panel);
     border: 1px solid var(--hairline);
@@ -777,6 +822,38 @@
     font-size: 13px;
     color: var(--text-dim);
     letter-spacing: 0.02em;
+  }
+
+  /* ---- Basit mod ---- */
+  .mode-pick button { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left; padding: 13px 14px; }
+  .mode-pick button b { font-size: 15.5px; }
+  .mode-pick button small { font-size: 12px; line-height: 1.4; color: var(--text-dim); font-weight: 400; }
+  .simple-q { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; text-align: center; margin: 2px 0 12px; }
+  .simple-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .big-pt {
+    min-height: 150px; border-radius: 18px; border: 1px solid var(--hairline);
+    background: var(--panel); color: var(--text); font-family: inherit;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+    padding: 12px 8px; min-width: 0; cursor: pointer;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  }
+  .big-pt:active { background: var(--panel-2); border-color: var(--brass); transform: scale(.98); }
+  .big-pt .nm { font-family: 'Fraunces', Georgia, serif; font-size: 25px; font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .big-pt .sub { font-size: 13px; color: var(--text-dim); }
+  .big-pt { position: relative; }
+  .big-pt .serve-ball { width: 17px; height: 17px; position: absolute; top: 14px; left: 50%; margin-left: -8.5px; }
+  .last-pt { background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; }
+  .last-pt .lp-head { font-size: 14.5px; }
+  .last-pt .lp-sub { font-size: 12px; color: var(--text-dim); margin: 2px 0 10px; }
+  .last-pt .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .last-pt .chips button {
+    background: var(--panel-2); border: 1px solid var(--hairline); color: var(--text);
+    border-radius: 999px; padding: 9px 14px; font-family: inherit; font-size: 13.5px; cursor: pointer;
+  }
+  .last-pt .chips button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .undo-big {
+    width: 100%; padding: 15px; border-radius: 12px; border: 1px solid var(--hairline);
+    background: none; color: var(--text); font-family: inherit; font-size: 15px; cursor: pointer;
   }
 
   .quickmode-row {
@@ -1218,6 +1295,21 @@
   .file-pick input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
   .or-sep { text-align: center; font-size: 12px; color: var(--text-dim); }
   .archived-bar .bar-end { margin-left: auto; }
+  .matchbar-top .mb-info { min-width: 0; text-align: center; line-height: 1.3; text-wrap: balance; }
+  .new-match-btn {
+    flex: none;
+    background: none;
+    border: 1px solid var(--brass);
+    color: var(--brass);
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .match-over-banner .btn-primary { width: 100%; margin-top: 14px; }
   .lang-switch { display: flex; gap: 6px; justify-content: flex-end; }
   .lang-switch button {
     background: none;
@@ -1231,6 +1323,156 @@
   }
   .lang-switch button[aria-pressed="true"] { color: var(--brass); border-color: var(--brass); font-weight: 600; }
 
+  /* ---- Kayıtlı oyuncular (kurulum ekranı) ---- */
+  .name-row { display: flex; gap: 8px; }
+  .name-row input { flex: 1; min-width: 0; }
+  .star-btn {
+    flex: none; width: 50px; border-radius: 10px;
+    border: 1px solid var(--hairline); background: var(--panel);
+    color: var(--text-dim); font-size: 21px; line-height: 1; cursor: pointer;
+    transition: transform .15s ease, color .2s, border-color .2s;
+  }
+  .star-btn.on { color: var(--brass); border-color: var(--brass); }
+  .star-btn.pop { transform: scale(1.18); }
+  .star-btn:disabled { opacity: .35; }
+  .sp-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-dim); margin-bottom: 7px; }
+  .sp-head button { background: none; border: none; color: var(--brass); font-family: inherit; font-size: 13px; padding: 2px 0; cursor: pointer; }
+  .sp-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pchip {
+    background: var(--panel); border: 1px solid var(--hairline); color: var(--text);
+    border-radius: 999px; padding: 8px 14px; font-family: inherit; font-size: 13.5px; cursor: pointer;
+  }
+  .pchip.used { border-color: var(--grass); color: var(--grass); }
+  .pchip .x { margin-left: 7px; color: var(--clay); font-weight: 700; }
+  .sp-hint { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+
+  /* ---- Yer değişimi bildirimi: üstten kayarak gelir, 8 sn kalır ---- */
+  .co-layer {
+    position: fixed; left: 0; right: 0; top: 0; z-index: 900; pointer-events: none;
+    display: flex; justify-content: center;
+    padding: calc(env(safe-area-inset-top, 0px) + 10px) 14px 0;
+  }
+  .co-card {
+    pointer-events: auto; width: 100%; max-width: 420px; overflow: hidden;
+    background: var(--panel); border: 1px solid var(--brass); border-radius: 18px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    transform: translateY(-160%) scale(.96); opacity: 0;
+    transition: transform .55s cubic-bezier(.2,1.25,.35,1), opacity .3s ease;
+  }
+  .co-card.in { transform: none; opacity: 1; }
+  .co-card.out { transform: translateY(-160%) scale(.96); opacity: 0; transition: transform .4s ease-in, opacity .3s ease-in; }
+  .co-body { display: flex; align-items: center; gap: 14px; padding: 14px 16px 12px; }
+  .co-ico { flex: none; width: 46px; height: 46px; border-radius: 50%; background: var(--panel-2); position: relative; overflow: hidden; }
+  .co-ico i { position: absolute; left: 50%; width: 22px; height: 3px; margin-left: -11px; border-radius: 2px; background: var(--brass); }
+  .co-ico i::after { content: ""; position: absolute; top: -4px; border: 5.5px solid transparent; }
+  .co-ico i.r { top: 16px; animation: coR 1.4s ease-in-out infinite; }
+  .co-ico i.r::after { right: -8px; border-left-color: var(--brass); }
+  .co-ico i.l { top: 27px; animation: coL 1.4s ease-in-out infinite; }
+  .co-ico i.l::after { left: -8px; border-right-color: var(--brass); }
+  @keyframes coR { 0%, 100% { transform: translateX(-5px); } 50% { transform: translateX(5px); } }
+  @keyframes coL { 0%, 100% { transform: translateX(5px); } 50% { transform: translateX(-5px); } }
+  .co-title { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; color: var(--brass); line-height: 1.2; }
+  .co-score { font-size: 14px; color: var(--text); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .co-rest { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
+  .co-bar { height: 3px; background: var(--brass); transform-origin: left; animation: coBar 8s linear forwards; }
+  @keyframes coBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+  /* ---- Servis kırma kutlaması ---- */
+  .bk-layer {
+    position: fixed; inset: 0; z-index: 950;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(8, 14, 19, .86);
+    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    opacity: 0; transition: opacity .25s ease;
+  }
+  .bk-layer.in { opacity: 1; }
+  .bk-layer.out { opacity: 0; transition: opacity .35s ease; }
+  .bk-card { position: relative; text-align: center; padding: 0 20px; }
+  .bk-ball { width: 64px; height: 64px; display: block; margin: 0 auto 8px; animation: bkBall .8s cubic-bezier(.3,.9,.3,1.3) both; }
+  .bk-title {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 700; font-size: 58px; line-height: 1;
+    color: #CFE21B; letter-spacing: .01em; text-shadow: 0 4px 0 rgba(0,0,0,.35);
+    animation: bkSlam .6s cubic-bezier(.2,1.6,.35,1) .08s both;
+  }
+  .bk-title.long { font-size: 40px; }
+  .bk-sub { font-size: 17px; font-weight: 600; color: #F4F1E8; margin-top: 12px; animation: bkFade .4s ease .45s both; }
+  .bk-score { font-family: 'Fraunces', Georgia, serif; font-size: 22px; color: #C79A54; margin-top: 4px; font-variant-numeric: tabular-nums; animation: bkFade .4s ease .6s both; }
+  .bk-conf { position: absolute; left: 50%; top: 45%; width: 9px; height: 14px; border-radius: 2px; opacity: 0; animation: bkConf 1.5s cubic-bezier(.15,.7,.3,1) .12s forwards; }
+  @keyframes bkSlam { 0% { transform: scale(2.6) rotate(-8deg); opacity: 0; } 60% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+  @keyframes bkBall { 0% { transform: translateY(-60vh) rotate(-240deg); } 70% { transform: translateY(6px) rotate(0); } 100% { transform: none; } }
+  @keyframes bkFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes bkConf {
+    0% { transform: translate(-50%, -50%) rotate(0); opacity: 1; }
+    75% { opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot)); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .co-card, .co-card.out { transition: opacity .3s ease; transform: none; }
+    .co-ico i { animation: none; }
+    .bk-ball, .bk-title, .bk-sub, .bk-score { animation: none; }
+    .bk-conf { display: none; }
+  }
+
+  /* ---- Canlı yayın ---- */
+  .live-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .live-go {
+    background: none; border: 1px solid var(--hairline); color: var(--text);
+    border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; cursor: pointer;
+  }
+  .live-go[disabled] { opacity: .6; }
+  .live-pill {
+    display: inline-flex; align-items: center; gap: 7px; flex: none;
+    font-size: 12px; font-weight: 700; letter-spacing: .04em; color: #fff;
+    background: #C0392B; border-radius: 999px; padding: 5px 11px;
+  }
+  .live-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: livePulse 1.2s ease-in-out infinite; }
+  .live-pill.off { background: var(--panel-2); color: var(--text-dim); }
+  .live-pill.off .dot { background: var(--text-dim); animation: none; }
+  @keyframes livePulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+  .live-row .live-act {
+    background: none; border: 1px solid var(--hairline); color: var(--text);
+    border-radius: 999px; padding: 6px 12px; font-family: inherit; font-size: 12.5px; cursor: pointer;
+  }
+  .live-row .live-act.stop { color: var(--text-dim); }
+  .live-note { width: 100%; font-size: 11.5px; color: var(--clay); }
+  .mb-live { flex: none; font-size: 10px; padding: 3px 8px; }
+  .live-bar { justify-content: space-between; }
+  .live-bar .live-status { font-size: 12px; color: var(--text-dim); text-align: right; }
+  .live-wait { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px 24px; text-align: center; color: var(--text-dim); }
+  .live-wait .ball { width: 72px; height: 72px; animation: introSpin 1.6s linear infinite; }
+  .live-foot { text-align: center; font-size: 11.5px; color: var(--text-dim); padding: 18px 0 6px; }
+
+  /* ---- Uygulama açılış animasyonu (yalnızca iOS uygulamasında) ----
+     iOS'un sabit açılış ekranı 1024px kare görseli ekrana "aspect fill" ile yayar;
+     top o görselin 300/1024'ü kadar. Dikey ekranda bu 300/1024 * 100vh = 29.3vh eder,
+     böylece animasyon tam aynı yerden ve boyuttan başlar, geçiş fark edilmez. */
+  .intro {
+    position: fixed; inset: 0; z-index: 1000;
+    background: #14212B;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity .45s ease, transform .45s ease;
+  }
+  .intro.out { opacity: 0; transform: scale(1.04); pointer-events: none; }
+  .intro .intro-ball {
+    width: 29.3vh; height: 29.3vh;
+    width: calc(300 / 1024 * max(100vh, 100vw)); height: calc(300 / 1024 * max(100vh, 100vw));
+    animation: introSpin .9s cubic-bezier(.45,.05,.2,1) .1s both, introRise .55s cubic-bezier(.3,.7,.2,1) .55s both;
+  }
+  .intro .intro-word {
+    font-family: 'Fraunces', Georgia, serif; font-weight: 600;
+    font-size: 34px; letter-spacing: .01em; color: #C79A54;
+    position: absolute; left: 0; right: 0; text-align: center;
+    top: calc(50% + 5vh); opacity: 0;
+    animation: introWord .5s ease-out .75s both;
+  }
+  @keyframes introSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes introRise { from { translate: 0 0; scale: 1; } to { translate: 0 -7vh; scale: .72; } }
+  @keyframes introWord { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .intro .intro-ball, .intro .intro-word { animation: none; }
+    .intro .intro-word { opacity: 1; top: calc(50% + 17vh); }
+  }
+
 </style>
 </head>
 <body>
@@ -1239,6 +1481,27 @@
 <script>
 (function () {
   "use strict";
+
+  // ---------- iOS uygulaması (Capacitor) ----------
+  // Aynı dosya hem web'de hem App Store uygulamasında çalışır. Uygulamada sayfa
+  // capacitor://localhost adresinden açıldığı için paylaşım linkleri web sürümünü göstermeli.
+  var WEB_APP_URL = "https://courtside.app/"; // TODO: web sürümünün gerçek adresi
+  var IS_NATIVE = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === "function" && window.Capacitor.isNativePlatform());
+  if (IS_NATIVE) { try { document.documentElement.classList.add("native"); } catch (e) {} }
+  function nativePlugin(name) {
+    return (IS_NATIVE && window.Capacitor.Plugins && window.Capacitor.Plugins[name]) || null;
+  }
+  // Metni geçici bir dosyaya yazıp iOS paylaşım menüsünü açar (Dosyalar'a kaydet, WhatsApp, AirDrop…).
+  function nativeShareFile(name, text, title) {
+    var fs = nativePlugin("Filesystem"), sh = nativePlugin("Share");
+    if (!fs || !sh) return Promise.reject(new Error("noplugin"));
+    return fs.writeFile({ path: name, data: text, directory: "CACHE", encoding: "utf8" })
+      .then(function (res) { return sh.share({ title: title || name, url: res.uri, dialogTitle: title || name }); });
+  }
+  function isShareCancel(err) {
+    var msg = String((err && (err.message || err.errorMessage)) || err || "");
+    return /cancel/i.test(msg) || (err && err.name === "AbortError");
+  }
 
   // ---------- Dil (i18n) ----------
   // Tüm arayüz metinleri buradan gelir. {ad} biçimindeki yer tutucular t() ile doldurulur.
@@ -1297,11 +1560,11 @@
       linkCopiedLong: "Link kopyalandı ✓ WhatsApp'a ya da mesaja yapıştırabilirsin.",
       copyFail: "Kopyalanamadı — kutudaki linki basılı tutup kopyala.",
       shared: "Paylaşıldı ✓", linkCopied: "Link kopyalandı ✓",
-      oAce: "⚡ Ace", oDouble: "✕ Çift Hata", oWinner: "🎯 Winner", oForced: "↩ Forced Error", oUnforced: "✕ Basit Hata",
-      whoServesFirst: "Maça kim servisle başlıyor?", tossHint: "Kurayı kazanan servis atacaksa onu seç.",
+      oAce: "⚡ Ace", oDouble: "✕ Çift Hata", oWinner: "🎯 Winner", oForced: "↩ Forced Error", oUnforced: "✕ Basit Hata", oReturn: "✕ Return Hatası",
+      whoServesFirst: "İlk Servis kimde?",
       zqWinner: "{name} winner vuruşunu nereden yaptı?", zqForced: "{name} forced error'ı nerede yaptı?",
       zqUnforced: "{name} basit hatayı nerede yaptı?", zqGeneric: "Vuruş nereden yapıldı?",
-      tapSpot: "Vuruşu yaptığı noktaya dokun", zoneSub: "{name} kendi yarısında — vuruşu yaptığı noktaya dokun.",
+      tapSpot: "Vuruşu yaptığı noktaya dokun", zoneSub: "{name} kendi yarısında — vuruşu yaptığı noktaya dokun, otomatik kaydedilir.",
       saveNoZone: "Bölgesiz kaydet", save: "Kaydet",
       backArchive: "← Arşiv", viewingArchived: "Arşivden görüntüleniyor · {date}",
       tabMatches: "Maçlar", tabPlayers: "Oyuncular",
@@ -1335,9 +1598,9 @@
       logEmpty: "Henüz puan kaydedilmedi.<br>Canlı sekmesinden ilk puanı işleyebilirsin.",
       tagSet: "SET", tagGame: "OYUN",
       secondServe: "2. servis", rallyMeta: "🎾 {n} vuruşluk ralli",
-      sAce: "Ace", sDouble: "Çift hata", sWinners: "Vuruşla kazanılan (winner)", sForced: "Forced error", sUnforced: "Basit hata",
-      sFH: "Forehand (kazanılan/hata)", sBH: "Backhand (kazanılan/hata)", sBPWon: "Break point kazanılan", sBPFaced: "Break point yenilen",
-      s1st: "1. servis puan kazanma", s2nd: "2. servis puan kazanma",
+      sAce: "Ace", sDouble: "Çift hata", sWinners: "Winner", sForced: "Forced error", sUnforced: "Basit hata", sReturnErr: "Return hatası",
+      sFH: "Forehand (kazanılan/hata)", sBH: "Backhand (kazanılan/hata)", sBPChances: "Servis kırma şansı",
+      s1stIn: "İlk servis içeri düşme", s1st: "İlk servis puan kazanma", s2nd: "İkinci servis puan kazanma",
       momNotEnough: "Henüz yeterli puan yok — birkaç puan kaydedince grafik burada oluşur.",
       momSub: "Kümülatif fark — dokun ya da sürükle, her puanı incele",
       start: "Başlangıç", tipPoint: "Puan {i} · <b>{name}</b> kazandı<br>{g} ({s}) → Fark: {d}",
@@ -1357,12 +1620,38 @@
       secMoments: "Dönüm noktaları", nMoments: "{n} an",
       pdfReportBtn: "Maç raporunu PDF olarak kaydet", archiveBtn: "🗂 Maç arşivi",
       resetQ: "Mevcut kayıt silinsin mi?", resetYes: "Evet, yeni maç", newMatch: "Yeni maç başlat",
+      newShort: "＋ Yeni maç", newConfirmQ: "Yeni maça geçilsin mi?", newConfirmSub: "{a} – {b} maçı silinmez. Geçmiş maçlar'a kaydedilir; istediğin zaman açıp istatistiklerine bakabilirsin.",
+      newConfirmSubDone: "{a} – {b} maçı Geçmiş maçlar'da kayıtlı; istediğin zaman açıp istatistiklerine bakabilirsin.",
+      newConfirmSubEmpty: "{a} – {b} maçında henüz puan girilmedi, bu yüzden arşive kaydedilmeyecek.",
+      newConfirmKeep: "Devam et",
+      modeQ: "Takip modu", modeSimple: "Basit", modeSimpleSub: "Puan ve skor takibi.",
+      modeDetailed: "Coach", modeDetailedSub: "Detaylı istatistik.",
+      whoWonPoint: "Puanı kim aldı?", tookPoint: "puanı aldı",
+      lastPoint: "Son puan: <b>{name}</b> aldı", howOptional: "Nasıl bitti? İstersen işaretle, zorunlu değil.",
+      chipErr: "{name} hata yaptı", chipDf: "{name} çift hata", oError: "✕ Hata", sErrors: "Hata", newConfirmGo: "Yeni maça geç",
       stillPlaying: "Maç devam ediyor", reportTitle: "Courtside — Maç Raporu", statsTitle: "İstatistikler",
       reportFooter: "Courtside ile oluşturuldu",
       reportHint: "Yazdırma penceresi açılmadıysa, bu sekmeyi kendi tarayıcı menünden yazdırıp \"PDF olarak kaydet\"i seçebilirsin.",
       areYouSure: "Emin misin?",
       popupBlocked: "Yeni sekme engellendi — tarayıcı ayarlarından bu site için pop-up'lara izin verip tekrar dene.",
-      language: "Dil"
+      language: "Dil",
+      sPoints: "Toplam kazanılan puan",
+      coTitle: "Yer değişimi", coScore: "{a} {ga}–{gb} {b}", coTbScore: "Tie-break {ta}–{tb}",
+      coRest0: "Mola yok, oyun devam", coRest90: "90 saniye mola", coRest120: "Set arası · 120 saniye mola", coTb: "Tie-break'te her 6 puanda bir",
+      bkBreak: "BREAK!", bkLove: "SIFIRA BREAK!", bkBack: "BREAK BACK!", bkSet: "BREAK İLE SET!",
+      bkSub: "{name} servisi kırdı", bkSubBack: "{name} servisini geri aldı", bkSubSet: "{name} servisi kırıp seti aldı",
+      savedPlayers: "Kayıtlı oyuncular", savePlayer: "Oyuncuyu kaydet", editSaved: "Düzenle", doneEdit: "Bitti",
+      savedHint: "İsmin yanındaki ☆ ile oyuncuyu kaydet; bir dahaki maçta tek dokunuşla seç.",
+      goLive: "📡 Canlı yayınla", liveStarting: "Yayın başlatılıyor…", liveOn: "CANLI YAYINDA",
+      liveShare: "Linki paylaş", liveStop: "Bitir", liveOffline: "Bağlantı bekleniyor · puanlar bağlantı gelince gönderilir",
+      liveErr: "Yayın başlatılamadı. İnternet bağlantını kontrol edip tekrar dene.",
+      liveModalTitle: "Canlı yayın başladı 📡",
+      liveModalSub: "Bu linki açan herkes maçı uygulama indirmeden, puan puan canlı izleyebilir.",
+      liveShareText: "🎾 {a} – {b} maçını canlı izle:", liveCopied: "Link kopyalandı ✓",
+      watchingLive: "CANLI", liveEnded: "Maç bitti · yayın sona erdi", liveEndedShort: "Yayın sona erdi",
+      liveNotFound: "Yayın bulunamadı. Link hatalı olabilir ya da yayın silinmiş.",
+      liveConnecting: "Canlı maça bağlanılıyor…", liveReconnect: "Bağlantı koptu, yeniden bağlanılıyor…",
+      liveBy: "Courtside ile canlı", liveExit: "Kapat", liveStopped: "Yayın bitirildi"
     },
     en: {
       docTitle: "Courtside — Match Tracker",
@@ -1416,11 +1705,11 @@
       linkCopiedLong: "Link copied ✓ Paste it into WhatsApp or a message.",
       copyFail: "Couldn't copy — press and hold the link in the box to copy it.",
       shared: "Shared ✓", linkCopied: "Link copied ✓",
-      oAce: "⚡ Ace", oDouble: "✕ Double Fault", oWinner: "🎯 Winner", oForced: "↩ Forced Error", oUnforced: "✕ Unforced Error",
-      whoServesFirst: "Who serves first?", tossHint: "If the toss winner chose to serve, pick them.",
+      oAce: "⚡ Ace", oDouble: "✕ Double Fault", oWinner: "🎯 Winner", oForced: "↩ Forced Error", oUnforced: "✕ Unforced Error", oReturn: "✕ Return Error",
+      whoServesFirst: "Who serves first?",
       zqWinner: "Where did {name} hit the winner from?", zqForced: "Where did {name} make the forced error?",
       zqUnforced: "Where did {name} make the unforced error?", zqGeneric: "Where was the shot hit from?",
-      tapSpot: "Tap where the shot was hit", zoneSub: "{name}'s half of the court — tap where the shot was hit.",
+      tapSpot: "Tap where the shot was hit", zoneSub: "{name}'s half of the court — tap where the shot was hit to save.",
       saveNoZone: "Save without zone", save: "Save",
       backArchive: "← Archive", viewingArchived: "Viewing from archive · {date}",
       tabMatches: "Matches", tabPlayers: "Players",
@@ -1454,9 +1743,9 @@
       logEmpty: "No points logged yet.<br>Log the first point from the Live tab.",
       tagSet: "SET", tagGame: "GAME",
       secondServe: "2nd serve", rallyMeta: "🎾 {n}-shot rally",
-      sAce: "Aces", sDouble: "Double faults", sWinners: "Winners", sForced: "Forced errors", sUnforced: "Unforced errors",
-      sFH: "Forehand (winners/errors)", sBH: "Backhand (winners/errors)", sBPWon: "Break points won", sBPFaced: "Breaks conceded",
-      s1st: "1st serve points won", s2nd: "2nd serve points won",
+      sAce: "Aces", sDouble: "Double faults", sWinners: "Winners", sForced: "Forced errors", sUnforced: "Unforced errors", sReturnErr: "Return errors",
+      sFH: "Forehand (winners/errors)", sBH: "Backhand (winners/errors)", sBPChances: "Break point chances",
+      s1stIn: "1st serve in", s1st: "1st serve points won", s2nd: "2nd serve points won",
       momNotEnough: "Not enough points yet — the chart appears after a few points.",
       momSub: "Cumulative point difference — tap or drag to inspect each point",
       start: "Start", tipPoint: "Point {i} · won by <b>{name}</b><br>{g} ({s}) → Diff: {d}",
@@ -1476,12 +1765,38 @@
       secMoments: "Key moments", nMoments: "{n} moments",
       pdfReportBtn: "Save match report as PDF", archiveBtn: "🗂 Match archive",
       resetQ: "Delete the current match?", resetYes: "Yes, new match", newMatch: "Start new match",
+      newShort: "＋ New match", newConfirmQ: "Move on to a new match?", newConfirmSub: "The {a} vs {b} match won't be deleted. It's saved to Past matches, where you can open it and see its stats any time.",
+      newConfirmSubDone: "The {a} vs {b} match is saved in Past matches; you can open it and see its stats any time.",
+      newConfirmSubEmpty: "No points have been logged in {a} vs {b} yet, so it won't be saved to the archive.",
+      newConfirmKeep: "Keep playing",
+      modeQ: "Tracking mode", modeSimple: "Simple", modeSimpleSub: "Point and score tracking.",
+      modeDetailed: "Coach", modeDetailedSub: "Detailed statistics.",
+      whoWonPoint: "Who won the point?", tookPoint: "won the point",
+      lastPoint: "Last point: won by <b>{name}</b>", howOptional: "How did it end? Optional — tag it if you like.",
+      chipErr: "Error by {name}", chipDf: "Double fault by {name}", oError: "✕ Error", sErrors: "Errors", newConfirmGo: "New match",
       stillPlaying: "Match in progress", reportTitle: "Courtside — Match Report", statsTitle: "Statistics",
       reportFooter: "Created with Courtside",
       reportHint: "If the print dialog didn't open, print this tab from your browser menu and choose \"Save as PDF\".",
       areYouSure: "Are you sure?",
       popupBlocked: "New tab blocked — allow pop-ups for this site in your browser settings and try again.",
-      language: "Language"
+      language: "Language",
+      sPoints: "Total points won",
+      coTitle: "Change ends", coScore: "{a} {ga}–{gb} {b}", coTbScore: "Tie-break {ta}–{tb}",
+      coRest0: "No break — play on", coRest90: "90-second break", coRest120: "Set break · 120 seconds", coTb: "Tie-break: every 6 points",
+      bkBreak: "BREAK!", bkLove: "LOVE BREAK!", bkBack: "BREAK BACK!", bkSet: "BREAK FOR THE SET!",
+      bkSub: "{name} broke serve", bkSubBack: "{name} broke straight back", bkSubSet: "{name} broke to take the set",
+      savedPlayers: "Saved players", savePlayer: "Save player", editSaved: "Edit", doneEdit: "Done",
+      savedHint: "Tap ☆ next to a name to save the player and pick them with one tap next time.",
+      goLive: "📡 Go live", liveStarting: "Starting broadcast…", liveOn: "LIVE",
+      liveShare: "Share link", liveStop: "End", liveOffline: "Waiting for connection · points will be sent when back online",
+      liveErr: "Couldn't start the broadcast. Check your internet connection and try again.",
+      liveModalTitle: "You're live 📡",
+      liveModalSub: "Anyone with this link can follow the match point by point — no app needed.",
+      liveShareText: "🎾 Follow {a} vs {b} live:", liveCopied: "Link copied ✓",
+      watchingLive: "LIVE", liveEnded: "Match over · broadcast ended", liveEndedShort: "Broadcast ended",
+      liveNotFound: "Broadcast not found. The link may be wrong or the broadcast was deleted.",
+      liveConnecting: "Connecting to the live match…", liveReconnect: "Connection lost, reconnecting…",
+      liveBy: "Live with Courtside", liveExit: "Close", liveStopped: "Broadcast ended"
     }
   };
   function hasSavedData() {
@@ -1539,10 +1854,14 @@
   // ---------- Persistence ----------
   var STORAGE_KEY = "courtside-match-v1";
   var QUICKMODE_KEY = "courtside-quickmode-v1";
+  var MODE_KEY = "courtside-mode-v1";
+  function loadMode() { try { return localStorage.getItem(MODE_KEY) === "detailed" ? "detailed" : "simple"; } catch (e) { return "simple"; } }
+  function saveMode(v) { try { localStorage.setItem(MODE_KEY, v); } catch (e) {} }
   function saveState() {
     // Arşivden açılmış bir maça bakarken canlı kaydın üzerine yazma.
     if (viewingArchived) return;
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+    if (state && state.live && typeof scheduleLivePush === "function") scheduleLivePush();
   }
   function loadState() {
     try {
@@ -1592,6 +1911,33 @@
     var arr = loadArchive().filter(function (r) { return r.archiveId !== archiveId; });
     writeArchive(arr);
   }
+  // ---------- Kayıtlı oyuncular ----------
+  var PLAYERS_KEY = "courtside-players-v1";
+  function loadPlayers() {
+    try {
+      var arr = JSON.parse(localStorage.getItem(PLAYERS_KEY) || "[]");
+      return Array.isArray(arr) ? arr.filter(function (p) { return p && typeof p.name === "string" && p.name.trim(); }) : [];
+    } catch (e) { return []; }
+  }
+  function writePlayers(arr) { try { localStorage.setItem(PLAYERS_KEY, JSON.stringify(arr)); } catch (e) {} }
+  function findSavedPlayer(name) {
+    var k = String(name || "").trim().toLocaleLowerCase("tr");
+    if (!k) return -1;
+    var arr = loadPlayers();
+    for (var i = 0; i < arr.length; i++) if (arr[i].name.trim().toLocaleLowerCase("tr") === k) return i;
+    return -1;
+  }
+  function toggleSavedPlayer(name) {
+    name = String(name || "").trim().slice(0, 24);
+    if (!name) return false;
+    var arr = loadPlayers(), i = findSavedPlayer(name);
+    if (i >= 0) { arr.splice(i, 1); writePlayers(arr); return false; }
+    arr.push({ name: name, createdAt: Date.now() });
+    arr.sort(function (x, y) { return x.name.localeCompare(y.name, "tr"); });
+    writePlayers(arr);
+    return true;
+  }
+
   // Arşivdeki isimlerden benzersiz oyuncu listesi (kurulum ekranındaki otomatik tamamlama için)
   function archivePlayerNames() {
     var seen = {}, out = [];
@@ -1676,6 +2022,8 @@
     if (fmt.forceSingleSet) stp = 1;
     return {
       setup: true,
+      // Eski kayıtlarda alan yok: onlar detaylı sayılır.
+      mode: fmt.mode === "simple" ? "simple" : "detailed",
       names: names || { a: t("playerA"), b: t("playerB") },
       noAd: !!noAd,
       setsToPlay: stp,
@@ -1705,7 +2053,7 @@
   // setsToPlay=1 ayrıca belirtilmeli; yoksa freshMatch onu 3 sete çevirir.
   function formatOptsOf(m) {
     return { setGamesTarget: m.setGamesTarget, setWinByTwo: m.setWinByTwo,
-             tbTriggerAt: m.tbTriggerAt, forceSingleSet: m.setsToPlay === 1 };
+             tbTriggerAt: m.tbTriggerAt, forceSingleSet: m.setsToPlay === 1, mode: m.mode };
   }
   // Tie-break servis sırası: ilk puanı biri atar, sonra her iki puanda bir değişir
   // (A, B B, A A, B B …). playedPoints = şimdiye kadar oynanan tie-break puanı.
@@ -1714,7 +2062,7 @@
   }
   function blankStats() {
     return { aces: 0, doubleFaults: 0, winners: 0, forcedErrors: 0, unforcedErrors: 0,
-              pointsWon: 0, breakPointsWon: 0, breakPointsFaced: 0,
+              pointsWon: 0, breakPointsWon: 0, breakPointsFaced: 0, returnErrors: 0, errors: 0,
               fhWinners: 0, bhWinners: 0, fhErrors: 0, bhErrors: 0 };
   }
 
@@ -1773,6 +2121,12 @@
       ls.forcedErrors++;
       if (shotType === "forehand") ls.fhErrors++;
       else if (shotType === "backhand") ls.bhErrors++;
+    } else if (outcome === "error") {
+      // Basit mod: türü belirtilmemiş hata.
+      ls.errors = (ls.errors || 0) + 1;
+    } else if (outcome === "return_error") {
+      // Return hatası ayrı tutulur; basit/forced hata sayılarına karışmaz.
+      ls.returnErrors = (ls.returnErrors || 0) + 1;
     } else if (outcome === "unforced_error") {
       ls.unforcedErrors++;
       if (shotType === "forehand") ls.fhErrors++;
@@ -1885,16 +2239,40 @@
     var setsToPlay = state.setsToPlay;
     var finalSetSuperTB = state.finalSetSuperTB;
     var startedAt = state.startedAt;
+    var live = state.live; // canlı yayın geri almadan sonra da sürsün
     // Maça ilk servisi atan: log'un en eski kaydı.
     var firstServer = state.log[state.log.length - 1].server || "a";
     state = freshMatch(names, noAd, setsToPlay, finalSetSuperTB, formatOptsOf(state));
     state.setup = false;
     state.startedAt = startedAt;
     state.server = firstServer;
+    if (live) state.live = live;
     entries.forEach(function (e) {
       logPoint(state, e.pointWinner, e.outcome, e.hr, e.rally, e.secondServe, e.shotType, e.t, e.loc);
     });
     render();
+  }
+
+  // Basit mod: son puanın nasıl bittiğini sonradan işaretler. Skor değişmez,
+  // istatistikler tutarlı kalsın diye maç kayıttan yeniden kurulur.
+  function setLastOutcome(outcome) {
+    if (!state.log.length) return;
+    var last = state.log[0];
+    last.outcome = outcome;
+    last.secondServe = outcome === "double_fault";
+    var entries = state.log.slice().reverse();
+    var keep = { startedAt: state.startedAt, archiveId: state.archiveId };
+    var firstServer = entries[0].server || "a";
+    state = freshMatch(state.names, state.noAd, state.setsToPlay, state.finalSetSuperTB, formatOptsOf(state));
+    state.setup = false;
+    state.startedAt = keep.startedAt;
+    if (keep.archiveId) state.archiveId = keep.archiveId;
+    state.server = firstServer;
+    entries.forEach(function (e) {
+      logPoint(state, e.pointWinner, e.outcome, e.hr, e.rally, e.secondServe, e.shotType, e.t, e.loc);
+    });
+    // id'ler korunur ki aynı puan olarak kalsın
+    for (var i = 0; i < entries.length; i++) state.log[entries.length - 1 - i].id = entries[i].id;
   }
 
   // Log'u baştan oynatarak her puandan ÖNCEKİ maç durumunu üretir.
@@ -2438,6 +2816,12 @@
     function resetLabel() {
       setTimeout(function () { btn.textContent = t("csvBtn"); }, 2200);
     }
+    if (IS_NATIVE) {
+      nativeShareFile(csvFileName(state), "\ufeff" + buildCSV(state), csvFileName(state)).then(function () {
+        btn.textContent = t("csvSaved"); resetLabel();
+      }, function () {});
+      return;
+    }
     if (!downloadsCap) { openCSVFallbackTab(btn); return; }
     // Excel'in UTF-8'i doğru okuması için BOM ekle (Türkçe karakterler).
     downloadsCap.save({ filename: csvFileName(state), data: "﻿" + buildCSV(state) })
@@ -2458,7 +2842,7 @@
   // Her puanın saati de taşınır: ileride sağlık verisi (nabız) bu saatlerle eşleşecek.
   var SHARE_PREFIX = "m=";
   var FILE_EXT = ".courtside";
-  var OUTCOMES_ALL = ["ace", "double_fault", "winner", "forced_error", "unforced_error"];
+  var OUTCOMES_ALL = ["ace", "double_fault", "winner", "forced_error", "unforced_error", "return_error", "error"];
   var SHOTS_ALL = ["forehand", "backhand"];
 
   // Paylaşım biçimi (v1), kısa tutmak için dizi tabanlı:
@@ -2470,7 +2854,7 @@
     return {
       v: 1,
       n: [m.names.a, m.names.b],
-      f: [m.noAd ? 1 : 0, m.setsToPlay, m.finalSetSuperTB ? 1 : 0, m.setGamesTarget, m.setWinByTwo ? 1 : 0, m.tbTriggerAt],
+      f: [m.noAd ? 1 : 0, m.setsToPlay, m.finalSetSuperTB ? 1 : 0, m.setGamesTarget, m.setWinByTwo ? 1 : 0, m.tbTriggerAt, m.mode === "simple" ? 1 : 0],
       t0: t0,
       fs: chrono.length ? chrono[0].server : m.server,
       p: chrono.map(function (e) {
@@ -2500,16 +2884,17 @@
   }
   function clamp01(n) { n = Number(n); return isFinite(n) ? Math.max(0, Math.min(1, n)) : 0.5; }
 
-  function unpackMatch(o) {
+  // allowEmpty: canlı yayın henüz puan girilmeden başlayabilir.
+  function unpackMatch(o, allowEmpty) {
     if (!o || o.v !== 1 || !Array.isArray(o.p) || !Array.isArray(o.n) || !Array.isArray(o.f)) throw new Error("bad");
-    if (!o.p.length || o.p.length > 3000) throw new Error("bad");
+    if ((!o.p.length && !allowEmpty) || o.p.length > 3000) throw new Error("bad");
     var f = o.f;
     var stp = Number(f[1]), gt = Number(f[3]), tbt = Number(f[5]);
     if ([1, 3, 5].indexOf(stp) === -1 || !(gt >= 1 && gt <= 12) || !(tbt >= 1 && tbt <= 12)) throw new Error("bad");
     var m = freshMatch(
       { a: cleanName(o.n[0], t("playerA")), b: cleanName(o.n[1], t("playerB")) },
       !!f[0], stp, !!f[2],
-      { setGamesTarget: gt, setWinByTwo: !!f[4], tbTriggerAt: tbt, forceSingleSet: stp === 1 }
+      { setGamesTarget: gt, setWinByTwo: !!f[4], tbTriggerAt: tbt, forceSingleSet: stp === 1, mode: f[6] === 1 ? "simple" : "detailed" }
     );
     m.setup = false;
     var t0 = Number(o.t0);
@@ -2537,7 +2922,7 @@
         t0 + off * 1000,
         loc);
     });
-    if (!m.log.length) throw new Error("bad");
+    if (!m.log.length && !allowEmpty) throw new Error("bad");
     m.imported = true;
     return m;
   }
@@ -2573,7 +2958,7 @@
     return pipeBytes(raw, new CompressionStream("deflate-raw"))
       .then(function (z) { return "z" + b64urlFromBytes(z); }, function () { return plain; });
   }
-  function decodeMatch(code) {
+  function decodeMatch(code, allowEmpty) {
     return Promise.resolve().then(function () {
       code = String(code || "").replace(/\s+/g, "");
       var kind = code.charAt(0);
@@ -2585,7 +2970,7 @@
       }
       throw new Error("bad");
     }).then(function (bytes) {
-      return unpackMatch(JSON.parse(new TextDecoder().decode(bytes)));
+      return unpackMatch(JSON.parse(new TextDecoder().decode(bytes)), allowEmpty);
     });
   }
 
@@ -2614,12 +2999,13 @@
     return t("errBadLink");
   }
 
-  function shareBaseUrl() { return location.href.split("#")[0]; }
+  function shareBaseUrl() { return IS_NATIVE ? WEB_APP_URL : location.href.split("#")[0]; }
   function inPreviewFrame() {
     try { return window.self !== window.top; } catch (e) { return true; }
   }
   // iPhone'da ana ekrana eklenen uygulama Safari'den ayrı bir hafıza kullanır.
   function isIOSBrowserNotApp() {
+    if (IS_NATIVE) return false;
     var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
       (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     var standalone = navigator.standalone === true ||
@@ -2696,6 +3082,16 @@
     var m = state;
     var text = buildMatchFileText(m);
     var name = matchFileName(m);
+    // 0) iOS uygulaması: dosyayı yazıp paylaşım menüsünü aç
+    if (IS_NATIVE) {
+      nativeShareFile(name, text, shareTitle(m)).then(function () {
+        setShareStatus(t("fileShared"));
+      }, function (err) {
+        if (isShareCancel(err)) return;
+        setShareStatus(t("fileSaveFail"), true);
+      });
+      return;
+    }
     // 1) Artifact önizlemesindeki indirme yeteneği
     if (downloadsCap) {
       downloadsCap.save({ filename: name, data: text }).then(function () {
@@ -2786,6 +3182,247 @@
     render();
   }
 
+
+  // ---------- Canlı yayın (Firebase Realtime Database, REST) ----------
+  // SDK yerine düz REST + Server-Sent Events: ek paket yok, uygulama çevrimdışı açılmaya devam eder.
+  // Yayıncı anonim oturumla yazar; izleyiciler yalnızca okur (kurallar veritabanında).
+  var FB = window.__CS_FB || {
+    apiKey: "AIzaSyCMSpN9EKOQxbkpdsodfLDAslNg9NNW-X8",
+    db: "https://courtside-62f8e-default-rtdb.europe-west1.firebasedatabase.app",
+    authBase: "https://identitytoolkit.googleapis.com",
+    tokenBase: "https://securetoken.googleapis.com"
+  };
+  var LIVE_PREFIX = "canli=";
+  var AUTH_KEY = "courtside-auth-v1";
+  var liveStatus = null;       // null | "starting" | "ok" | "offline" | "error"
+  var liveModalOpen = false;
+  var livePushTimer = null, liveRetryTimer = null, livePushing = false, livePushAgain = false;
+
+  function liveUrl(code) { return shareBaseUrl() + "#" + LIVE_PREFIX + code; }
+  function newLiveCode() {
+    var abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", out = "";
+    var r = new Uint8Array(10);
+    try { crypto.getRandomValues(r); } catch (e) { for (var j = 0; j < 10; j++) r[j] = Math.floor(Math.random() * 256); }
+    for (var i = 0; i < 10; i++) out += abc.charAt(r[i] % abc.length);
+    return out;
+  }
+  function loadAuth() { try { return JSON.parse(localStorage.getItem(AUTH_KEY) || "null"); } catch (e) { return null; } }
+  function saveAuth(a) { try { localStorage.setItem(AUTH_KEY, JSON.stringify(a)); } catch (e) {} }
+  // Geçerli bir kimlik belirteci döndürür: gerekirse yeniler, hiç yoksa anonim hesap açar.
+  function getIdToken() {
+    var a = loadAuth();
+    if (a && a.idToken && a.exp - Date.now() > 5 * 60 * 1000) return Promise.resolve(a);
+    if (a && a.refreshToken) {
+      return fetch(FB.tokenBase + "/v1/token?key=" + FB.apiKey, {
+        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(a.refreshToken)
+      }).then(function (r) { if (!r.ok) throw new Error("refresh"); return r.json(); })
+        .then(function (j) {
+          var na = { uid: j.user_id, idToken: j.id_token, refreshToken: j.refresh_token, exp: Date.now() + Number(j.expires_in || 3600) * 1000 };
+          saveAuth(na); return na;
+        });
+    }
+    return fetch(FB.authBase + "/v1/accounts:signUp?key=" + FB.apiKey, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ returnSecureToken: true })
+    }).then(function (r) { if (!r.ok) throw new Error("signup"); return r.json(); })
+      .then(function (j) {
+        var na = { uid: j.localId, idToken: j.idToken, refreshToken: j.refreshToken, exp: Date.now() + Number(j.expiresIn || 3600) * 1000 };
+        saveAuth(na); return na;
+      });
+  }
+  function putLive(code, match, ended) {
+    return Promise.all([encodeMatch(match), getIdToken()]).then(function (res) {
+      var body = { owner: res[1].uid, c: res[0], t: { ".sv": "timestamp" }, ended: !!ended };
+      return fetch(FB.db + "/live/" + code + ".json?auth=" + encodeURIComponent(res[1].idToken), {
+        method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+      }).then(function (r) { if (!r.ok) throw new Error("put " + r.status); });
+    });
+  }
+  function scheduleLivePush() {
+    if (!state.live || viewingArchived) return;
+    clearTimeout(livePushTimer);
+    livePushTimer = setTimeout(pushLiveNow, 250);
+  }
+  function setLiveStatus(st) {
+    if (liveStatus === st) return;
+    liveStatus = st;
+    var row = document.getElementById("liveRow");
+    if (row) render();
+  }
+  function pushLiveNow() {
+    if (!state.live || viewingArchived) return;
+    if (livePushing) { livePushAgain = true; return; }
+    livePushing = true; clearTimeout(liveRetryTimer);
+    var code = state.live.code;
+    putLive(code, state, state.matchOver || state.live.ended).then(function () {
+      livePushing = false; setLiveStatus("ok");
+      if (livePushAgain) { livePushAgain = false; pushLiveNow(); }
+    }, function () {
+      livePushing = false; setLiveStatus("offline");
+      liveRetryTimer = setTimeout(pushLiveNow, 8000);
+    });
+  }
+  function startLive() {
+    if (state.live || liveStatus === "starting") return;
+    liveStatus = "starting"; render();
+    var code = newLiveCode();
+    putLive(code, state, false).then(function () {
+      state.live = { code: code, startedAt: Date.now() };
+      liveStatus = "ok"; liveModalOpen = true;
+      saveState(); render();
+    }, function () {
+      liveStatus = "error"; render();
+    });
+  }
+  function stopLive() {
+    if (!state.live) return;
+    var code = state.live.code, snap = JSON.parse(JSON.stringify(state));
+    putLive(code, snap, true).catch(function () {});
+    delete state.live; liveStatus = null; liveModalOpen = false;
+    saveState(); render();
+  }
+  function liveShareText(m) { return t("liveShareText", { a: m.names.a, b: m.names.b }); }
+  function shareLiveLink() {
+    if (!state.live) return;
+    var url = liveUrl(state.live.code), text = liveShareText(state);
+    var sh = nativePlugin("Share");
+    var p = sh ? sh.share({ title: shareTitle(state), text: text, url: url, dialogTitle: shareTitle(state) })
+      : (navigator.share && !inPreviewFrame() ? navigator.share({ title: shareTitle(state), text: text, url: url }) : null);
+    if (p) { p.catch(function () {}); return; }
+    copyText(url, document.getElementById("liveLinkInput")).then(function () {
+      var st = document.getElementById("liveStatusMsg"); if (st) st.textContent = t("liveCopied");
+    }, function () {});
+  }
+  function renderLiveRow(m) {
+    if (viewingArchived) return "";
+    if (!state.live) {
+      var busy = liveStatus === "starting";
+      return '<div class="live-row" id="liveRow">' +
+        '<button class="live-go" id="liveGo" type="button"' + (busy ? " disabled" : "") + '>' + (busy ? t("liveStarting") : t("goLive")) + '</button>' +
+        (liveStatus === "error" ? '<div class="live-note">' + escapeHtml(t("liveErr")) + '</div>' : '') +
+      '</div>';
+    }
+    return '<div class="live-row" id="liveRow">' +
+      '<span class="live-pill' + (liveStatus === "offline" ? " off" : "") + '"><span class="dot"></span>' + t("liveOn") + '</span>' +
+      '<button class="live-act" id="liveShareBtn" type="button">' + t("liveShare") + '</button>' +
+      '<button class="live-act stop" id="liveStopBtn" type="button">' + t("liveStop") + '</button>' +
+      (liveStatus === "offline" ? '<div class="live-note">' + escapeHtml(t("liveOffline")) + '</div>' : '') +
+    '</div>';
+  }
+  function renderLiveModal() {
+    if (!liveModalOpen || !state.live) return "";
+    var url = liveUrl(state.live.code);
+    var canNative = IS_NATIVE || (!!navigator.share && !inPreviewFrame());
+    return '<div class="zone-modal" id="liveModal"><div class="zone-card">' +
+      '<div class="zone-title">' + t("liveModalTitle") + '</div>' +
+      '<div class="zone-sub">' + escapeHtml(t("liveModalSub")) + '</div>' +
+      '<input class="share-link" id="liveLinkInput" type="text" readonly value="' + escapeAttr(url) + '">' +
+      '<div class="zone-actions">' +
+        '<button id="liveCopyBtn" type="button"' + (canNative ? '' : ' class="primary"') + '>' + t("copyLink") + '</button>' +
+        (canNative ? '<button id="liveNativeBtn" class="primary" type="button">' + t("shareNative") + '</button>' : '') +
+      '</div>' +
+      '<div class="share-status" id="liveStatusMsg"></div>' +
+      '<button class="share-close" id="liveModalClose" type="button">' + t("close") + '</button>' +
+    '</div></div>';
+  }
+  function bindLiveEvents() {
+    var el;
+    if ((el = document.getElementById("liveGo"))) el.onclick = function () { startLive(); };
+    if ((el = document.getElementById("liveShareBtn"))) el.onclick = function () { liveModalOpen = true; render(); };
+    if ((el = document.getElementById("liveStopBtn"))) el.onclick = function () { stopLive(); };
+    if ((el = document.getElementById("liveModalClose"))) el.onclick = function () { liveModalOpen = false; render(); };
+    if ((el = document.getElementById("liveModal"))) el.onclick = function (ev) { if (ev.target === this) { liveModalOpen = false; render(); } };
+    if ((el = document.getElementById("liveNativeBtn"))) el.onclick = function () { shareLiveLink(); };
+    if ((el = document.getElementById("liveCopyBtn"))) el.onclick = function () {
+      copyText(liveUrl(state.live.code), document.getElementById("liveLinkInput")).then(function () {
+        var st = document.getElementById("liveStatusMsg"); if (st) st.textContent = t("liveCopied");
+      }, function () {});
+    };
+    if ((el = document.getElementById("liveExit"))) el.onclick = function () {
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+      location.reload();
+    };
+  }
+
+  // --- İzleyici ---
+  var liveView = null;   // { code, status: "connecting"|"live"|"ended"|"notfound"|"reconnecting", hasData, raw }
+  var liveES = null;
+  function extractLiveCode(hash) {
+    var h = String(hash || ""), i = h.indexOf(LIVE_PREFIX);
+    if (i < 0) return null;
+    var c = h.slice(i + LIVE_PREFIX.length).split(/[&#\s]/)[0].toUpperCase();
+    return /^[A-Z0-9]{6,16}$/.test(c) ? c : null;
+  }
+  function applyLiveData(obj) {
+    if (!obj || !obj.c) { liveView.status = liveView.hasData ? "ended" : "notfound"; render(); return; }
+    var raw = obj.c, ended = !!obj.ended;
+    if (raw === liveView.raw) {
+      if (ended && liveView.status !== "ended") { liveView.status = "ended"; render(); }
+      return;
+    }
+    decodeMatch(raw, true).then(function (m) {
+      var prevLen = liveView.hasData ? state.log.length : -1;
+      liveView.raw = raw;
+      liveView.status = ended ? "ended" : "live";
+      state = m; state.setup = false; state.archiveId = m.startedAt;
+      viewingArchived = true;
+      if (!liveView.hasData) { liveView.hasData = true; activeTab = "log"; }
+      // Bağlantı yavaşsa birkaç puan birlikte gelebilir: son puana göre bildirim göster.
+      if (prevLen >= 0 && state.log.length > prevLen && state.log.length - prevLen <= 6) markJustLogged();
+      else if (prevLen >= 0 && state.log.length < prevLen) clearOverlays();
+      render();
+    }, function () {});
+  }
+  function startLiveViewer(code) {
+    liveView = { code: code, status: "connecting", hasData: false, raw: null, data: null };
+    viewingArchived = true;
+    connectLiveStream();
+  }
+  function connectLiveStream() {
+    if (typeof EventSource !== "function") { liveView.status = "notfound"; render(); return; }
+    try { if (liveES) liveES.close(); } catch (e) {}
+    var es = new EventSource(FB.db + "/live/" + liveView.code + ".json");
+    liveES = es;
+    function onEvt(kind) {
+      return function (ev) {
+        var msg; try { msg = JSON.parse(ev.data); } catch (e) { return; }
+        if (!msg) return;
+        var path = msg.path || "/", data = msg.data;
+        if (path === "/") {
+          liveView.data = kind === "patch" && liveView.data ? Object.assign({}, liveView.data, data || {}) : data;
+        } else {
+          var key = path.replace(/^\//, "").split("/")[0];
+          liveView.data = Object.assign({}, liveView.data || {});
+          if (data === null) delete liveView.data[key]; else liveView.data[key] = data;
+        }
+        applyLiveData(liveView.data);
+      };
+    }
+    es.addEventListener("put", onEvt("put"));
+    es.addEventListener("patch", onEvt("patch"));
+    es.addEventListener("cancel", function () { liveView.status = liveView.hasData ? "ended" : "notfound"; render(); });
+    es.onerror = function () {
+      if (liveView.status === "ended" || liveView.status === "notfound") return;
+      if (liveView.hasData) { liveView.status = "reconnecting"; render(); }
+    };
+    es.onopen = function () { if (liveView.status === "reconnecting") { liveView.status = "live"; render(); } };
+  }
+  function renderLiveViewerBar(m) {
+    var st = liveView.status;
+    var pill = st === "ended"
+      ? '<span class="live-pill off"><span class="dot"></span>' + escapeHtml(t("liveEndedShort")) + '</span>'
+      : '<span class="live-pill' + (st === "reconnecting" ? " off" : "") + '"><span class="dot"></span>' + t("watchingLive") + '</span>';
+    var msg = st === "reconnecting" ? t("liveReconnect") : (st === "ended" ? t("liveEnded") : t("liveBy"));
+    return '<div class="archived-bar live-bar">' + pill + '<span class="live-status">' + escapeHtml(msg) + '</span></div>';
+  }
+  function renderLiveWaiting() {
+    var nf = liveView.status === "notfound";
+    return '<div class="live-wait">' + ballSVG("ball") +
+      '<div>' + escapeHtml(nf ? t("liveNotFound") : t("liveConnecting")) + '</div>' +
+      (nf ? '<button class="live-go" id="liveExit" type="button">' + t("liveExit") + '</button>' : '') +
+    '</div>';
+  }
+
   // Açılışta link bir maç taşıyorsa onay penceresi göster.
   function checkLaunchLink() {
     var code = extractShareCode(location.hash);
@@ -2804,7 +3441,7 @@
 
   function renderShareModal() {
     var m = state;
-    var canNative = !!navigator.share && !inPreviewFrame();
+    var canNative = IS_NATIVE || (!!navigator.share && !inPreviewFrame());
     var body;
     if (shareError) {
       body = '<div class="share-status err">' + escapeHtml(shareError) + '</div>';
@@ -2912,6 +3549,8 @@
         na = document.getElementById("nameA"); nb = document.getElementById("nameB");
         if (na && keepA !== null) na.value = keepA;
         if (nb && keepB !== null) nb.value = keepB;
+        if (na) na.dispatchEvent(new Event("input"));
+        if (nb) nb.dispatchEvent(new Event("input"));
       };
     }
   }
@@ -2944,10 +3583,14 @@
     }
     if ((el = document.getElementById("shareNative"))) {
       el.onclick = function () {
-        navigator.share({ title: shareTitle(state), text: shareText(state), url: shareLink }).then(function () {
+        var sh = nativePlugin("Share");
+        var p = sh
+          ? sh.share({ title: shareTitle(state), text: shareText(state), url: shareLink, dialogTitle: shareTitle(state) })
+          : navigator.share({ title: shareTitle(state), text: shareText(state), url: shareLink });
+        p.then(function () {
           setShareStatus(t("shared"));
         }, function (err) {
-          if (err && err.name === "AbortError") return;
+          if (isShareCancel(err)) return;
           copyText(shareLink).then(function () { setShareStatus(t("linkCopied")); }, function () {});
         });
       };
@@ -2994,14 +3637,16 @@
   var pendingShotType = null;
   var lastMomentumPoints = null;
   var pulseFlag = null; // "point" | "game" | "set" | "match" — consumed once by the next renderHeader
+  var newMatchConfirm = false;     // üst çubuktaki "Yeni maç" onay penceresi açık mı
   var resetConfirmPending = false; // native confirm() doesn't work inside the artifact sandbox, so we use an inline confirm row instead
-  var quickMode = loadQuickMode(); // "Hızlı mod" — kim kazandı dışında detay istemeden puanı hemen kaydet
+  var quickMode = loadQuickMode(); // "Hızlı mod" — forehand/backhand ve bölge sorulmadan kaydet
   var archiveOpen = false;      // arşiv ekranı açık mı
   var archiveTab = "matches";   // "matches" | "players"
   var viewingArchived = false;  // arşivden açılmış bir maça bakılıyor mu
   var stashedState = null;      // arşive girilirken canlı maç burada bekletilir
   var statsSetFilter = "all";   // İstatistik sekmesi: "all" veya set numarası
   var zonePrompt = null;        // bölge sorulurken bekleyen puan: {winner, outcome, rally, secondServe, shotType}
+  var zoneSaving = false;       // bölgeye dokunuldu, kısa gecikmeyle kaydediliyor
   var zonePick = null;          // kort üzerinde seçilen nokta: {zone, side, x, y}
   var shotMapFilter = "all";    // vuruş haritası sonuç filtresi: "all" | "win" | "err"
   var shotMapPlayer = "all";    // vuruş haritası oyuncu filtresi: "all" | "a" | "b"
@@ -3019,16 +3664,162 @@
     else if (last.setWonBy) { pulseFlag = "set"; vibrate([20, 50, 40]); }
     else if (last.gameWonBy) { pulseFlag = "game"; vibrate(30); }
     else { pulseFlag = "point"; vibrate(12); }
+    // Önce kutlama, sonra yer değişimi: ikisi aynı oyunda olabilir.
+    var bk = detectBreak(state);
+    if (bk) queueOverlay(function (done) { showBreakCelebration(bk, done); });
+    var co = detectChangeover(state);
+    if (co) queueOverlay(function (done) { showChangeover(co, done); });
   }
 
-  var OUTCOME_KEY = { ace: "oAce", double_fault: "oDouble", winner: "oWinner", forced_error: "oForced", unforced_error: "oUnforced" };
+  // ---------- Maç içi bildirimler ----------
+  // Aynı anda tek bildirim; sıradakiler bekler. Bildirimler #app dışında durur,
+  // böylece her puanda yeniden çizilen ekran onları silmez.
+  var overlayQueue = [], overlayBusy = false;
+  function queueOverlay(fn) {
+    overlayQueue.push(fn);
+    if (!overlayBusy) nextOverlay();
+  }
+  function nextOverlay() {
+    var fn = overlayQueue.shift();
+    if (!fn) { overlayBusy = false; return; }
+    overlayBusy = true;
+    var finished = false;
+    fn(function () { if (finished) return; finished = true; setTimeout(nextOverlay, 120); });
+  }
+  function clearOverlays() {
+    overlayQueue = [];
+    var old = document.querySelectorAll(".co-layer, .bk-layer");
+    for (var i = 0; i < old.length; i++) old[i].parentNode.removeChild(old[i]);
+    overlayBusy = false;
+  }
+  function reducedMotion() {
+    try { return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; }
+  }
+
+  // Teniste yer değişimi: setteki toplam oyun tek sayı olunca (1, 3, 5…), set sonunda
+  // toplam oyun tek ise, tie-break'te her 6 puanda bir. Mola: setin ilk oyunundan sonra
+  // ve tie-break'te yok, diğerlerinde 90 sn, set arasında 120 sn.
+  function detectChangeover(m) {
+    var e = m.log[0];
+    if (!e || m.matchOver) return null;
+    if (e.setWonBy) {
+      var st = m.sets[m.sets.length - 1];
+      if (!st || st.superTB) return null;
+      return (st.a + st.b) % 2 === 1 ? { rest: "set", ga: st.a, gb: st.b } : null;
+    }
+    if (e.gameWonBy) {
+      var tot = m.games.a + m.games.b;
+      return tot % 2 === 1 ? { rest: tot === 1 ? "none" : "90", ga: m.games.a, gb: m.games.b } : null;
+    }
+    if (m.tiebreak) {
+      var tt = m.tb.a + m.tb.b;
+      return (tt > 0 && tt % 6 === 0) ? { rest: "tb", ta: m.tb.a, tb: m.tb.b } : null;
+    }
+    return null;
+  }
+
+  // Servis kırıldı mı; kırıldıysa ne tür: sıfıra, geri alma, set getiren.
+  function detectBreak(m) {
+    var e = m.log[0];
+    if (!e || !e.breakPoint || !e.gameWonBy || m.matchOver) return null;
+    var breaker = e.pointWinner, lost = 0, i = 1;
+    while (i < m.log.length && !m.log[i].gameWonBy) { if (m.log[i].pointWinner !== breaker) lost++; i++; }
+    var prev = i < m.log.length ? m.log[i] : null;
+    var back = !!(prev && prev.breakPoint && prev.gameWonBy === prev.pointWinner &&
+      prev.pointWinner === otherKey(breaker) && prev.setIndex === e.setIndex);
+    var sc = e.setWonBy ? m.sets[m.sets.length - 1] : m.games;
+    var kind = e.setWonBy ? "set" : (back ? "back" : (lost === 0 ? "love" : "break"));
+    return { kind: kind, breaker: breaker, ga: sc.a, gb: sc.b };
+  }
+
+  function showChangeover(co, done) {
+    var m = state;
+    var layer = document.createElement("div");
+    layer.className = "co-layer";
+    var scoreTxt = co.rest === "tb"
+      ? t("coTbScore", { ta: co.ta, tb: co.tb })
+      : t("coScore", { a: shortName(m, "a"), b: shortName(m, "b"), ga: co.ga, gb: co.gb });
+    var restTxt = t({ none: "coRest0", "90": "coRest90", set: "coRest120", tb: "coTb" }[co.rest]);
+    layer.innerHTML =
+      '<div class="co-card" role="status">' +
+        '<div class="co-body">' +
+          '<div class="co-ico" aria-hidden="true"><i class="r"></i><i class="l"></i></div>' +
+          '<div><div class="co-title">' + escapeHtml(t("coTitle")) + '</div>' +
+          '<div class="co-score">' + escapeHtml(scoreTxt) + '</div>' +
+          '<div class="co-rest">' + escapeHtml(restTxt) + '</div></div>' +
+        '</div>' +
+        '<div class="co-bar"></div>' +
+      '</div>';
+    document.body.appendChild(layer);
+    var card = layer.firstChild, closed = false;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { card.classList.add("in"); }); });
+    function close() {
+      if (closed) return; closed = true;
+      card.classList.remove("in"); card.classList.add("out");
+      setTimeout(function () { if (layer.parentNode) layer.parentNode.removeChild(layer); done(); }, 420);
+    }
+    card.addEventListener("click", close);
+    setTimeout(close, 8000);
+  }
+
+  function ballSVG(cls) {
+    return '<svg class="' + cls + '" viewBox="0 0 512 512" aria-hidden="true">' +
+      '<defs><clipPath id="' + cls + 'Clip"><circle cx="256" cy="256" r="172"/></clipPath></defs>' +
+      '<circle cx="256" cy="256" r="188.5" fill="none" stroke="#C79A54" stroke-width="10"/>' +
+      '<circle cx="256" cy="256" r="172" fill="#CFE21B"/>' +
+      '<g clip-path="url(#' + cls + 'Clip)" fill="none" stroke="#F7FBDC" stroke-width="18">' +
+        '<circle cx="43.4" cy="256" r="151.6"/><circle cx="468.6" cy="256" r="151.6"/></g></svg>';
+  }
+
+  function showBreakCelebration(bk, done) {
+    var m = state;
+    var name = shortName(m, bk.breaker);
+    var title = t({ break: "bkBreak", love: "bkLove", back: "bkBack", set: "bkSet" }[bk.kind]);
+    var sub = t(bk.kind === "back" ? "bkSubBack" : (bk.kind === "set" ? "bkSubSet" : "bkSub"), { name: name });
+    var conf = "";
+    if (!reducedMotion()) {
+      var colors = ["#CFE21B", "#C79A54", "#F4F1E8", "#6FA37F", "#4A7399"];
+      for (var i = 0; i < 34; i++) {
+        var ang = (i / 34) * Math.PI * 2 + Math.random() * 0.4;
+        var dist = 120 + Math.random() * 170;
+        conf += '<span class="bk-conf" style="background:' + colors[i % colors.length] +
+          ';--dx:' + Math.round(Math.cos(ang) * dist) + 'px;--dy:' + Math.round(Math.sin(ang) * dist + 60) +
+          'px;--rot:' + Math.round(Math.random() * 720 - 360) + 'deg"></span>';
+      }
+    }
+    var layer = document.createElement("div");
+    layer.className = "bk-layer";
+    layer.setAttribute("role", "status");
+    layer.innerHTML =
+      '<div class="bk-card">' + conf +
+        ballSVG("bk-ball") +
+        '<div class="bk-title' + (title.length > 9 ? " long" : "") + '">' + escapeHtml(title) + '</div>' +
+        '<div class="bk-sub">' + escapeHtml(sub) + '</div>' +
+        '<div class="bk-score">' + escapeHtml(shortName(m, "a") + " " + bk.ga + "–" + bk.gb + " " + shortName(m, "b")) + '</div>' +
+      '</div>';
+    document.body.appendChild(layer);
+    vibrate([30, 40, 30, 40, 90]);
+    var closed = false;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { layer.classList.add("in"); }); });
+    function close() {
+      if (closed) return; closed = true;
+      layer.classList.remove("in"); layer.classList.add("out");
+      setTimeout(function () { if (layer.parentNode) layer.parentNode.removeChild(layer); done(); }, 360);
+    }
+    layer.addEventListener("click", close);
+    setTimeout(close, 2800);
+  }
+
+  var OUTCOME_KEY = { ace: "oAce", double_fault: "oDouble", winner: "oWinner", forced_error: "oForced", unforced_error: "oUnforced", return_error: "oReturn", error: "oError" };
   function outcomeLabel(o) { return OUTCOME_KEY[o] ? t(OUTCOME_KEY[o]) : ""; }
   var OUTCOME_POLARITY = {
     ace: "pos",
     winner: "pos",
     double_fault: "neg",
     forced_error: "neg",
-    unforced_error: "neg"
+    unforced_error: "neg",
+    return_error: "neg",
+    error: "neg"
   };
   var SHOT_TYPE_OUTCOMES = ["winner", "forced_error", "unforced_error"];
   // Bölge yalnızca oyuncunun yer seçtiği vuruşlarda anlamlı.
@@ -3041,6 +3832,8 @@
     var rallyExcludes = (rally || 0) >= 2;
     var opts = [];
     if (!rallyExcludes) opts.push("ace");
+    // Sayaç servisle başlar: servis = 1, return = 2. Üçüncü vuruş olduysa return geçmiştir.
+    if ((rally || 0) <= 2) opts.push("return_error");
     opts.push("winner");
     opts.push("forced_error");
     opts.push("unforced_error");
@@ -3055,7 +3848,11 @@
   }
   // Ace ve çift hatayı her zaman servis atan yapar; "kim yaptı" sorulmaz.
   var SERVER_ONLY_OUTCOMES = ["ace", "double_fault"];
+  // Return hatasını her zaman karşılayan yapar; o da sorulmaz.
+  var RETURNER_ONLY_OUTCOMES = ["return_error"];
+  var AUTO_ACTOR_OUTCOMES = SERVER_ONLY_OUTCOMES.concat(RETURNER_ONLY_OUTCOMES);
   function resolvedActor(m, outcome) {
+    if (RETURNER_ONLY_OUTCOMES.indexOf(outcome) !== -1) return otherKey(m.server);
     return SERVER_ONLY_OUTCOMES.indexOf(outcome) !== -1 ? m.server : pendingActor;
   }
 
@@ -3063,6 +3860,7 @@
   var app = document.getElementById("app");
 
   function render() {
+    if (liveView && !liveView.hasData) { app.innerHTML = renderLiveWaiting(); bindLiveEvents(); return; }
     if (archiveOpen) { app.innerHTML = renderArchiveScreen() + renderShareOverlays(); bindEvents(); bindShareEvents(); return; }
     if (state.setup) {
       renderSetup();
@@ -3085,10 +3883,14 @@
     // Servis sorusu her şeyin önünde: cevaplanmadan puan girilmemeli.
     if (m.needsServer) html += renderServerModal(m);
     else if (zonePrompt) html += renderZoneModal(m);
+    if (newMatchConfirm) html += renderNewMatchConfirm();
     html += renderShareOverlays();
+    html += renderLiveModal();
+    if (liveView) html += '<div class="live-foot">' + escapeHtml(t("liveBy")) + ' · Courtside</div>';
     app.innerHTML = html;
     bindEvents();
     bindShareEvents();
+    bindLiveEvents();
     if (activeTab === "stats") initMomentumChartInteraction(m);
   }
 
@@ -3098,7 +3900,6 @@
       '<div class="zone-modal" id="serverModal">' +
         '<div class="zone-card">' +
           '<p class="actor-q" style="margin-top:6px;">' + t("whoServesFirst") + '</p>' +
-          '<div class="zone-sub" style="text-align:center;margin-top:-6px;">' + t("tossHint") + '</div>' +
           '<div class="winner-pick actor-pick" style="margin-top:14px;margin-bottom:0;">' +
             ["a", "b"].map(function (k) {
               return '<button data-firstserver="' + k + '" type="button">' +
@@ -3136,7 +3937,6 @@
           '<div class="zone-readout">' + readout + '</div>' +
           '<div class="zone-actions">' +
             '<button id="zoneSkip" type="button">' + t("saveNoZone") + '</button>' +
-            '<button id="zoneSave" class="primary" type="button"' + (zonePick ? "" : " disabled") + '>' + t("save") + '</button>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -3157,6 +3957,7 @@
   }
 
   function renderArchivedBar(m) {
+    if (liveView) return renderLiveViewerBar(m);
     return '<div class="archived-bar">' +
       '<button id="backToArchive" type="button">' + t("backArchive") + '</button>' +
       '<span>' + escapeHtml(t("viewingArchived", { date: fmtDateTR(m.archiveId || m.startedAt) })) + '</span>' +
@@ -3229,6 +4030,9 @@
 
   function renderSetup() {
     var knownNames = archivePlayerNames();
+    loadPlayers().forEach(function (p) {
+      if (knownNames.map(function (n) { return n.toLowerCase(); }).indexOf(p.name.toLowerCase()) === -1) knownNames.push(p.name);
+    });
     var nameListAttr = knownNames.length ? ' list="knownPlayers" autocomplete="off"' : "";
     var knownNamesHtml = knownNames.length
       ? '<datalist id="knownPlayers">' + knownNames.map(function (n) {
@@ -3244,8 +4048,18 @@
           '<p class="lede">' + t("lede") + '</p>' +
         '</div>' +
         knownNamesHtml +
-        '<div class="field"><label>' + t("playerA") + '</label><input id="nameA" type="text" placeholder="' + escapeAttr(t("phA")) + '" maxlength="24"' + nameListAttr + '></div>' +
-        '<div class="field"><label>' + t("playerB") + '</label><input id="nameB" type="text" placeholder="' + escapeAttr(t("phB")) + '" maxlength="24"' + nameListAttr + '></div>' +
+        '<div class="field"><label>' + t("playerA") + '</label><div class="name-row"><input id="nameA" type="text" placeholder="' + escapeAttr(t("phA")) + '" maxlength="24"' + nameListAttr + '>' +
+          '<button class="star-btn" data-star="nameA" type="button" aria-label="' + escapeAttr(t("savePlayer")) + '">☆</button></div></div>' +
+        '<div class="field"><label>' + t("playerB") + '</label><div class="name-row"><input id="nameB" type="text" placeholder="' + escapeAttr(t("phB")) + '" maxlength="24"' + nameListAttr + '>' +
+          '<button class="star-btn" data-star="nameB" type="button" aria-label="' + escapeAttr(t("savePlayer")) + '">☆</button></div></div>' +
+        '<div class="saved-players" id="savedPlayers"></div>' +
+        '<div class="field">' +
+          '<label>' + t("modeQ") + '</label>' +
+          '<div class="server-pick mode-pick">' +
+            '<button id="modeSimple" aria-pressed="' + (loadMode() === "simple") + '" type="button"><b>' + t("modeSimple") + '</b><small>' + escapeHtml(t("modeSimpleSub")) + '</small></button>' +
+            '<button id="modeDetailed" aria-pressed="' + (loadMode() === "detailed") + '" type="button"><b>' + t("modeDetailed") + '</b><small>' + escapeHtml(t("modeDetailedSub")) + '</small></button>' +
+          '</div>' +
+        '</div>' +
         '<div class="field">' +
           '<label>' + t("matchFormat") + '</label>' +
           '<div class="server-pick">' +
@@ -3286,6 +4100,14 @@
       '</div>';
 
     var noAdRule = false;
+    var modeVal = loadMode();
+    ["Simple", "Detailed"].forEach(function (nm) {
+      document.getElementById("mode" + nm).onclick = function () {
+        modeVal = nm.toLowerCase();
+        document.getElementById("modeSimple").setAttribute("aria-pressed", String(modeVal === "simple"));
+        document.getElementById("modeDetailed").setAttribute("aria-pressed", String(modeVal === "detailed"));
+      };
+    });
     var setsToPlayVal = 3;
     var finalSetSuperTBVal = false;
     var formatPreset = "standard";
@@ -3337,6 +4159,66 @@
       document.getElementById("ruleNoAd").setAttribute("aria-pressed", "true");
       document.getElementById("ruleAd").setAttribute("aria-pressed", "false");
     };
+    // --- Kayıtlı oyuncular: ☆ ile kaydet, çipe dokunarak seç ---
+    var lastNameField = "nameA";
+    var spEditing = false;
+    function nameEl(id) { return document.getElementById(id); }
+    function updateStar(id) {
+      var inp = nameEl(id), btn = app.querySelector('[data-star="' + id + '"]');
+      if (!inp || !btn) return;
+      var v = inp.value.trim(), saved = findSavedPlayer(v) >= 0;
+      btn.disabled = !v;
+      btn.classList.toggle("on", saved);
+      btn.textContent = saved ? "★" : "☆";
+      btn.setAttribute("aria-pressed", String(saved));
+    }
+    function renderSavedChips() {
+      var box = nameEl("savedPlayers");
+      if (!box) return;
+      var players = loadPlayers();
+      if (!players.length) { box.innerHTML = '<div class="sp-hint">' + escapeHtml(t("savedHint")) + '</div>'; spEditing = false; return; }
+      var used = [nameEl("nameA").value.trim().toLowerCase(), nameEl("nameB").value.trim().toLowerCase()];
+      box.innerHTML =
+        '<div class="sp-head"><span>' + t("savedPlayers") + '</span><button type="button" id="spEdit">' + (spEditing ? t("doneEdit") : t("editSaved")) + '</button></div>' +
+        '<div class="sp-chips">' + players.map(function (p) {
+          var isUsed = used.indexOf(p.name.toLowerCase()) !== -1;
+          return '<button type="button" class="pchip' + (isUsed && !spEditing ? ' used' : '') + '" data-pname="' + escapeAttr(p.name) + '">' +
+            escapeHtml(p.name) + (spEditing ? '<span class="x">×</span>' : '') + '</button>';
+        }).join("") + '</div>';
+      nameEl("spEdit").onclick = function () { spEditing = !spEditing; renderSavedChips(); };
+      var chips = box.querySelectorAll("[data-pname]");
+      for (var c = 0; c < chips.length; c++) {
+        chips[c].onclick = function () {
+          var nm = this.getAttribute("data-pname");
+          if (spEditing) { toggleSavedPlayer(nm); updateStar("nameA"); updateStar("nameB"); renderSavedChips(); return; }
+          var a = nameEl("nameA"), b = nameEl("nameB");
+          // Zaten seçiliyse bir daha yazma; önce boş alanı, yoksa son dokunulan alanı doldur.
+          if (a.value.trim().toLowerCase() === nm.toLowerCase() || b.value.trim().toLowerCase() === nm.toLowerCase()) return;
+          var target = !a.value.trim() ? a : (!b.value.trim() ? b : nameEl(lastNameField));
+          target.value = nm;
+          lastNameField = target.id === "nameA" ? "nameB" : "nameA";
+          updateStar("nameA"); updateStar("nameB"); renderSavedChips();
+        };
+      }
+    }
+    ["nameA", "nameB"].forEach(function (id) {
+      var inp = nameEl(id);
+      inp.addEventListener("focus", function () { lastNameField = id; });
+      inp.addEventListener("input", function () { updateStar(id); renderSavedChips(); });
+      updateStar(id);
+    });
+    var stars = app.querySelectorAll("[data-star]");
+    for (var si = 0; si < stars.length; si++) {
+      stars[si].onclick = function () {
+        var id = this.getAttribute("data-star"), btn = this;
+        if (!nameEl(id).value.trim()) return;
+        toggleSavedPlayer(nameEl(id).value);
+        updateStar("nameA"); updateStar("nameB"); renderSavedChips();
+        btn.classList.add("pop"); setTimeout(function () { btn.classList.remove("pop"); }, 160);
+      };
+    }
+    renderSavedChips();
+
     var openArcSetup = document.getElementById("openArchiveSetup");
     if (openArcSetup) {
       openArcSetup.onclick = function () { openArchive(); };
@@ -3344,7 +4226,11 @@
     document.getElementById("startBtn").onclick = function () {
       var nA = document.getElementById("nameA").value.trim() || t("playerA");
       var nB = document.getElementById("nameB").value.trim() || t("playerB");
-      state = freshMatch({ a: nA, b: nB }, noAdRule, setsToPlayVal, finalSetSuperTBVal, FORMAT_OPTS[formatPreset]);
+      saveMode(modeVal);
+      var fo = {}, base = FORMAT_OPTS[formatPreset] || {};
+      Object.keys(base).forEach(function (k) { fo[k] = base[k]; });
+      fo.mode = modeVal;
+      state = freshMatch({ a: nA, b: nB }, noAdRule, setsToPlayVal, finalSetSuperTBVal, fo);
       state.setup = false;
       // Servisi kimin atacağı skor ekranında pop-up ile sorulur (kura genelde sonra belli olur).
       state.needsServer = true;
@@ -3377,27 +4263,28 @@
     return (
       '<header class="matchbar"><div class="matchbar-inner">' +
         '<div class="matchbar-top">' +
-          '<span class="live-dot"><span class="dot"></span>' + (m.matchOver ? t("matchOver") : t("liveTracking")) + '</span>' +
-          '<span>' + (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? t("ruleNoAdShort") : t("ruleAdShort")) + ' · ' + t("nSets", { n: m.setsToPlay }) + (m.finalSetSuperTB ? t("finalSTBShort") : "") + ' · ' + t("pointsLogged", { n: m.log.length }) + '</span>' +
+          (state.live && !viewingArchived && !m.matchOver
+            ? '<span class="mb-left"><span class="live-pill mb-live"><span class="dot"></span>' + t("liveOn") + '</span></span>'
+            : '<span class="live-dot mb-left"><span class="dot"></span>' + (m.matchOver ? t("matchOver") : t("liveTracking")) + '</span>') +
+          '<span class="mb-info">' + (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? t("ruleNoAdShort") : t("ruleAdShort")) + ' · ' + t("nSets", { n: m.setsToPlay }) + (m.finalSetSuperTB ? t("finalSTBShort") : "") + ' · ' + t("pointsLogged", { n: m.log.length }) + '</span>' +
+          '<span class="mb-right">' + (viewingArchived ? '' : '<button class="new-match-btn" data-newmatch="1" type="button">' + t("newShort") + '</button>') + '</span>' +
         '</div>' +
-        '<div class="players-row">' +
-          '<div class="player-name">' + (m.server === "a" && !m.matchOver ? '<span class="serve-ball"></span>' : '') +
-            '<span class="txt">' + escapeHtml(m.names.a) + '</span>' + gameCountHtml("a") + '</div>' +
+        '<div class="board">' +
+          '<div class="bd-name bd-a">' + (m.server === "a" && !m.matchOver ? '<span class="serve-ball"></span>' : '') +
+            '<span class="txt">' + escapeHtml(m.names.a) + '</span></div>' +
           '<span class="vs">vs</span>' +
-          '<div class="player-name">' + gameCountHtml("b") +
-            '<span class="txt">' + escapeHtml(m.names.b) + '</span>' +
-            (m.server === "b" && !m.matchOver ? '<span class="serve-ball"></span>' : '') + '</div>' +
-        '</div>' +
-        '<div class="scorepanel">' +
-          '<div class="sets-mini">' +
-            (m.sets.length ? '<span class="set-chip">' + setsRowA + '</span>' : '') +
-          '</div>' +
+          '<div class="bd-name bd-b">' + (m.server === "b" && !m.matchOver ? '<span class="serve-ball"></span>' : '') +
+            '<span class="txt">' + escapeHtml(m.names.b) + '</span></div>' +
+          '<div class="bd-games">' + gameCountHtml("a") + '</div>' +
           '<div class="game-score scorefont' + (m.matchOver ? " final" : "") + pulseClass + '">' +
             (m.matchOver ? (m.sets.map(function(s){return s.superTB ? "[" + s.a + "-" + s.b + "]" : s.a + "-" + s.b;}).join("  ")) : scoreLabel(m)) +
           '</div>' +
-          '<div class="sets-mini">' +
-            (bp ? '<span class="bp-badge">BREAK POINT</span>' : (m.sets.length ? '<span class="set-chip">' + setsRowB + '</span>' : '<span></span>')) +
-          '</div>' +
+          '<div class="bd-games">' + gameCountHtml("b") + '</div>' +
+          ((m.sets.length && !m.matchOver) || bp ?
+            '<div class="bd-sets">' + (m.sets.length && !m.matchOver ? setsRowA : '') + '</div>' +
+            '<div class="bd-mid">' + (bp ? '<span class="bp-badge">BREAK POINT</span>' : '') + '</div>' +
+            '<div class="bd-sets">' + (m.sets.length && !m.matchOver ? setsRowB : '') + '</div>'
+          : '') +
         '</div>' +
         momentumHtml +
       '</div></header>'
@@ -3412,36 +4299,70 @@
     return '<nav class="tabs">' + (viewingArchived ? "" : tb("live", t("tabLive"))) + tb("log", t("tabLog")) + tb("stats", t("tabStats")) + '</nav>';
   }
 
+  // Üst çubuktaki "Yeni maç" onayı. Devam eden maç kaybolmaz, arşive yazılır.
+  function renderNewMatchConfirm() {
+    return '<div class="zone-modal" id="newMatchModal"><div class="zone-card">' +
+      '<div class="zone-title">' + t("newConfirmQ") + '</div>' +
+      '<div class="zone-sub">' + escapeHtml(t(state.matchOver ? "newConfirmSubDone" : (state.log && state.log.length ? "newConfirmSub" : "newConfirmSubEmpty"), { a: state.names.a, b: state.names.b })) + '</div>' +
+      '<div class="zone-actions">' +
+        '<button id="newMatchNo" type="button">' + t("newConfirmKeep") + '</button>' +
+        '<button id="newMatchYes" class="primary" type="button">' + t("newConfirmGo") + '</button>' +
+      '</div></div></div>';
+  }
+
   function renderMatchOverBanner(m) {
     return (
       '<div class="match-over-banner">' +
         '<div class="win">🏆 ' + t("wonBy", { name: escapeHtml(m.names[m.winner]) }) + '</div>' +
         '<div class="sub">' + m.sets.map(function (s) { return s.superTB ? "[" + t("superTB") + " " + s.a + "–" + s.b + "]" : (s.a + "–" + s.b + (s.tb ? " (TB " + Math.min(s.tb.a,s.tb.b) + ")" : "")); }).join(" · ") + '</div>' +
+        (viewingArchived ? '' : '<button class="btn-primary" data-newmatch="1" type="button">' + t("newMatch") + '</button>') +
         '<button class="pdf-btn" data-share="1" type="button">' + t("shareMatchBtn") + '</button>' +
-        '<button class="pdf-btn" id="pdfBtnBanner" type="button">' + t("pdfBtn") + '</button>' +
-        '<div class="pdf-hint">' + escapeHtml(t("pdfHint")) + '</div>' +
+        (IS_NATIVE ? '' : '<button class="pdf-btn" id="pdfBtnBanner" type="button">' + t("pdfBtn") + '</button>' +
+        '<div class="pdf-hint">' + escapeHtml(t("pdfHint")) + '</div>') +
       '</div>'
     );
   }
 
+  // Basit mod: iki büyük düğme. Nasıl bittiği, puan kaydedildikten sonra isteğe bağlı işaretlenir.
+  function renderSimpleLive(m) {
+    var btn = function (k) {
+      return '<button class="big-pt" data-simplewin="' + k + '" type="button">' +
+        (m.server === k ? '<span class="serve-ball" aria-hidden="true"></span>' : '') +
+        '<span class="nm">' + escapeHtml(m.names[k]) + '</span>' +
+        '<span class="sub">' + t("tookPoint") + '</span></button>';
+    };
+    var last = m.log[0];
+    var lastHtml = "";
+    if (last) {
+      var W = last.pointWinner, L = otherKey(W);
+      var opts = W === last.server ? ["ace", "winner", "error"] : ["winner", "error", "double_fault"];
+      var lbl = {
+        ace: "Ace", winner: "Winner",
+        error: t("chipErr", { name: shortName(m, L) }),
+        double_fault: t("chipDf", { name: shortName(m, L) })
+      };
+      lastHtml = '<div class="last-pt">' +
+        '<div class="lp-head">' + t("lastPoint", { name: escapeHtml(shortName(m, W)) }) + '</div>' +
+        '<div class="lp-sub">' + t("howOptional") + '</div>' +
+        '<div class="chips">' + opts.map(function (o) {
+          return '<button data-lastout="' + o + '" aria-pressed="' + (last.outcome === o) + '" type="button">' + escapeHtml(lbl[o]) + '</button>';
+        }).join("") + '</div></div>';
+    }
+    return renderLiveRow(m) + '<p class="simple-q">' + t("whoWonPoint") + '</p>' +
+      '<div class="simple-pick">' + btn("a") + btn("b") + '</div>' +
+      lastHtml +
+      (m.log.length ? '<button class="undo-big" id="undoBtn" type="button">↩ ' + t("undo") + '</button>' : '');
+  }
+
   function renderLiveTab(m) {
     if (m.matchOver) {
-      return '<p class="empty-state">' + t("matchDone") + '</p>' + renderResetRow();
+      return '<p class="empty-state">' + t("matchDone") + '</p>';
     }
-    // Hızlı mod: tek soru — puanı kim aldı.
-    var winnerPickHtml = ["a", "b"].map(function (k) {
-      var role = k === m.server ? t("serving") : t("returning");
-      return (
-        '<button data-winner="' + k + '" aria-pressed="' + (pendingWinner === k) + '" type="button">' +
-          '<span class="who">' + escapeHtml(m.names[k]) + '</span>' +
-          '<span class="role">' + role + '</span>' +
-        '</button>'
-      );
-    }).join("");
-
-    // Detaylı mod: önce "ne oldu", sonra "kim yaptı".
+    if (m.mode === "simple") return renderSimpleLive(m);
+    // Hızlı mod da aynı akışı kullanır ("ne oldu", sonra "kim yaptı");
+    // tek farkı forehand/backhand ve bölge sorulmaması.
     var outcomeHtml = "";
-    if (!quickMode) {
+    {
       var opts = outcomeOptions(m, pendingSecondServe, pendingRally);
       outcomeHtml = '<p class="section-label">' + t("howEnded") + '</p><div class="outcome-grid">' +
         opts.map(function (o) {
@@ -3470,7 +4391,7 @@
     };
     // Ace ve çift hatada soru sorulmuyor: yapan her zaman servis atan.
     var actorHtml = "";
-    if (!quickMode && pendingOutcome && SERVER_ONLY_OUTCOMES.indexOf(pendingOutcome) === -1) {
+    if (pendingOutcome && AUTO_ACTOR_OUTCOMES.indexOf(pendingOutcome) === -1) {
       actorHtml = '<p class="actor-q">' + ACTOR_Q[pendingOutcome] + '</p>' +
         '<div class="winner-pick actor-pick">' +
         ["a", "b"].map(function (k) {
@@ -3481,8 +4402,8 @@
         '</div>';
     }
 
-    var actorReady = SERVER_ONLY_OUTCOMES.indexOf(pendingOutcome) !== -1 || !!pendingActor;
-    var canLog = quickMode ? !!pendingWinner : (!!pendingOutcome && actorReady);
+    var actorReady = AUTO_ACTOR_OUTCOMES.indexOf(pendingOutcome) !== -1 || !!pendingActor;
+    var canLog = !!pendingOutcome && actorReady;
     var servingName = shortName(m, m.server);
 
     var quickModeToggleHtml =
@@ -3491,7 +4412,7 @@
         '<button id="quickModeToggle" aria-pressed="' + quickMode + '" type="button">' + (quickMode ? t("on") : t("off")) + '</button>' +
       '</div>';
 
-    var serveSectionHtml = quickMode ? "" : (
+    var serveSectionHtml = (
       '<div class="serve-row">' +
         '<span class="serve-row-label">' + escapeHtml(t("isServing", { name: servingName })) + '</span>' +
         '<div class="serve-toggle">' +
@@ -3501,7 +4422,7 @@
       '</div>'
     );
 
-    var rallySectionHtml = quickMode ? "" : (
+    var rallySectionHtml = (
       '<p class="section-label">' + t("rallyHint") + '</p>' +
       '<button class="rally-btn" id="rallyBtn" type="button">' +
         '<span class="rally-num" id="rallyNum">' + pendingRally + '</span>' +
@@ -3510,14 +4431,12 @@
     );
 
     return (
+      renderLiveRow(m) +
       quickModeToggleHtml +
       rallySectionHtml +
       serveSectionHtml +
-      (quickMode
-        ? '<p class="section-label">' + t("whoWon") + '</p><div class="winner-pick">' + winnerPickHtml + '</div>'
-        : outcomeHtml + shotTypeHtml + actorHtml) +
-      '<button class="log-point-btn" id="logBtn" type="button" ' + (canLog ? "" : "disabled") + '>' + t("logPoint") + '</button>' +
-      (m.log.length ? '<div class="undo-row"><button id="undoBtn" type="button">' + t("undo") + '</button></div>' : "")
+      outcomeHtml + shotTypeHtml + actorHtml +
+            (m.log.length ? '<div class="undo-row"><button id="undoBtn" type="button">' + t("undo") + '</button></div>' : "")
     );
   }
 
@@ -3534,6 +4453,8 @@
       if (e.outcome === "winner") return '<b>' + winnerName + '</b> ' + where + (shot ? shot + 'vuruşuyla bitirdi' : 'vuruşla puanı bitirdi');
       if (e.outcome === "forced_error") return '<b>' + loserName + '</b> ' + where + shot + 'forced error yaptı';
       if (e.outcome === "unforced_error") return '<b>' + loserName + '</b> ' + where + shot + 'basit hata yaptı';
+      if (e.outcome === "return_error") return '<b>' + loserName + '</b> return hatası yaptı';
+      if (e.outcome === "error") return '<b>' + loserName + '</b> hata yaptı';
       return '<b>' + winnerName + '</b> ' + where + 'puanı kazandı';
     }
     var whereEn = z ? " from zone " + z : "";
@@ -3543,6 +4464,8 @@
     if (e.outcome === "winner") return '<b>' + winnerName + '</b> hit ' + art("winner") + whereEn;
     if (e.outcome === "forced_error") return '<b>' + loserName + '</b> made ' + art("forced error") + whereEn;
     if (e.outcome === "unforced_error") return '<b>' + loserName + '</b> made ' + art("unforced error") + whereEn;
+    if (e.outcome === "return_error") return '<b>' + loserName + '</b> made a return error';
+    if (e.outcome === "error") return '<b>' + loserName + '</b> made an error';
     return '<b>' + winnerName + '</b> won the point' + whereEn;
   }
 
@@ -3553,7 +4476,7 @@
       var loserName = shortName(m, otherKey(e.pointWinner));
       var desc = logDesc(e, escapeHtml(winnerName), escapeHtml(loserName));
 
-      var tagClass = (e.outcome === "double_fault" || e.outcome === "unforced_error" || e.outcome === "forced_error") ? "neg" : "pos";
+      var tagClass = (e.outcome === "double_fault" || e.outcome === "unforced_error" || e.outcome === "forced_error" || e.outcome === "return_error" || e.outcome === "error") ? "neg" : "pos";
       var tag = e.setWonBy ? (e.pointWinner === e.setWonBy ? t("tagSet") + " " + escapeHtml(winnerName) : "") : (e.gameWonBy ? t("tagGame") + " " + escapeHtml(winnerName) : "");
       if (e.breakPoint && e.gameWonBy) tag = "BREAK · " + tag;
 
@@ -3600,19 +4523,54 @@
     var st = statsOverride || m.stats;
     var sa = st.a, sb = st.b;
     var serve = computeServeStats(m, logArr);
+    var bpc = computeBreakChances(m, logArr);
+    if (m.mode === "simple") {
+      // Basit modda servis/vuruş/bölge verisi yok; sıfır gösterip yanıltmamak için o satırlar çıkar.
+      return [
+        [t("sPoints"), sa.pointsWon, sb.pointsWon],
+        [t("sAce"), sa.aces, sb.aces],
+        [t("sDouble"), sa.doubleFaults, sb.doubleFaults],
+        [t("sWinners"), sa.winners, sb.winners],
+        [t("sErrors"), sa.errors || 0, sb.errors || 0],
+        [t("sBPChances"), bpc.a.won + "/" + bpc.a.chances, bpc.b.won + "/" + bpc.b.chances]
+      ];
+    }
     return [
-      [t("sAce"), sa.aces, sb.aces],
+      [t("sPoints"), sa.pointsWon, sb.pointsWon],
+      [t("s1stIn"), fmtPct(serve.a.first, serve.a.first + serve.a.second), fmtPct(serve.b.first, serve.b.first + serve.b.second)],
+      [t("s1st"), fmtPct(serve.a.firstWon, serve.a.first), fmtPct(serve.b.firstWon, serve.b.first)],
+      [t("s2nd"), fmtPct(serve.a.secondWon, serve.a.second), fmtPct(serve.b.secondWon, serve.b.second)],
       [t("sDouble"), sa.doubleFaults, sb.doubleFaults],
+      [t("sAce"), sa.aces, sb.aces],
       [t("sWinners"), sa.winners, sb.winners],
       [t("sForced"), sa.forcedErrors, sb.forcedErrors],
       [t("sUnforced"), sa.unforcedErrors, sb.unforcedErrors],
+      [t("sReturnErr"), sa.returnErrors || 0, sb.returnErrors || 0],
+      // Yayınlardaki gibi "kırılan/şans": 3/7 = 7 servis kırma şansının 3'ü değerlendirildi.
+      [t("sBPChances"), bpc.a.won + "/" + bpc.a.chances, bpc.b.won + "/" + bpc.b.chances],
       [t("sFH"), sa.fhWinners + " / " + sa.fhErrors, sb.fhWinners + " / " + sb.fhErrors],
-      [t("sBH"), sa.bhWinners + " / " + sa.bhErrors, sb.bhWinners + " / " + sb.bhErrors],
-      [t("sBPWon"), sa.breakPointsWon, sb.breakPointsWon],
-      [t("sBPFaced"), sa.breakPointsFaced, sb.breakPointsFaced],
-      [t("s1st"), fmtPct(serve.a.firstWon, serve.a.first), fmtPct(serve.b.firstWon, serve.b.first)],
-      [t("s2nd"), fmtPct(serve.a.secondWon, serve.a.second), fmtPct(serve.b.secondWon, serve.b.second)]
+      [t("sBH"), sa.bhWinners + " / " + sa.bhErrors, sb.bhWinners + " / " + sb.bhErrors]
     ];
+  }
+
+  // Karşılayan oyuncunun servis kırma şansları: maç baştan oynatılır ve her puandan
+  // önceki durumda break point olup olmadığına bakılır. Eski maçlarda da çalışır.
+  function computeBreakChances(m, logArr) {
+    var res = { a: { chances: 0, won: 0 }, b: { chances: 0, won: 0 } };
+    var arr = logArr || m.log;
+    if (!arr.length) return res;
+    var ids = {};
+    arr.forEach(function (e) { ids[e.id] = 1; });
+    replayMatch(m).steps.forEach(function (step) {
+      var e = step.entry, b = step.before;
+      if (!ids[e.id]) return;
+      var isBp = isBreakPointNow({ tiebreak: b.tiebreak, matchOver: false, server: b.server, points: b.points, noAd: m.noAd });
+      if (!isBp) return;
+      var ret = otherKey(b.server);
+      res[ret].chances++;
+      if (e.pointWinner === ret) res[ret].won++;
+    });
+    return res;
   }
 
   // ---------- Momentum chart (cumulative point differential) ----------
@@ -3968,8 +4926,9 @@
         '<div class="card"><div class="n">' + totalB + '</div><div class="lbl">' + escapeHtml(t("totalPoints", { name: m.names.b })) + '</div></div>' +
         '<div class="card"><div class="n">' + fmtDuration(dur) + '</div><div class="lbl">' + durLabel + '</div></div>' +
         '<div class="card"><div class="n">' + (bestStreak > 1 ? bestStreak : "—") + '</div><div class="lbl">' + (bestKey && bestStreak > 1 ? t("longestStreakBy", { name: escapeHtml(shortName(m, bestKey)) }) : t("longestStreak")) + '</div></div>' +
+        (m.mode === "simple" ? '' :
         '<div class="card"><div class="n">' + (rallyAvg !== null ? rallyAvg : "—") + '</div><div class="lbl">' + t("avgRally") + '</div></div>' +
-        '<div class="card"><div class="n">' + (rallyMaxEntry ? rallyMaxEntry.rally : "—") + '</div><div class="lbl">' + (rallyMaxEntry ? t("longestRallyBy", { name: escapeHtml(shortName(m, rallyMaxEntry.pointWinner)) }) : t("longestRally")) + '</div></div>' +
+        '<div class="card"><div class="n">' + (rallyMaxEntry ? rallyMaxEntry.rally : "—") + '</div><div class="lbl">' + (rallyMaxEntry ? t("longestRallyBy", { name: escapeHtml(shortName(m, rallyMaxEntry.pointWinner)) }) : t("longestRally")) + '</div></div>') +
       '</div>' +
       '<table class="stat-table">' +
         '<thead><tr><th></th><th>' + escapeHtml(shortName(m,"a")) + '</th><th>' + escapeHtml(shortName(m,"b")) + '</th></tr></thead>' +
@@ -3992,7 +4951,7 @@
           : "") +
       '</div>' +
       (m.log.length ? '<button class="pdf-btn" data-share="1" type="button">' + t("shareMatchBtn") + '</button>' +
-        '<button class="pdf-btn" id="pdfBtnStats" type="button">' + t("pdfReportBtn") + '</button><div class="pdf-hint">' + escapeHtml(t("pdfHint")) + '</div>' +
+        (IS_NATIVE ? '' : '<button class="pdf-btn" id="pdfBtnStats" type="button">' + t("pdfReportBtn") + '</button><div class="pdf-hint">' + escapeHtml(t("pdfHint")) + '</div>') +
         '<button class="csv-btn" id="csvBtn" type="button">' + t("csvBtn") + '</button>' : "") +
       (viewingArchived ? "" : '<div class="archive-entry"><button id="openArchiveStats" type="button">' + t("archiveBtn") + '</button></div>') +
       renderResetRow() +
@@ -4015,7 +4974,7 @@
         '</div>'
       );
     }
-    return '<div class="reset-row"><button id="resetBtn" type="button">' + t("newMatch") + '</button></div>';
+    return '<div class="reset-row"><button data-newmatch="1" type="button">' + t("newMatch") + '</button></div>';
   }
 
   // ---------- Maç sonu PDF (yazdırma) raporu ----------
@@ -4117,6 +5076,28 @@
     render();
   }
 
+  function startNewMatch() {
+    clearOverlays();
+    if (state.live && !viewingArchived) {
+      var endedCode = state.live.code, endedSnap = JSON.parse(JSON.stringify(state));
+      putLive(endedCode, endedSnap, true).catch(function () {});
+      liveStatus = null; liveModalOpen = false;
+    }
+    resetConfirmPending = false;
+    newMatchConfirm = false;
+    // Yeni maça geçmeden önce mevcut maçı arşive al — hiçbir kayıt kaybolmasın.
+    if (!viewingArchived && state.log && state.log.length) archiveMatch(state);
+    viewingArchived = false;
+    stashedState = null;
+    zonePrompt = null; zonePick = null;
+    clearPending();
+    state = freshMatch();
+    activeTab = "live";
+    statsSetFilter = "all";
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    render();
+  }
+
   function bindEvents() {
     var arcTabs = app.querySelectorAll("[data-arctab]");
     for (var at = 0; at < arcTabs.length; at++) {
@@ -4207,8 +5188,8 @@
     var actorButtons = app.querySelectorAll("[data-actor]");
     for (var ac = 0; ac < actorButtons.length; ac++) {
       actorButtons[ac].onclick = function () {
-        var k = this.getAttribute("data-actor");
-        pendingActor = (pendingActor === k) ? null : k;
+        pendingActor = this.getAttribute("data-actor");
+        if (pendingOutcome) { logCurrentPoint(); return; }
         render();
       };
     }
@@ -4219,6 +5200,8 @@
         pendingOutcome = (pendingOutcome === v) ? null : v;
         pendingShotType = null;
         pendingActor = null; // sonuç değişince "kim yaptı" yeniden sorulur
+        // Ace ve çift hatayı her zaman servis atan yapar: başka soru yok, hemen kaydet.
+        if (pendingOutcome && AUTO_ACTOR_OUTCOMES.indexOf(pendingOutcome) !== -1) { logCurrentPoint(); return; }
         render();
       };
     }
@@ -4240,6 +5223,12 @@
           render();
           return;
         }
+        if (pendingRally === 3) {
+          // Return oynandı: return hatası seçeneği kalkar.
+          if (pendingOutcome === "return_error") pendingOutcome = null;
+          render();
+          return;
+        }
         var numEl = document.getElementById("rallyNum");
         if (numEl) numEl.textContent = pendingRally;
       };
@@ -4248,26 +5237,22 @@
     for (var sv = 0; sv < serveButtons.length; sv++) {
       serveButtons[sv].onclick = function () {
         var toSecond = this.getAttribute("data-serve") === "2";
+        // 1. servisten 2. servise geçilince ralli sayacı sıfırlanır (1. serviste sayılan vuruşlar geçersiz).
+        if (toSecond && !pendingSecondServe) pendingRally = 0;
         pendingSecondServe = toSecond;
         // Çift hata sadece ikinci serviste geçerli; 1. servise dönülünce temizle.
         if (!toSecond && pendingOutcome === "double_fault") pendingOutcome = null;
         render();
       };
     }
-    var logBtn = document.getElementById("logBtn");
-    if (logBtn) {
-      logBtn.onclick = function () {
-        var winnerKey;
-        if (quickMode) {
-          if (!pendingWinner) return;
-          winnerKey = pendingWinner;
-        } else {
-          if (!pendingOutcome) return;
-          var actor = resolvedActor(state, pendingOutcome);
-          if (!actor) return;
-          // Puanı kimin aldığı, vuruşu yapan + sonuçtan çıkıyor.
-          winnerKey = winnerFromActor(actor, pendingOutcome);
-        }
+    // "Puanı kaydet" düğmesi yok: son gerekli seçim yapılınca puan kendiliğinden kaydedilir.
+    function logCurrentPoint() {
+      (function () {
+        if (!pendingOutcome) return;
+        var actor = resolvedActor(state, pendingOutcome);
+        if (!actor) return;
+        // Puanı kimin aldığı, vuruşu yapan + sonuçtan çıkıyor.
+        var winnerKey = winnerFromActor(actor, pendingOutcome);
         // Bölge takibi hızlı modda ve ace/çift hatada sorulmuyor.
         if (!quickMode && ZONE_ASK_OUTCOMES.indexOf(pendingOutcome) !== -1) {
           zonePrompt = {
@@ -4278,11 +5263,31 @@
           render();
           return;
         }
-        logPoint(state, winnerKey, quickMode ? null : pendingOutcome, null, pendingRally, pendingSecondServe, quickMode ? null : pendingShotType);
+        logPoint(state, winnerKey, pendingOutcome, null, pendingRally, pendingSecondServe, quickMode ? null : pendingShotType);
         markJustLogged();
         clearPending();
         saveState();
         if (state.matchOver && !viewingArchived) archiveMatch(state);
+        render();
+      })();
+    }
+    var simpleBtns = app.querySelectorAll("[data-simplewin]");
+    for (var sw = 0; sw < simpleBtns.length; sw++) {
+      simpleBtns[sw].onclick = function () {
+        logPoint(state, this.getAttribute("data-simplewin"), null, null, 0, false, null);
+        markJustLogged();
+        clearPending();
+        saveState();
+        if (state.matchOver && !viewingArchived) archiveMatch(state);
+        render();
+      };
+    }
+    var lastOutBtns = app.querySelectorAll("[data-lastout]");
+    for (var lo = 0; lo < lastOutBtns.length; lo++) {
+      lastOutBtns[lo].onclick = function () {
+        var o = this.getAttribute("data-lastout");
+        setLastOutcome(state.log[0] && state.log[0].outcome === o ? null : o);
+        saveState();
         render();
       };
     }
@@ -4301,12 +5306,23 @@
       zoneCourt.onclick = function (ev) {
         var p = svgPointFromEvent(this, ev, HCRT.W, HCRT.H);
         if (!p || !zonePrompt) return;
+        if (zoneSaving) return;
         zonePick = zoneFromHalfPoint(p.x, p.y, pointActor(zonePrompt.winner, zonePrompt.outcome));
         render();
+        // Seçilen nokta bir an görünsün, pencere hızlıca solsun, sonra kaydet.
+        zoneSaving = true;
+        var promptAtTap = zonePrompt;
+        setTimeout(function () {
+          var mdl = document.getElementById("zoneModal");
+          if (mdl && zonePrompt === promptAtTap) mdl.classList.add("fading");
+        }, 220);
+        setTimeout(function () {
+          zoneSaving = false;
+          if (zonePrompt === promptAtTap && zonePick) commitPendingPoint(zonePick);
+        }, 520);
       };
     }
-    var zoneSave = document.getElementById("zoneSave");
-    if (zoneSave) zoneSave.onclick = function () { if (zonePick) commitPendingPoint(zonePick); };
+
     var zoneSkip = document.getElementById("zoneSkip");
     if (zoneSkip) zoneSkip.onclick = function () { commitPendingPoint(null); };
     var zoneModal = document.getElementById("zoneModal");
@@ -4321,12 +5337,12 @@
       quickModeToggle.onclick = function () {
         quickMode = !quickMode;
         saveQuickMode(quickMode);
-        pendingOutcome = null; pendingShotType = null; pendingSecondServe = false;
+        pendingShotType = null;
         render();
       };
     }
     var undoBtn = document.getElementById("undoBtn");
-    if (undoBtn) { undoBtn.onclick = function () { undoLastPoint(); saveState(); }; }
+    if (undoBtn) { undoBtn.onclick = function () { clearOverlays(); undoLastPoint(); saveState(); }; }
 
     var pdfHandler = function () {
       var docHtml = buildPrintDocHTML(state);
@@ -4356,19 +5372,22 @@
     }
     var resetYes = document.getElementById("resetConfirmYes");
     if (resetYes) {
-      resetYes.onclick = function () {
-        resetConfirmPending = false;
-        // Yeni maça geçmeden önce mevcut maçı arşive al — hiçbir kayıt kaybolmasın.
-        if (!viewingArchived && state.log && state.log.length) archiveMatch(state);
-        viewingArchived = false;
-        stashedState = null;
-        state = freshMatch();
-        activeTab = "live";
-        statsSetFilter = "all";
-        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      resetYes.onclick = function () { startNewMatch(); };
+    }
+    var newBtns = app.querySelectorAll("[data-newmatch]");
+    for (var nb = 0; nb < newBtns.length; nb++) {
+      newBtns[nb].onclick = function () {
+        // Yanlışlıkla dokunmaya karşı her durumda onay sorulur.
+        newMatchConfirm = true;
         render();
       };
     }
+    var nmYes = document.getElementById("newMatchYes");
+    if (nmYes) nmYes.onclick = function () { startNewMatch(); };
+    var nmNo = document.getElementById("newMatchNo");
+    if (nmNo) nmNo.onclick = function () { newMatchConfirm = false; render(); };
+    var nmModal = document.getElementById("newMatchModal");
+    if (nmModal) nmModal.onclick = function (ev) { if (ev.target === this) { newMatchConfirm = false; render(); } };
     var resetNo = document.getElementById("resetConfirmNo");
     if (resetNo) {
       resetNo.onclick = function () {
@@ -4378,13 +5397,53 @@
     }
   }
 
+
+  // ---------- Açılış animasyonu ----------
+  function showIntro() {
+    if (!IS_NATIVE) return;
+    var reduce = false;
+    try { reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    var el = document.createElement("div");
+    el.className = "intro";
+    el.setAttribute("aria-hidden", "true");
+    // Uygulama ikonuyla aynı çizim (512'lik koordinatlarda).
+    el.innerHTML =
+      '<svg class="intro-ball" viewBox="0 0 512 512">' +
+        '<defs><clipPath id="introClip"><circle cx="256" cy="256" r="172"/></clipPath></defs>' +
+        '<circle cx="256" cy="256" r="188.5" fill="none" stroke="#C79A54" stroke-width="7"/>' +
+        '<circle cx="256" cy="256" r="172" fill="#CFE21B"/>' +
+        '<g clip-path="url(#introClip)" fill="none" stroke="#F7FBDC" stroke-width="18">' +
+          '<circle cx="43.4" cy="256" r="151.6"/><circle cx="468.6" cy="256" r="151.6"/>' +
+        '</g>' +
+      '</svg>' +
+      '<div class="intro-word">Courtside</div>';
+    document.body.appendChild(el);
+    var done = false;
+    function finish() {
+      if (done) return; done = true;
+      el.classList.add("out");
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+    }
+    el.addEventListener("click", finish);
+    setTimeout(finish, reduce ? 500 : 1450);
+  }
+
   applyDocLang();
-  checkLaunchLink();
+  var launchLiveCode = extractLiveCode(location.hash);
+  if (launchLiveCode) {
+    startLiveViewer(launchLiveCode);
+  } else {
+    showIntro();
+    checkLaunchLink();
+    // Uygulama kapanıp açıldıysa süren yayın kaldığı yerden devam etsin.
+    if (state.live && !state.setup) scheduleLivePush();
+  }
   render();
 })();
 </script>
 <script>
-  if ("serviceWorker" in navigator) {
+  var isNativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  if ("serviceWorker" in navigator && !isNativeApp) {
     window.addEventListener("load", function () {
       navigator.serviceWorker.register("service-worker.js").catch(function () {});
     });
