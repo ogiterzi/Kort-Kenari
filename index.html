@@ -1443,6 +1443,75 @@
   .live-bar .live-status { font-size: 12px; color: var(--text-dim); text-align: right; }
   .live-wait { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px 24px; text-align: center; color: var(--text-dim); }
   .live-wait .ball { width: 72px; height: 72px; animation: introSpin 1.6s linear infinite; }
+  /* ---- Maç günü ---- */
+  .ev-entry { margin-top: 10px; }
+  .ev-entry button { width: 100%; padding: 13px 16px; border-radius: 12px; border: 1px dashed var(--brass); background: none; color: var(--brass); font-family: inherit; font-size: 14.5px; font-weight: 600; cursor: pointer; }
+  .ev-bar { justify-content: space-between; }
+  .ev-bar-title { flex: 1; font-weight: 600; color: var(--text); font-size: 14px; }
+  .ev-bar .live-go { flex: none; }
+  .ev-bar button.live-pill { background: #C0392B; color: #fff; border: none; border-radius: 999px; padding: 6px 11px; font-size: 11px; }
+  .ev-bar button.live-pill.off { background: var(--panel); color: var(--text-dim); }
+  .ev-bar .ev-golive { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .ev-main { padding-top: 14px; }
+  .ev-name-input { width: 100%; box-sizing: border-box; background: none; border: none; border-bottom: 1px dashed var(--hairline); color: var(--text); font-family: 'Fraunces', serif; font-size: 21px; font-weight: 600; padding: 4px 0 8px; margin-bottom: 12px; }
+  .ev-name-input:focus { outline: none; border-bottom-color: var(--brass); }
+  .ev-name-input::placeholder { color: var(--text); opacity: .75; }
+  .ev-h1 { font-family: 'Fraunces', serif; font-size: 22px; margin: 2px 0 6px; line-height: 1.25; }
+  .ev-add { width: 100%; margin: 0 0 6px; }
+  .ev-sec { margin-top: 20px; text-transform: uppercase; letter-spacing: .06em; font-size: 11.5px; font-weight: 600; }
+  .ev-card { background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+  .ev-card.st-live { border-color: var(--brass); }
+  .ev-card.fav { box-shadow: inset 3px 0 0 var(--brass); }
+  .ev-card.st-sched .ev-set { display: none; }
+  .ev-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; min-height: 26px; }
+  .ev-meta { flex: 1; min-width: 0; font-size: 12px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ev-tag { flex: none; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--brass); border: 1px solid var(--brass); border-radius: 999px; padding: 2px 7px; }
+  .ev-more { flex: none; background: none; border: 1px solid var(--hairline); color: var(--text-dim); border-radius: 8px; padding: 4px 10px; font-family: inherit; font-size: 12px; cursor: pointer; }
+  .ev-star { flex: none; background: none; border: none; color: var(--text-dim); font-size: 20px; line-height: 1; padding: 2px 4px; cursor: pointer; }
+  .ev-star.on { color: var(--brass); }
+  .ev-board { display: flex; flex-direction: column; gap: 4px; }
+  .ev-row { display: flex; align-items: center; gap: 6px; font-size: 15.5px; }
+  .ev-row.win .ev-name { font-weight: 700; }
+  .ev-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ev-trophy { font-size: 13px; }
+  .ev-set { flex: none; width: 26px; text-align: center; font-family: 'Fraunces', serif; font-size: 17px; font-variant-numeric: tabular-nums; color: var(--text-dim); position: relative; }
+  .ev-set.w { color: var(--text); font-weight: 600; }
+  .ev-set sup { font-size: 10px; position: absolute; top: -3px; right: -2px; }
+  .ev-set.cur { width: 32px; border-radius: 7px; background: var(--panel-2); color: var(--brass); font-weight: 700; margin-left: 4px; }
+  .ev-actions { margin-top: 10px; }
+  .ev-startbtn { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--hairline); background: var(--panel-2); color: var(--text); font-family: inherit; font-size: 14.5px; cursor: pointer; }
+  .ev-plus { display: flex; gap: 8px; margin-top: 12px; }
+  .ev-plus button { flex: 1; min-width: 0; padding: 15px 8px; border-radius: 12px; border: 1px solid var(--brass); background: var(--panel-2); color: var(--text); font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ev-plus button:active { background: var(--brass); color: var(--ink); }
+  .ev-undo { margin-top: 8px; background: none; border: none; color: var(--text-dim); font-family: inherit; font-size: 13px; padding: 4px 0; cursor: pointer; }
+  .ev-upd { margin-top: 8px; font-size: 11.5px; color: var(--text-dim); }
+  .ev-result { text-align: center; font-weight: 600; margin: 12px 0 4px; }
+  .ev-form .field input { width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: 16px; }
+  .ev-2col { display: flex; gap: 10px; }
+  .ev-2col .field { flex: 1; min-width: 0; }
+  .ev-fmts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ev-fmts button { padding: 8px 11px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 13px; cursor: pointer; }
+  .ev-fmts button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); background: var(--panel-2); font-weight: 600; }
+  .ev-hint { font-size: 11.5px; color: var(--text-dim); line-height: 1.4; }
+  .ev-del { color: var(--clay) !important; }
+  .ev-ruleline { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-dim); margin: 0 0 12px; }
+  .ev-ruleline span { flex: 1; min-width: 0; }
+  .ev-days { display: flex; flex-wrap: wrap; gap: 7px; padding: 2px 0 12px; }
+  .ev-days::-webkit-scrollbar { display: none; }
+  .ev-daychip { flex: none; position: relative; padding: 8px 13px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 13.5px; cursor: pointer; white-space: nowrap; }
+  .ev-daychip[aria-pressed="true"] { border-color: var(--brass); background: var(--panel-2); color: var(--brass); font-weight: 600; }
+  .ev-daycount { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 3px; border-radius: 999px; background: var(--panel-2); color: var(--text-dim); font-size: 11px; font-weight: 600; text-align: center; }
+  .ev-daychip[aria-pressed="true"] .ev-daycount { background: var(--brass); color: var(--ink); }
+  .ev-otherday { color: var(--text-dim); border-style: dashed; overflow: hidden; }
+  .ev-otherday input { position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; font-size: 16px; }
+  .ev-dayonly { margin: 0 0 6px; }
+  .ev-tcard { display: flex; align-items: center; gap: 10px; }
+  .ev-tmain { flex: 1; min-width: 0; }
+  .ev-tname { font-weight: 600; font-size: 15.5px; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ev-tlive { font-size: 9.5px; padding: 2px 7px; }
+  .ev-rules { padding-top: 20px; justify-content: flex-start; flex: none; }
+  .ev-tbchips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+  .ev-tbchips button { padding: 12px 0; border-radius: 10px; border: 1px solid var(--hairline); background: var(--panel-2); color: var(--text); font-family: 'Fraunces', serif; font-size: 17px; cursor: pointer; }
   .live-foot { text-align: center; font-size: 11.5px; color: var(--text-dim); padding: 18px 0 6px; }
 
   /* ---- Uygulama açılış animasyonu (yalnızca iOS uygulamasında) ----
@@ -1823,6 +1892,71 @@
     }
     return "en";
   }
+  // ---------- Turnuva modu metinleri ----------
+  Object.assign(I18N.tr, {
+    evEntry: "🏆 Turnuva modu", evEntryOpen: "🏆 Turnuvalar · {n} aktif",
+    evListTitle: "Turnuvalar", evNewT: "+ Yeni turnuva", evOpenT: "Aç", evNMatches: "{n} maç",
+    evCreateTitle: "Yeni turnuva", evRulesTitle: "Turnuva kuralları", evTName: "Turnuva adı", evTNamePh: "ör. Kulüp Kupası 2026",
+    evCreate: "Turnuvayı oluştur", evSaveRules: "Kuralları kaydet", evNeedTName: "Turnuvaya bir ad ver.",
+    evRulesNote: "Yeni kurallar henüz başlamamış maçlara uygulanır; oynanan maçlar kendi kurallarıyla kalır.",
+    evRulesBtn: "Kurallar", evBackList: "← Turnuvalar",
+    evOtherDay: "📅 Başka gün", evToday: "Bugün", evTomorrow: "Yarın", evYesterday: "Dün", evDate: "Tarih",
+    evTitle: "Turnuva", evAdd: "+ Maç ekle", evLive: "Oynanıyor", evNext: "Sıradaki", evDone: "Bitenler", evFollowing: "Takip ettiklerin",
+    evEmptyDay: "Bu güne henüz maç yok. \"+ Maç ekle\" ile programı gir; veliler saatleri ve kortları görür.",
+    evStart: "▶ Başlat", evEdit: "Düzenle", evUndo: "↩ Geri al", evCourt: "Kort", evTime: "Saat",
+    evCourtPh: "Kort 1", evP1: "1. oyuncu", evP2: "2. oyuncu",
+    evScore: "Skor", evScoreHint: "Boşluklarla yaz: 6-4 3-2 · Tie-break: 7-6(5) · Süper TB: 10-7",
+    evScoreBad: "Skor anlaşılamadı. Örnek: 6-4 3-2",
+    evSave: "Kaydet", evSaveNext: "Kaydet, yenisini ekle", evDelete: "Maçı sil", evDeleteSure: "Emin misin? Sil",
+    evAddTitle: "Maç ekle", evEditTitle: "Maçı düzenle", evNeedNames: "İki oyuncunun adını yaz.",
+    evTB: "Tie-break", evSTB: "Süper tie-break", evTbQ: "{name} tie-break'i kazandı", evTbSub: "Rakibi kaç puan aldı? (bilmiyorsan geç)",
+    evTbSkip: "Bilmiyorum, geç", evPlusGame: "+ {name}", evPlusPt: "+1 {name}",
+    evWon: "🏆 {name} kazandı", evNotStarted: "Başlamadı",
+    evUpdated: "güncellendi {ago}", agoNow: "az önce", agoMin: "{n} dk önce", agoHour: "{n} sa önce",
+    evGoLive: "📡 Velilere yayınla", evLiveTitle: "Turnuva yayında 📡",
+    evLiveSub: "Bu tek linkle veliler turnuvanın bütün günlerini, saatleri, kortları ve canlı skorları görür. Uygulama indirmeleri gerekmez.",
+    evShareText: "🎾 {name} · program ve canlı skorlar:",
+    evFinish: "Turnuvayı bitir", evFinishQ: "Turnuva bitsin mi?",
+    evFinishSub: "Skoru girilen maçlar arşive kaydedilir, yayın \"sona erdi\" olarak kapanır ve turnuva listeden kalkar.",
+    evFinishYes: "Turnuvayı bitir",
+    evViewerBy: "Turnuva · canlı skorlar", evViewerEnded: "Turnuva sona erdi · son skorlar",
+    evFollow: "Takip et", evUnfollow: "Takibi bırak",
+    evArchTag: "Sadece skor", evScoreOnlyNote: "Bu maç Turnuva modunda oyun oyun girildi; puan istatistiği yok.",
+    evNoMatches: "Henüz maç eklenmedi.", evNoMatchesDay: "Bu gün için maç yok.",
+    rStandard: "Standart", rSets: "{n} set", rFinalSTB: "son set süper TB", rNoAd: "karar puanı", rAd: "avantajlı"
+  });
+  Object.assign(I18N.en, {
+    evEntry: "🏆 Tournament mode", evEntryOpen: "🏆 Tournaments · {n} active",
+    evListTitle: "Tournaments", evNewT: "+ New tournament", evOpenT: "Open", evNMatches: "{n} matches",
+    evCreateTitle: "New tournament", evRulesTitle: "Tournament rules", evTName: "Tournament name", evTNamePh: "e.g. Club Cup 2026",
+    evCreate: "Create tournament", evSaveRules: "Save rules", evNeedTName: "Give the tournament a name.",
+    evRulesNote: "New rules apply to matches that haven't started; played matches keep their own rules.",
+    evRulesBtn: "Rules", evBackList: "← Tournaments",
+    evOtherDay: "📅 Other day", evToday: "Today", evTomorrow: "Tomorrow", evYesterday: "Yesterday", evDate: "Date",
+    evTitle: "Tournament", evAdd: "+ Add match", evLive: "In play", evNext: "Up next", evDone: "Finished", evFollowing: "Following",
+    evEmptyDay: "No matches on this day yet. Use \"+ Add match\" to enter the schedule; parents will see times and courts.",
+    evStart: "▶ Start", evEdit: "Edit", evUndo: "↩ Undo", evCourt: "Court", evTime: "Time",
+    evCourtPh: "Court 1", evP1: "Player 1", evP2: "Player 2",
+    evScore: "Score", evScoreHint: "Separate with spaces: 6-4 3-2 · Tie-break: 7-6(5) · Super TB: 10-7",
+    evScoreBad: "Couldn't read that score. Example: 6-4 3-2",
+    evSave: "Save", evSaveNext: "Save & add another", evDelete: "Delete match", evDeleteSure: "Sure? Delete",
+    evAddTitle: "Add match", evEditTitle: "Edit match", evNeedNames: "Enter both players' names.",
+    evTB: "Tie-break", evSTB: "Super tie-break", evTbQ: "{name} won the tie-break", evTbSub: "How many points did the opponent get? (skip if unsure)",
+    evTbSkip: "Not sure, skip", evPlusGame: "+ {name}", evPlusPt: "+1 {name}",
+    evWon: "🏆 {name} won", evNotStarted: "Not started",
+    evUpdated: "updated {ago}", agoNow: "just now", agoMin: "{n} min ago", agoHour: "{n} h ago",
+    evGoLive: "📡 Share live with parents", evLiveTitle: "Tournament is live 📡",
+    evLiveSub: "With this one link, parents see every day of the tournament — times, courts and live scores. No app needed.",
+    evShareText: "🎾 {name} · schedule and live scores:",
+    evFinish: "End tournament", evFinishQ: "End the tournament?",
+    evFinishSub: "Matches with a score are saved to the archive, the broadcast closes as \"ended\" and the tournament is removed from the list.",
+    evFinishYes: "End tournament",
+    evViewerBy: "Tournament · live scores", evViewerEnded: "Tournament over · final scores",
+    evFollow: "Follow", evUnfollow: "Unfollow",
+    evArchTag: "Score only", evScoreOnlyNote: "This match was entered game by game in Tournament mode; there are no point stats.",
+    evNoMatches: "No matches added yet.", evNoMatchesDay: "No matches on this day.",
+    rStandard: "Standard", rSets: "{n} sets", rFinalSTB: "final set super TB", rNoAd: "deciding point", rAd: "advantage"
+  });
   var LANG = detectLang();
   function t(key, params) {
     var dict = I18N[LANG] || I18N.tr;
@@ -1910,7 +2044,7 @@
     var existing = -1;
     for (var i = 0; i < arr.length; i++) { if (arr[i].archiveId === stamp) { existing = i; break; } }
     if (existing >= 0) arr[existing] = rec; else arr.unshift(rec);
-    arr.sort(function (x, y) { return (y.archiveId || 0) - (x.archiveId || 0); });
+    arr.sort(function (x, y) { return (y.startedAt || +y.archiveId || 0) - (x.startedAt || +x.archiveId || 0); });
     if (arr.length > ARCHIVE_MAX) arr = arr.slice(0, ARCHIVE_MAX);
     writeArchive(arr);
   }
@@ -2097,7 +2231,7 @@
     return n.split(" ")[0];
   }
   function formatLabel(m) {
-    if (m.setGamesTarget === 4 && !m.setWinByTwo) return "Fast4";
+    if (m.setGamesTarget === 4) return "Fast4";
     if (m.setGamesTarget === 8) return "Pro Set";
     return null;
   }
@@ -2164,7 +2298,8 @@
           m.sets.push({ a: m.tb.a, b: m.tb.b, superTB: true });
         } else {
           var tbSnapshot = { a: m.tb.a, b: m.tb.b };
-          m.sets.push({ a: pointWinnerKey === "a" ? 7 : 6, b: pointWinnerKey === "b" ? 7 : 6, tb: tbSnapshot });
+          var tbHi = (m.tbTriggerAt || 6) + 1, tbLo = m.tbTriggerAt || 6; // 7-6, Fast4'te 5-4, Pro sette 9-8
+          m.sets.push({ a: pointWinnerKey === "a" ? tbHi : tbLo, b: pointWinnerKey === "b" ? tbHi : tbLo, tb: tbSnapshot });
         }
         setWonBy = pointWinnerKey; tbSet = true;
         m.games = { a: 0, b: 0 }; m.tb = { a: 0, b: 0 }; m.tiebreak = false;
@@ -3381,6 +3516,7 @@
       if (ended && liveView.status !== "ended") { liveView.status = "ended"; render(); }
       return;
     }
+    if (raw.charAt(0) === "E") { applyEventLiveData(raw, ended); return; }
     decodeMatch(raw, true).then(function (m) {
       var prevLen = liveView.hasData ? state.log.length : -1;
       liveView.raw = raw;
@@ -3881,8 +4017,11 @@
   var app = document.getElementById("app");
 
   function render() {
+    if (liveView && liveView.event) { app.innerHTML = renderEventViewer(); bindEventViewer(); return; }
+    if (eventOpen && !liveView) { app.innerHTML = renderTournamentScreens(); bindTournamentScreens(); return; }
     if (liveView && !liveView.hasData) { app.innerHTML = renderLiveWaiting(); bindLiveEvents(); return; }
     if (archiveOpen) { app.innerHTML = renderArchiveScreen() + renderShareOverlays(); bindEvents(); bindShareEvents(); return; }
+    if (viewingArchived && state.scoreOnly && !liveView) { app.innerHTML = renderScoreOnlyView(state); bindEvents(); return; }
     if (state.setup) {
       renderSetup();
       var overlays = renderShareOverlays();
@@ -4003,7 +4142,8 @@
         var dur = matchDuration(r);
         var meta = [fmtDateTR(r.archiveId || r.startedAt)];
         if (formatLabel(r)) meta.push(formatLabel(r));
-        meta.push(t("nPoints", { n: r.log.length }));
+        if (r.scoreOnly) { if (r.court) meta.push(r.court); meta.push(t("evArchTag")); }
+        else meta.push(t("nPoints", { n: r.log.length }));
         if (dur !== null) meta.push(fmtDuration(dur));
         if (r.imported) meta.push(t("fromShare"));
         return '<div class="arc-item">' +
@@ -4114,6 +4254,7 @@
           '</div>' +
         '</div>' +
         '<button class="btn-primary" id="startBtn" type="button">' + t("startMatch") + '</button>' +
+        '<div class="ev-entry"><button id="openEventBtn" type="button">' + escapeHtml(tournaments.length ? t("evEntryOpen", { n: tournaments.length }) : t("evEntry")) + '</button></div>' +
         (archiveCount
           ? '<div class="archive-entry"><button id="openArchiveSetup" type="button">' + t("pastMatches", { n: archiveCount }) + '</button></div>'
           : '') +
@@ -4134,7 +4275,8 @@
     var formatPreset = "standard";
     var FORMAT_OPTS = {
       standard: null,
-      fast4: { setGamesTarget: 4, setWinByTwo: false, tbTriggerAt: 3 },
+      // Fast4: 4 oyunluk set; 3-3'te set 5'e uzar (2 fark), 4-4'te 7 puanlık tie-break.
+      fast4: { setGamesTarget: 4, setWinByTwo: true, tbTriggerAt: 4 },
       proset: { setGamesTarget: 8, setWinByTwo: true, tbTriggerAt: 8, forceSingleSet: true }
     };
     var FORMAT_BTN_IDS = { standard: "fmtStandard", fast4: "fmtFast4", proset: "fmtProSet" };
@@ -4148,7 +4290,13 @@
       document.getElementById("finalSetField").style.display = isProSet ? "none" : "";
     }
     document.getElementById("fmtStandard").onclick = function () { selectFormat("standard"); };
-    document.getElementById("fmtFast4").onclick = function () { selectFormat("fast4"); };
+    document.getElementById("fmtFast4").onclick = function () {
+      selectFormat("fast4");
+      // Fast4 kuralları: 3 set, son set süper tie-break, karar puanı (avantaj yok). İstenirse değiştirilebilir.
+      document.getElementById("setsThree").onclick();
+      document.getElementById("finalSuperTB").onclick();
+      document.getElementById("ruleNoAd").onclick();
+    };
     document.getElementById("fmtProSet").onclick = function () { selectFormat("proset"); };
     document.getElementById("setsThree").onclick = function () {
       setsToPlayVal = 3;
@@ -4240,6 +4388,7 @@
     }
     renderSavedChips();
 
+    document.getElementById("openEventBtn").onclick = function () { openEventScreen(); };
     var openArcSetup = document.getElementById("openArchiveSetup");
     if (openArcSetup) {
       openArcSetup.onclick = function () { openArchive(); };
@@ -5448,6 +5597,777 @@
     el.addEventListener("click", finish);
     setTimeout(finish, reduce ? 500 : 1450);
   }
+
+  // ================= Turnuva modu: birden çok maçı oyun oyun takip et =================
+  // Yönetici turnuvayı adı ve kurallarıyla kurar, günlere maç programı girer (ileri tarih
+  // dahil), maç sırasında her oyunda tek dokunuşla skor işler. Turnuva başına tek canlı
+  // link: veliler bütün günleri ve kortları görür. Biten maçlar arşive düşer.
+  var TOURN_KEY = "courtside-tournaments-v1";
+  var OLD_EVENT_KEY = "courtside-event-v1";
+  var FAV_KEY = "courtside-evfav-v1";
+  var DEFAULT_RULES = { preset: "standard", noAd: false, sets: 3, finalSTB: false };
+
+  function rulesFmt(r) {
+    r = r || DEFAULT_RULES;
+    if (r.preset === "proset") return { sets: 1, target: 8, tbAt: 8, stb: false };
+    var tgt = r.preset === "fast4" ? 4 : 6; // Fast4: 3-3'te set 5'e uzar, 4-4'te 7'lik tie-break
+    return { sets: r.sets === 5 ? 5 : 3, target: tgt, tbAt: tgt, stb: !!r.finalSTB };
+  }
+  function rulesLabel(r) {
+    r = r || DEFAULT_RULES;
+    var bits = [r.preset === "fast4" ? "Fast4" : (r.preset === "proset" ? "Pro Set" : t("rStandard"))];
+    if (r.preset !== "proset") { bits.push(t("rSets", { n: r.sets === 5 ? 5 : 3 })); if (r.finalSTB) bits.push(t("rFinalSTB")); }
+    bits.push(r.noAd ? t("rNoAd") : t("rAd"));
+    return bits.join(" · ");
+  }
+  function evFmt(m) { return rulesFmt(m.rules || (eventState && eventState.rules)); }
+
+  // --- Tarih yardımcıları (yerel gün, "YYYY-AA-GG") ---
+  function ymd(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function todayStr() { return ymd(new Date()); }
+  function dayFromStr(s) { var p = String(s || "").split("-"); return new Date(+p[0], (+p[1] || 1) - 1, +p[2] || 1); }
+  function dayOffset(s) { return Math.round((dayFromStr(s) - dayFromStr(todayStr())) / 86400000); }
+  function dayLabel(s) {
+    var off = dayOffset(s);
+    if (off === 0) return t("evToday");
+    if (off === 1) return t("evTomorrow");
+    if (off === -1) return t("evYesterday");
+    try { return dayFromStr(s).toLocaleDateString(locale(), { weekday: "short", day: "numeric", month: "short" }); } catch (e) { return s; }
+  }
+  function validDay(s) { return /^\d{4}-\d{2}-\d{2}$/.test(String(s || "")); }
+
+  // --- Kalıcı kayıt ---
+  function loadTournaments() {
+    var arr = [];
+    try { arr = JSON.parse(localStorage.getItem(TOURN_KEY) || "[]"); } catch (e) { arr = []; }
+    if (!Array.isArray(arr)) arr = [];
+    // Önceki "Maç günü" sürümünden kalan etkinliği turnuvaya çevir.
+    try {
+      var old = JSON.parse(localStorage.getItem(OLD_EVENT_KEY) || "null");
+      if (old && Array.isArray(old.matches)) {
+        var d = ymd(new Date(old.createdAt || Date.now()));
+        old.name = old.name || "Turnuva"; old.rules = old.rules || DEFAULT_RULES;
+        old.matches.forEach(function (m) { m.date = m.date || d; m.rules = m.rules || DEFAULT_RULES; delete m.fmt; });
+        arr.push(old);
+        localStorage.setItem(TOURN_KEY, JSON.stringify(arr));
+        localStorage.removeItem(OLD_EVENT_KEY);
+      }
+    } catch (e) {}
+    return arr.filter(function (x) { return x && Array.isArray(x.matches); });
+  }
+  var tournaments = loadTournaments();
+  var eventState = null;        // açık turnuva (tournaments içindeki nesne)
+  var eventOpen = false;        // Turnuva ekranları açık mı
+  var evRulesForm = null;       // {mode:"create"|"edit", d:{name, preset, noAd, sets, finalSTB}, err}
+  var evDay = todayStr();       // yöneticinin baktığı gün
+  var evModal = null;           // {kind:"add"|"edit"|"tb"|"live"|"stop"|"finish", ...}
+  var evPush = {};              // turnuva id → {timer, retry, busy, again}
+  var evStatus = {};            // turnuva id → null | "starting" | "ok" | "offline" | "error"
+
+  function saveTournaments() {
+    try { localStorage.setItem(TOURN_KEY, JSON.stringify(tournaments)); } catch (e) {}
+  }
+  function saveEvent() {
+    saveTournaments();
+    if (eventState && eventState.live) scheduleEventPush(eventState);
+  }
+  function evName(ev) { return (ev && ev.name || "").trim() || t("evTitle"); }
+  function evFind(id) {
+    if (!eventState) return null;
+    for (var i = 0; i < eventState.matches.length; i++) if (String(eventState.matches[i].id) === String(id)) return eventState.matches[i];
+    return null;
+  }
+
+  // --- Skor motoru (oyun seviyesinde) ---
+  function evSetsWon(m, k) { return m.sets.filter(function (s) { return s[k] > s[otherKey(k)]; }).length; }
+  function evInTB(m) {
+    var f = evFmt(m);
+    return !m.stbNow && m.status === "live" && m.g.a === f.tbAt && m.g.b === f.tbAt;
+  }
+  function evSnapshot(m) {
+    m.hist = m.hist || [];
+    m.hist.push(JSON.stringify({ sets: m.sets, g: m.g, p: m.p, stbNow: m.stbNow, status: m.status, winner: m.winner }));
+    if (m.hist.length > 40) m.hist.shift();
+  }
+  function evAfterSet(m) {
+    var f = evFmt(m), need = Math.ceil(f.sets / 2);
+    m.g = { a: 0, b: 0 }; m.p = { a: 0, b: 0 }; m.stbNow = false;
+    ["a", "b"].forEach(function (k) { if (evSetsWon(m, k) >= need) { m.status = "done"; m.winner = k; } });
+    if (m.status === "done") { m.endedAt = Date.now(); return; }
+    if (f.stb && m.sets.length === f.sets - 1 && evSetsWon(m, "a") === evSetsWon(m, "b")) m.stbNow = true;
+  }
+  function evAddGame(m, k, tbLoser) {
+    if (m.status === "done") return;
+    var f = evFmt(m), o = otherKey(k);
+    evSnapshot(m);
+    if (m.status !== "live") { m.status = "live"; m.startedAt = m.startedAt || Date.now(); }
+    if (m.stbNow) {
+      m.p[k]++;
+      if (m.p[k] >= 10 && m.p[k] - m.p[o] >= 2) { m.sets.push({ a: m.p.a, b: m.p.b, superTB: true }); evAfterSet(m); }
+    } else if (evInTB(m)) {
+      var s = { a: m.g.a, b: m.g.b }; s[k]++;
+      if (tbLoser !== null && tbLoser !== undefined) { var tb = {}; tb[o] = tbLoser; tb[k] = Math.max(7, tbLoser + 2); s.tb = tb; }
+      m.sets.push(s); evAfterSet(m);
+    } else {
+      m.g[k]++;
+      if (m.g[k] >= f.target && m.g[k] - m.g[o] >= 2) { m.sets.push({ a: m.g.a, b: m.g.b }); evAfterSet(m); }
+    }
+    m.updatedAt = Date.now();
+    evAfterChange(m);
+  }
+  function evUndo(m) {
+    if (!m.hist || !m.hist.length) return;
+    var wasDone = m.status === "done";
+    var s = JSON.parse(m.hist.pop());
+    m.sets = s.sets; m.g = s.g; m.p = s.p; m.stbNow = s.stbNow; m.status = s.status; m.winner = s.winner;
+    if (m.status !== "done") m.endedAt = null;
+    m.updatedAt = Date.now();
+    if (wasDone && m.status !== "done") deleteArchived(evArchiveId(m));
+    evAfterChange(m);
+  }
+  function evAfterChange(m) {
+    if (m.status === "done") evArchive(m);
+    saveEvent();
+  }
+
+  // "6-4 3-2", "7-6(5) 6-7(3) 10-8" gibi yazılmış skoru çözer. Hatalıysa null.
+  function evParseScore(str, rules) {
+    var f = rulesFmt(rules);
+    var toks = String(str || "").trim().split(/[\s,;]+/).filter(Boolean);
+    var m = { rules: rules, sets: [], g: { a: 0, b: 0 }, p: { a: 0, b: 0 }, stbNow: false, status: "sched", winner: null };
+    if (!toks.length) return m;
+    m.status = "live";
+    for (var i = 0; i < toks.length; i++) {
+      if (m.status === "done") return null;
+      var mt = /^\[?(\d{1,2})[-–:/](\d{1,2})\]?(?:\((\d{1,2})\))?$/.exec(toks[i]);
+      if (!mt) return null;
+      var a = +mt[1], b = +mt[2], tbp = mt[3] !== undefined ? +mt[3] : null;
+      var last = i === toks.length - 1;
+      var hi = Math.max(a, b), lo = Math.min(a, b), k = a > b ? "a" : "b";
+      if (m.stbNow) {
+        if (hi >= 10 && hi - lo >= 2) { m.sets.push({ a: a, b: b, superTB: true }); evAfterSet(m); continue; }
+        if (!last) return null;
+        m.p = { a: a, b: b }; continue;
+      }
+      var isTB = hi === f.tbAt + 1 && lo === f.tbAt;
+      var done = (hi === f.target && lo <= f.target - 2) || (hi === f.target + 1 && lo === f.target - 1) || isTB;
+      if (done) {
+        var s = { a: a, b: b };
+        if (isTB && tbp !== null) { var tb = {}; tb[otherKey(k)] = tbp; tb[k] = Math.max(7, tbp + 2); s.tb = tb; }
+        m.sets.push(s); evAfterSet(m); continue;
+      }
+      var partialOk = hi < f.target || (hi === f.target && lo >= f.target - 1);
+      if (!last || !partialOk) return null;
+      m.g = { a: a, b: b };
+    }
+    return m;
+  }
+  function evScoreText(m) {
+    var parts = m.sets.map(function (s) {
+      if (s.superTB) return s.a + "-" + s.b;
+      return s.a + "-" + s.b + (s.tb ? "(" + Math.min(s.tb.a, s.tb.b) + ")" : "");
+    });
+    if (m.status === "live") parts.push(m.stbNow ? m.p.a + "-" + m.p.b : m.g.a + "-" + m.g.b);
+    return parts.join(" ");
+  }
+
+  // --- Arşiv ---
+  function evArchiveId(m) { return "ev" + m.id; }
+  function evArchive(m) {
+    if (!m.sets.length && !m.g.a && !m.g.b) return;
+    var r = m.rules || DEFAULT_RULES, f = rulesFmt(r);
+    var rec = freshMatch({ a: m.a, b: m.b }, !!r.noAd, f.sets === 5 ? 5 : 3, f.stb,
+      { setGamesTarget: f.target, setWinByTwo: true, tbTriggerAt: f.tbAt, forceSingleSet: f.sets === 1, mode: "simple" });
+    rec.setup = false;
+    rec.sets = JSON.parse(JSON.stringify(m.sets));
+    if (m.status !== "done") rec.games = { a: m.g.a, b: m.g.b };
+    rec.matchOver = m.status === "done";
+    rec.winner = m.winner || null;
+    rec.startedAt = m.startedAt || m.createdAt || Date.now();
+    rec.archiveId = evArchiveId(m);
+    rec.archivedAt = Date.now();
+    rec.abandoned = !rec.matchOver;
+    rec.scoreOnly = true;
+    rec.court = m.court || "";
+    rec.eventName = eventState ? evName(eventState) : "";
+    var arr = loadArchive().filter(function (x) { return x.archiveId !== rec.archiveId; });
+    arr.unshift(rec);
+    arr.sort(function (x, y) { return (y.startedAt || 0) - (x.startedAt || 0); });
+    if (arr.length > ARCHIVE_MAX) arr = arr.slice(0, ARCHIVE_MAX);
+    writeArchive(arr);
+  }
+
+  // --- Yayın (turnuva başına bir link) ---
+  function evPublic(ev) {
+    return {
+      v: 2, n: evName(ev), r: ev.rules || DEFAULT_RULES,
+      m: ev.matches.map(function (m) {
+        var o = { i: m.id, dt: m.date, c: m.court || "", tm: m.time || "", a: m.a, b: m.b, st: m.status, s: m.sets, u: m.updatedAt || 0 };
+        if (m.status === "live") { o.g = m.g; if (m.stbNow) { o.stb = 1; o.p = m.p; } if (evInTBOf(ev, m)) o.tb = 1; }
+        if (m.winner) o.w = m.winner;
+        return o;
+      })
+    };
+  }
+  function evInTBOf(ev, m) {
+    var f = rulesFmt(m.rules || ev.rules);
+    return !m.stbNow && m.status === "live" && m.g.a === f.tbAt && m.g.b === f.tbAt;
+  }
+  function putEventLive(ev, code, ended) {
+    var body = "E" + JSON.stringify(evPublic(ev));
+    return getIdToken().then(function (a) {
+      return fetch(FB.db + "/live/" + code + ".json?auth=" + encodeURIComponent(a.idToken), {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ owner: a.uid, c: body, t: { ".sv": "timestamp" }, ended: !!ended })
+      }).then(function (r) { if (!r.ok) throw new Error("put " + r.status); });
+    });
+  }
+  function pushSlot(ev) { return evPush[ev.id] || (evPush[ev.id] = { timer: null, retry: null, busy: false, again: false }); }
+  function scheduleEventPush(ev) {
+    var sl = pushSlot(ev);
+    clearTimeout(sl.timer);
+    sl.timer = setTimeout(function () { pushEventNow(ev); }, 250);
+  }
+  function setEvStatus(ev, st) {
+    if (evStatus[ev.id] === st) return;
+    evStatus[ev.id] = st;
+    if (eventOpen && eventState === ev) render();
+  }
+  function pushEventNow(ev) {
+    if (!ev.live || tournaments.indexOf(ev) === -1) return;
+    var sl = pushSlot(ev);
+    if (sl.busy) { sl.again = true; return; }
+    sl.busy = true; clearTimeout(sl.retry);
+    putEventLive(ev, ev.live.code, false).then(function () {
+      sl.busy = false; setEvStatus(ev, "ok");
+      if (sl.again) { sl.again = false; pushEventNow(ev); }
+    }, function () {
+      sl.busy = false; setEvStatus(ev, "offline");
+      sl.retry = setTimeout(function () { pushEventNow(ev); }, 8000);
+    });
+  }
+  function startEventLive() {
+    var ev = eventState;
+    if (!ev || ev.live || evStatus[ev.id] === "starting") return;
+    evStatus[ev.id] = "starting"; render();
+    var code = newLiveCode();
+    putEventLive(ev, code, false).then(function () {
+      ev.live = { code: code }; evStatus[ev.id] = "ok";
+      if (eventState === ev) evModal = { kind: "live" };
+      saveEvent(); render();
+    }, function () {
+      evStatus[ev.id] = "error"; render();
+    });
+  }
+  function stopEventLive() {
+    var ev = eventState;
+    if (!ev || !ev.live) return;
+    putEventLive(ev, ev.live.code, true).catch(function () {});
+    ev.live = null; evStatus[ev.id] = null; evModal = null;
+    saveEvent(); render();
+  }
+  function shareEventLink() {
+    var url = liveUrl(eventState.live.code), text = t("evShareText", { name: evName(eventState) });
+    var sh = nativePlugin("Share");
+    var p = sh ? sh.share({ title: evName(eventState), text: text, url: url, dialogTitle: evName(eventState) })
+      : (navigator.share && !inPreviewFrame() ? navigator.share({ title: evName(eventState), text: text, url: url }) : null);
+    if (p) { p.catch(function () {}); return; }
+    copyText(url, document.getElementById("evLinkInput")).then(function () {
+      var st = document.getElementById("evLinkStatus"); if (st) st.textContent = t("liveCopied");
+    }, function () {});
+  }
+  function finishEvent() {
+    var ev = eventState;
+    if (!ev) return;
+    ev.matches.forEach(function (m) { if (m.status !== "sched") evArchive(m); });
+    if (ev.live) putEventLive(ev, ev.live.code, true).catch(function () {});
+    var sl = evPush[ev.id]; if (sl) { clearTimeout(sl.timer); clearTimeout(sl.retry); }
+    tournaments = tournaments.filter(function (x) { return x !== ev; });
+    eventState = null; evModal = null;
+    saveTournaments(); render();
+  }
+
+  // --- Ortak görünüm parçaları ---
+  function evSortSched(x, y) {
+    var tx = x.time || "99:99", ty = y.time || "99:99";
+    if (tx !== ty) return tx < ty ? -1 : 1;
+    return (x.order || 0) - (y.order || 0);
+  }
+  function evGroups(list) {
+    return {
+      live: list.filter(function (m) { return m.status === "live"; }).sort(function (x, y) { return String(x.court).localeCompare(String(y.court), locale(), { numeric: true }); }),
+      next: list.filter(function (m) { return m.status === "sched"; }).sort(evSortSched),
+      done: list.filter(function (m) { return m.status === "done"; }).sort(function (x, y) { return (y.endedAt || y.updatedAt || 0) - (x.endedAt || x.updatedAt || 0); })
+    };
+  }
+  function agoText(ts) {
+    if (!ts) return "";
+    var d = Math.max(0, Date.now() - ts), mn = Math.floor(d / 60000);
+    if (mn < 1) return t("agoNow");
+    if (mn < 60) return t("agoMin", { n: mn });
+    return t("agoHour", { n: Math.floor(mn / 60) });
+  }
+  function evBoard(m) {
+    var live = m.status === "live";
+    function row(k) {
+      var o = otherKey(k), win = m.status === "done" && m.winner === k;
+      var cells = (m.sets || []).map(function (s) {
+        var sup = s.tb && s[k] < s[o] ? '<sup>' + s.tb[k] + '</sup>' : '';
+        return '<span class="ev-set' + (s[k] > s[o] ? ' w' : '') + '">' + s[k] + sup + '</span>';
+      }).join("");
+      if (live) cells += '<span class="ev-set cur">' + (m.stbNow ? m.p[k] : m.g[k]) + '</span>';
+      return '<div class="ev-row' + (win ? ' win' : '') + '"><span class="ev-name">' + escapeHtml(m[k]) + (win ? ' <span class="ev-trophy">🏆</span>' : '') + '</span>' + cells + '</div>';
+    }
+    return '<div class="ev-board">' + row("a") + row("b") + '</div>';
+  }
+  function evMeta(m) {
+    var bits = [];
+    if (m.time) bits.push(escapeHtml(m.time));
+    if (m.court) bits.push(escapeHtml(m.court));
+    return bits.join(" · ") || "&nbsp;";
+  }
+  function evDaysOf(list, extra) {
+    var seen = {}, out = [];
+    list.forEach(function (m) { if (validDay(m.date) && !seen[m.date]) { seen[m.date] = 1; out.push(m.date); } });
+    (extra || []).forEach(function (d) { if (validDay(d) && !seen[d]) { seen[d] = 1; out.push(d); } });
+    return out.sort();
+  }
+  function evDayChips(days, cur, attr, withPicker) {
+    return '<div class="ev-days">' + days.map(function (d) {
+      var n = attr === "data-evday" ? eventState.matches.filter(function (m) { return m.date === d; }).length : 0;
+      return '<button type="button" class="ev-daychip" ' + attr + '="' + d + '" aria-pressed="' + (d === cur) + '">' + escapeHtml(dayLabel(d)) +
+        (n ? ' <span class="ev-daycount">' + n + '</span>' : '') + '</button>';
+    }).join("") +
+      (withPicker ? '<span class="ev-daychip ev-otherday">' + t("evOtherDay") + '<input type="date" id="evDayPick" aria-label="' + escapeAttr(t("evOtherDay")) + '"></span>' : '') +
+    '</div>';
+  }
+
+  // --- Yönetici: turnuva listesi ---
+  function renderTournamentList() {
+    var html = '<div class="archived-bar ev-bar"><button id="evExit" type="button">' + t("back") + '</button><span class="ev-bar-title">' + t("evListTitle") + '</span></div><main class="ev-main">';
+    html += tournaments.map(function (ev) {
+      return '<div class="ev-card ev-tcard">' +
+        '<div class="ev-tmain"><div class="ev-tname">' + escapeHtml(evName(ev)) + (ev.live ? ' <span class="live-pill ev-tlive"><span class="dot"></span>' + t("liveOn") + '</span>' : '') + '</div>' +
+        '<div class="ev-meta">' + escapeHtml(rulesLabel(ev.rules)) + ' · ' + t("evNMatches", { n: ev.matches.length }) + '</div></div>' +
+        '<button class="ev-more" data-evopen="' + ev.id + '" type="button">' + t("evOpenT") + '</button></div>';
+    }).join("");
+    html += '<button class="btn-primary ev-add" id="evNewT" type="button">' + t("evNewT") + '</button></main>';
+    return html;
+  }
+
+  // --- Yönetici: turnuva oluştur / kuralları düzenle (ana ekrandaki gibi seçenek seçenek) ---
+  function renderRulesForm() {
+    var f = evRulesForm, d = f.d, pro = d.preset === "proset";
+    var pick = function (id, on, label) { return '<button id="' + id + '" type="button" aria-pressed="' + on + '">' + label + '</button>'; };
+    return '<div class="archived-bar ev-bar"><button id="evRulesBack" type="button">' + t("back") + '</button><span class="ev-bar-title">' +
+        t(f.mode === "create" ? "evCreateTitle" : "evRulesTitle") + '</span></div>' +
+      '<div class="setup ev-rules">' +
+        '<div class="field"><label>' + t("evTName") + '</label><input id="evTName" type="text" maxlength="48" placeholder="' + escapeAttr(t("evTNamePh")) + '" value="' + escapeAttr(d.name || "") + '"></div>' +
+        '<div class="field"><label>' + t("matchFormat") + '</label><div class="server-pick">' +
+          pick("evrStd", d.preset === "standard", t("fmtStandard")) + pick("evrFast4", d.preset === "fast4", "Fast4") + pick("evrPro", pro, "Pro Set") + '</div></div>' +
+        '<div class="field"><label>' + t("deuceRule") + '</label><div class="server-pick">' +
+          pick("evrAd", !d.noAd, t("ruleAd")) + pick("evrNoAd", !!d.noAd, t("ruleNoAd")) + '</div>' +
+          '<p style="font-size:12.5px;color:var(--text-dim);margin:2px 0 0;line-height:1.5;">' + escapeHtml(t("ruleHelp")) + '</p></div>' +
+        (pro ? '' :
+        '<div class="field"><label>' + t("setsQ") + '</label><div class="server-pick">' +
+          pick("evrS3", d.sets !== 5, t("sets3")) + pick("evrS5", d.sets === 5, t("sets5")) + '</div></div>' +
+        '<div class="field"><label>' + t("finalSetQ") + '</label><div class="server-pick">' +
+          pick("evrFinN", !d.finalSTB, t("finalNormal")) + pick("evrFinS", !!d.finalSTB, escapeHtml(t("finalSuperTB"))) + '</div></div>') +
+        (f.mode === "edit" ? '<p class="ev-hint">' + escapeHtml(t("evRulesNote")) + '</p>' : '') +
+        (f.err ? '<div class="share-status err">' + escapeHtml(f.err) + '</div>' : '') +
+        '<button class="btn-primary" id="evRulesSave" type="button">' + t(f.mode === "create" ? "evCreate" : "evSaveRules") + '</button>' +
+      '</div>';
+  }
+  function bindRulesForm() {
+    var f = evRulesForm, d = f.d, el;
+    var keepName = function () { var n = document.getElementById("evTName"); if (n) d.name = n.value; };
+    var set = function (id, fn) { var b = document.getElementById(id); if (b) b.onclick = function () { keepName(); fn(); f.err = null; render(); }; };
+    set("evrStd", function () { d.preset = "standard"; });
+    // Fast4 seçilince ana ekrandaki gibi: 3 set, son set süper TB, karar puanı. İstenirse değiştirilebilir.
+    set("evrFast4", function () { d.preset = "fast4"; d.sets = 3; d.finalSTB = true; d.noAd = true; });
+    set("evrPro", function () { d.preset = "proset"; });
+    set("evrAd", function () { d.noAd = false; });
+    set("evrNoAd", function () { d.noAd = true; });
+    set("evrS3", function () { d.sets = 3; });
+    set("evrS5", function () { d.sets = 5; });
+    set("evrFinN", function () { d.finalSTB = false; });
+    set("evrFinS", function () { d.finalSTB = true; });
+    if ((el = document.getElementById("evRulesBack"))) el.onclick = function () {
+      evRulesForm = null;
+      if (f.mode === "create" && !tournaments.length) eventOpen = false;
+      render();
+    };
+    if ((el = document.getElementById("evRulesSave"))) el.onclick = function () {
+      keepName();
+      var name = String(d.name || "").trim().slice(0, 48);
+      if (!name) { f.err = t("evNeedTName"); render(); return; }
+      var rules = { preset: d.preset, noAd: !!d.noAd, sets: d.sets === 5 ? 5 : 3, finalSTB: !!d.finalSTB };
+      if (f.mode === "create") {
+        var ev = { id: Date.now(), name: name, rules: rules, createdAt: Date.now(), live: null, matches: [] };
+        tournaments.unshift(ev); eventState = ev; evDay = todayStr();
+      } else {
+        eventState.name = name; eventState.rules = rules;
+        eventState.matches.forEach(function (m) { if (m.status === "sched") m.rules = rules; });
+      }
+      evRulesForm = null; saveEvent(); render();
+    };
+  }
+
+  // --- Yönetici: turnuva ekranı ---
+  function renderEventScreen() {
+    var ev = eventState, st = evStatus[ev.id];
+    var liveBtn = ev.live
+      ? '<button class="live-pill mb-live' + (st === "offline" ? " off" : "") + '" id="evLivePill" type="button"><span class="dot"></span>' + t("liveOn") + '</button>'
+      : '<button class="live-go ev-golive" id="evGoLive" type="button"' + (st === "starting" ? " disabled" : "") + '>' + (st === "starting" ? t("liveStarting") : t("evGoLive")) + '</button>';
+    var html = '<div class="archived-bar ev-bar"><button id="evBack" type="button">' + t("evBackList") + '</button><span class="ev-bar-title"></span>' + liveBtn + '</div>';
+    html += '<main class="ev-main">';
+    if (st === "error") html += '<div class="live-note">' + escapeHtml(t("liveErr")) + '</div>';
+    if (ev.live && st === "offline") html += '<div class="live-note">' + escapeHtml(t("liveOffline")) + '</div>';
+    html += '<h1 class="ev-h1">' + escapeHtml(evName(ev)) + '</h1>' +
+      '<div class="ev-ruleline"><span>' + escapeHtml(rulesLabel(ev.rules)) + '</span><button class="ev-more" id="evRulesBtn" type="button">' + t("evRulesBtn") + '</button></div>';
+    html += evDayChips(evDaysOf(ev.matches, [todayStr(), evDay]), evDay, "data-evday", true);
+    html += '<button class="btn-primary ev-add" id="evAddBtn" type="button">' + t("evAdd") + '</button>';
+    var dayList = ev.matches.filter(function (m) { return m.date === evDay; });
+    var g = evGroups(dayList);
+    if (!dayList.length) html += '<p class="empty-state">' + escapeHtml(t("evEmptyDay")) + '</p>';
+    if (g.live.length) html += '<p class="section-label ev-sec">' + t("evLive") + ' · ' + g.live.length + '</p>' + g.live.map(evAdminCard).join("");
+    if (g.next.length) html += '<p class="section-label ev-sec">' + t("evNext") + ' · ' + g.next.length + '</p>' + g.next.map(evAdminCard).join("");
+    if (g.done.length) html += '<p class="section-label ev-sec">' + t("evDone") + ' · ' + g.done.length + '</p>' + g.done.map(evAdminCard).join("");
+    html += '<div class="reset-row"><button id="evFinishBtn" type="button">' + t("evFinish") + '</button></div>';
+    html += '</main>';
+    html += renderEventModal();
+    return html;
+  }
+  function evAdminCard(m) {
+    var tag = m.status === "live" && m.stbNow ? '<span class="ev-tag">' + t("evSTB") + '</span>' : (evInTB(m) ? '<span class="ev-tag">' + t("evTB") + '</span>' : "");
+    var head = '<div class="ev-head"><span class="ev-meta">' + evMeta(m) + '</span>' + tag +
+      '<button class="ev-more" data-evedit="' + m.id + '" type="button">' + t("evEdit") + '</button></div>';
+    var actions = "";
+    if (m.status === "sched") {
+      actions = '<div class="ev-actions"><button class="ev-startbtn" data-evstart="' + m.id + '" type="button">' + t("evStart") + '</button></div>';
+    } else if (m.status === "live") {
+      var lbl = function (k) { return t(m.stbNow ? "evPlusPt" : "evPlusGame", { name: shortName({ names: { a: m.a, b: m.b } }, k) }); };
+      actions = '<div class="ev-plus">' +
+        '<button data-evgame="' + m.id + '" data-k="a" type="button">' + escapeHtml(lbl("a")) + '</button>' +
+        '<button data-evgame="' + m.id + '" data-k="b" type="button">' + escapeHtml(lbl("b")) + '</button></div>' +
+        (m.hist && m.hist.length ? '<button class="ev-undo" data-evundo="' + m.id + '" type="button">' + t("evUndo") + '</button>' : '');
+    } else if (m.hist && m.hist.length) {
+      actions = '<button class="ev-undo" data-evundo="' + m.id + '" type="button">' + t("evUndo") + '</button>';
+    }
+    return '<div class="ev-card st-' + m.status + '">' + head + evBoard(m) + actions + '</div>';
+  }
+  function renderEventModal() {
+    var md = evModal;
+    if (!md) return "";
+    if (md.kind === "add" || md.kind === "edit") {
+      var m = md.kind === "edit" ? evFind(md.id) : null;
+      if (md.kind === "edit" && !m) return "";
+      var d = md.draft || {};
+      var known = archivePlayerNames();
+      loadPlayers().forEach(function (p) { if (known.indexOf(p.name) === -1) known.push(p.name); });
+      var dl = '<datalist id="evKnown">' + known.map(function (n) { return '<option value="' + escapeAttr(n) + '"></option>'; }).join("") + '</datalist>';
+      var val = function (k, def) { return escapeAttr(d[k] !== undefined ? d[k] : (m ? (m[k] || "") : def)); };
+      return '<div class="zone-modal" id="evFormModal"><div class="zone-card ev-form">' +
+        '<div class="zone-title">' + t(md.kind === "edit" ? "evEditTitle" : "evAddTitle") + '</div>' + dl +
+        '<div class="field"><label>' + t("evDate") + '</label><input id="evfDate" type="date" value="' + val("date", evDay) + '"></div>' +
+        '<div class="ev-2col">' +
+          '<div class="field"><label>' + t("evTime") + '</label><input id="evfTime" type="time" value="' + val("time", "") + '"></div>' +
+          '<div class="field"><label>' + t("evCourt") + '</label><input id="evfCourt" type="text" maxlength="16" placeholder="' + escapeAttr(t("evCourtPh")) + '" value="' + val("court", "") + '"></div>' +
+        '</div>' +
+        '<div class="field"><label>' + t("evP1") + '</label><input id="evfA" type="text" maxlength="24" list="evKnown" autocomplete="off" value="' + val("a", "") + '"></div>' +
+        '<div class="field"><label>' + t("evP2") + '</label><input id="evfB" type="text" maxlength="24" list="evKnown" autocomplete="off" value="' + val("b", "") + '"></div>' +
+        (md.kind === "edit"
+          ? '<div class="field"><label>' + t("evScore") + '</label><input id="evfScore" type="text" autocomplete="off" placeholder="6-4 3-2" value="' + escapeAttr(d.score !== undefined ? d.score : evScoreText(m)) + '">' +
+            '<div class="ev-hint">' + escapeHtml(t("evScoreHint")) + '</div></div>'
+          : '') +
+        (md.err ? '<div class="share-status err">' + escapeHtml(md.err) + '</div>' : '') +
+        '<div class="zone-actions"><button id="evfCancel" type="button">' + t("cancel") + '</button>' +
+          '<button id="evfSave" class="primary" type="button">' + t("evSave") + '</button></div>' +
+        (md.kind === "add" ? '<button class="live-share-again" id="evfSaveNext" type="button">' + t("evSaveNext") + '</button>' : '') +
+        (md.kind === "edit" ? '<button class="live-share-again ev-del" id="evfDelete" type="button">' + t(md.delArm ? "evDeleteSure" : "evDelete") + '</button>' : '') +
+      '</div></div>';
+    }
+    if (md.kind === "tb") {
+      var mm = evFind(md.id); if (!mm) return "";
+      var nm = shortName({ names: { a: mm.a, b: mm.b } }, md.winner);
+      var chips = "";
+      for (var i = 0; i <= 12; i++) chips += '<button type="button" data-evtb="' + i + '">' + i + '</button>';
+      return '<div class="zone-modal" id="evTbModal"><div class="zone-card">' +
+        '<div class="zone-title">' + escapeHtml(t("evTbQ", { name: nm })) + '</div>' +
+        '<div class="zone-sub">' + escapeHtml(t("evTbSub")) + '</div>' +
+        '<div class="ev-tbchips">' + chips + '</div>' +
+        '<div class="zone-actions"><button id="evTbCancel" type="button">' + t("cancel") + '</button>' +
+        '<button id="evTbSkip" class="primary" type="button">' + t("evTbSkip") + '</button></div>' +
+      '</div></div>';
+    }
+    if (md.kind === "live" && eventState.live) {
+      var url = liveUrl(eventState.live.code);
+      var canNative = IS_NATIVE || (!!navigator.share && !inPreviewFrame());
+      return '<div class="zone-modal" id="evLiveModal"><div class="zone-card">' +
+        '<div class="zone-title">' + t("evLiveTitle") + '</div>' +
+        '<div class="zone-sub">' + escapeHtml(t("evLiveSub")) + '</div>' +
+        '<input class="share-link" id="evLinkInput" type="text" readonly value="' + escapeAttr(url) + '">' +
+        '<div class="zone-actions">' +
+          '<button id="evCopyBtn" type="button"' + (canNative ? '' : ' class="primary"') + '>' + t("copyLink") + '</button>' +
+          (canNative ? '<button id="evShareBtn" class="primary" type="button">' + t("shareNative") + '</button>' : '') +
+        '</div>' +
+        '<div class="share-status" id="evLinkStatus"></div>' +
+        '<button class="share-close" id="evModalClose" type="button">' + t("close") + '</button>' +
+      '</div></div>';
+    }
+    if (md.kind === "stop" && eventState.live) {
+      return '<div class="zone-modal" id="evStopModal"><div class="zone-card">' +
+        '<div class="zone-title">' + t("liveStopQ") + '</div>' +
+        '<div class="zone-sub">' + escapeHtml(t("liveStopSub")) + '</div>' +
+        '<div class="zone-actions"><button id="evStopNo" type="button">' + t("liveKeep") + '</button>' +
+        '<button id="evStopYes" class="primary live-stop-yes" type="button">' + t("liveStopYes") + '</button></div>' +
+        '<button class="live-share-again" id="evShareAgain" type="button">' + t("liveShareAgain") + '</button>' +
+      '</div></div>';
+    }
+    if (md.kind === "finish") {
+      return '<div class="zone-modal" id="evFinishModal"><div class="zone-card">' +
+        '<div class="zone-title">' + t("evFinishQ") + '</div>' +
+        '<div class="zone-sub">' + escapeHtml(t("evFinishSub")) + '</div>' +
+        '<div class="zone-actions"><button id="evFinishNo" type="button">' + t("cancel") + '</button>' +
+        '<button id="evFinishYes" class="primary live-stop-yes" type="button">' + t("evFinishYes") + '</button></div>' +
+      '</div></div>';
+    }
+    return "";
+  }
+  function evReadForm() {
+    var g = function (id) { var el = document.getElementById(id); return el ? el.value : undefined; };
+    return { date: g("evfDate") || "", court: (g("evfCourt") || "").trim().slice(0, 16), time: g("evfTime") || "",
+             a: (g("evfA") || "").trim().slice(0, 24), b: (g("evfB") || "").trim().slice(0, 24), score: g("evfScore") };
+  }
+  function evSaveForm(andNext) {
+    var d = evReadForm();
+    if (!validDay(d.date)) d.date = evDay;
+    if (!d.a || !d.b) { evModal.err = t("evNeedNames"); evModal.draft = d; render(); return; }
+    if (evModal.kind === "add") {
+      var maxOrder = 0;
+      eventState.matches.forEach(function (x) { if ((x.order || 0) > maxOrder) maxOrder = x.order; });
+      var id = Date.now();
+      while (evFind(id)) id++;
+      eventState.matches.push({ id: id, order: maxOrder + 1, date: d.date, court: d.court, time: d.time, a: d.a, b: d.b,
+        rules: eventState.rules || DEFAULT_RULES, status: "sched", sets: [], g: { a: 0, b: 0 }, p: { a: 0, b: 0 }, stbNow: false,
+        winner: null, createdAt: Date.now(), updatedAt: Date.now(), hist: [] });
+      evDay = d.date;
+      saveEvent();
+      evModal = andNext ? { kind: "add", draft: { date: d.date, time: d.time } } : null;
+      render();
+      if (andNext) { var f = document.getElementById("evfTime"); if (f) f.focus(); }
+      return;
+    }
+    var m = evFind(evModal.id); if (!m) { evModal = null; render(); return; }
+    if (d.score !== undefined && d.score.trim() !== evScoreText(m)) {
+      var parsed = evParseScore(d.score, m.rules || eventState.rules);
+      if (!parsed) { evModal.err = t("evScoreBad"); evModal.draft = d; render(); return; }
+      evSnapshot(m);
+      var wasDone = m.status === "done";
+      m.sets = parsed.sets; m.g = parsed.g; m.p = parsed.p; m.stbNow = parsed.stbNow;
+      m.status = parsed.status; m.winner = parsed.winner;
+      if (m.status !== "sched" && !m.startedAt) m.startedAt = Date.now();
+      if (m.status === "done" && !m.endedAt) m.endedAt = Date.now();
+      if (m.status !== "done") m.endedAt = null;
+      if (wasDone && m.status !== "done") deleteArchived(evArchiveId(m));
+    }
+    m.date = d.date; m.court = d.court; m.time = d.time; m.a = d.a; m.b = d.b; m.updatedAt = Date.now();
+    evDay = m.date;
+    evModal = null;
+    evAfterChange(m);
+    render();
+  }
+  function bindEventScreen() {
+    var el, i, list;
+    if ((el = document.getElementById("evBack"))) el.onclick = function () { eventState = null; evModal = null; render(); };
+    if ((el = document.getElementById("evRulesBtn"))) el.onclick = function () {
+      var r = eventState.rules || DEFAULT_RULES;
+      evRulesForm = { mode: "edit", d: { name: eventState.name, preset: r.preset, noAd: r.noAd, sets: r.sets, finalSTB: r.finalSTB } };
+      render();
+    };
+    list = app.querySelectorAll("[data-evday]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { evDay = this.getAttribute("data-evday"); render(); };
+    if ((el = document.getElementById("evDayPick"))) el.onchange = function () { if (validDay(this.value)) { evDay = this.value; render(); } };
+    if ((el = document.getElementById("evAddBtn"))) el.onclick = function () { evModal = { kind: "add" }; render(); var f = document.getElementById("evfTime"); if (f) f.focus(); };
+    if ((el = document.getElementById("evGoLive"))) el.onclick = function () { startEventLive(); };
+    if ((el = document.getElementById("evLivePill"))) el.onclick = function () { evModal = { kind: "stop" }; render(); };
+    if ((el = document.getElementById("evFinishBtn"))) el.onclick = function () { evModal = { kind: "finish" }; render(); };
+    list = app.querySelectorAll("[data-evstart]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var m = evFind(this.getAttribute("data-evstart")); if (!m) return;
+      evSnapshot(m); m.status = "live"; m.startedAt = Date.now(); m.updatedAt = Date.now(); saveEvent(); render();
+    };
+    list = app.querySelectorAll("[data-evgame]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var m = evFind(this.getAttribute("data-evgame")), k = this.getAttribute("data-k"); if (!m) return;
+      if (evInTB(m)) { evModal = { kind: "tb", id: m.id, winner: k }; render(); return; }
+      evAddGame(m, k, null); vibrate(m.status === "done" ? [25, 60, 25] : 12); render();
+    };
+    list = app.querySelectorAll("[data-evundo]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { var m = evFind(this.getAttribute("data-evundo")); if (m) { evUndo(m); render(); } };
+    list = app.querySelectorAll("[data-evedit]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { evModal = { kind: "edit", id: this.getAttribute("data-evedit") }; render(); };
+    if ((el = document.getElementById("evfCancel"))) el.onclick = function () { evModal = null; render(); };
+    if ((el = document.getElementById("evFormModal"))) el.onclick = function (ev) { if (ev.target === this) { evModal = null; render(); } };
+    if ((el = document.getElementById("evfSave"))) el.onclick = function () { evSaveForm(false); };
+    if ((el = document.getElementById("evfSaveNext"))) el.onclick = function () { evSaveForm(true); };
+    if ((el = document.getElementById("evfDelete"))) el.onclick = function () {
+      if (!evModal.delArm) { evModal.delArm = true; evModal.draft = evReadForm(); render(); return; }
+      var id = evModal.id;
+      eventState.matches = eventState.matches.filter(function (x) { return String(x.id) !== String(id); });
+      evModal = null; saveEvent(); render();
+    };
+    list = app.querySelectorAll("[data-evtb]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var m = evFind(evModal.id), k = evModal.winner; evModal = null;
+      if (m) evAddGame(m, k, +this.getAttribute("data-evtb")); render();
+    };
+    if ((el = document.getElementById("evTbSkip"))) el.onclick = function () { var m = evFind(evModal.id), k = evModal.winner; evModal = null; if (m) evAddGame(m, k, null); render(); };
+    if ((el = document.getElementById("evTbCancel"))) el.onclick = function () { evModal = null; render(); };
+    if ((el = document.getElementById("evModalClose"))) el.onclick = function () { evModal = null; render(); };
+    if ((el = document.getElementById("evLiveModal"))) el.onclick = function (ev) { if (ev.target === this) { evModal = null; render(); } };
+    if ((el = document.getElementById("evShareBtn"))) el.onclick = function () { shareEventLink(); };
+    if ((el = document.getElementById("evCopyBtn"))) el.onclick = function () {
+      copyText(liveUrl(eventState.live.code), document.getElementById("evLinkInput")).then(function () {
+        var st = document.getElementById("evLinkStatus"); if (st) st.textContent = t("liveCopied");
+      }, function () {});
+    };
+    if ((el = document.getElementById("evStopNo"))) el.onclick = function () { evModal = null; render(); };
+    if ((el = document.getElementById("evStopModal"))) el.onclick = function (ev) { if (ev.target === this) { evModal = null; render(); } };
+    if ((el = document.getElementById("evStopYes"))) el.onclick = function () { stopEventLive(); };
+    if ((el = document.getElementById("evShareAgain"))) el.onclick = function () { evModal = { kind: "live" }; render(); };
+    if ((el = document.getElementById("evFinishNo"))) el.onclick = function () { evModal = null; render(); };
+    if ((el = document.getElementById("evFinishYes"))) el.onclick = function () { finishEvent(); };
+  }
+  function renderTournamentScreens() {
+    if (evRulesForm) return renderRulesForm();
+    if (eventState) return renderEventScreen();
+    return renderTournamentList();
+  }
+  function bindTournamentScreens() {
+    if (evRulesForm) { bindRulesForm(); return; }
+    if (eventState) { bindEventScreen(); return; }
+    var el, list = app.querySelectorAll("[data-evopen]");
+    for (var i = 0; i < list.length; i++) list[i].onclick = function () {
+      var id = this.getAttribute("data-evopen");
+      eventState = tournaments.filter(function (x) { return String(x.id) === id; })[0] || null;
+      var days = eventState ? evDaysOf(eventState.matches) : [];
+      evDay = days.indexOf(todayStr()) !== -1 || !days.length ? todayStr() : (days.filter(function (d) { return d >= todayStr(); })[0] || days[days.length - 1]);
+      render();
+    };
+    if ((el = document.getElementById("evNewT"))) el.onclick = function () {
+      evRulesForm = { mode: "create", d: { name: "", preset: "standard", noAd: false, sets: 3, finalSTB: false } }; render();
+    };
+    if ((el = document.getElementById("evExit"))) el.onclick = function () { eventOpen = false; render(); };
+  }
+  function openEventScreen() {
+    eventOpen = true; eventState = null; evModal = null;
+    evRulesForm = tournaments.length ? null : { mode: "create", d: { name: "", preset: "standard", noAd: false, sets: 3, finalSTB: false } };
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  // --- Veli (izleyici) ekranı ---
+  function loadFavs() { try { var a = JSON.parse(localStorage.getItem(FAV_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+  function saveFavs(a) { try { localStorage.setItem(FAV_KEY, JSON.stringify(a.slice(-40))); } catch (e) {} }
+  var evViewTimer = null, viewDay = null;
+  function evFromPublic(o) {
+    if (!o || !Array.isArray(o.m)) return null;
+    var fallbackDay = ymd(new Date(o.d || Date.now()));
+    return {
+      name: String(o.n || ""), rules: o.r && typeof o.r === "object" ? o.r : null,
+      matches: o.m.slice(0, 400).map(function (x) {
+        return { id: x.i, date: validDay(x.dt) ? x.dt : fallbackDay, court: String(x.c || ""), time: String(x.tm || ""), a: String(x.a || "A"), b: String(x.b || "B"),
+          status: x.st === "live" || x.st === "done" ? x.st : "sched",
+          sets: Array.isArray(x.s) ? x.s : [], g: x.g || { a: 0, b: 0 }, p: x.p || { a: 0, b: 0 }, stbNow: !!x.stb, tbNow: !!x.tb,
+          winner: x.w === "a" || x.w === "b" ? x.w : null, updatedAt: x.u || 0 };
+      })
+    };
+  }
+  function evViewerCard(m, favs) {
+    var fav = favs.indexOf(String(m.id)) !== -1;
+    var tag = m.status === "live" && m.stbNow ? '<span class="ev-tag">' + t("evSTB") + '</span>'
+      : (m.status === "live" && m.tbNow ? '<span class="ev-tag">' + t("evTB") + '</span>' : '');
+    var foot = m.status === "live" && m.updatedAt ? '<div class="ev-upd">' + escapeHtml(t("evUpdated", { ago: agoText(m.updatedAt) })) + '</div>' : '';
+    return '<div class="ev-card st-' + m.status + (fav ? ' fav' : '') + '">' +
+      '<div class="ev-head"><span class="ev-meta">' + evMeta(m) + '</span>' + tag +
+        '<button class="ev-star' + (fav ? ' on' : '') + '" data-evfav="' + escapeAttr(String(m.id)) + '" type="button" aria-pressed="' + fav + '" aria-label="' + escapeAttr(t(fav ? "evUnfollow" : "evFollow")) + '">' + (fav ? "★" : "☆") + '</button></div>' +
+      evBoard(m) + foot + '</div>';
+  }
+  function defaultViewDay(days) {
+    var today = todayStr();
+    if (days.indexOf(today) !== -1) return today;
+    return days.filter(function (d) { return d > today; })[0] || days[days.length - 1] || today;
+  }
+  function renderEventViewer() {
+    var ev = liveView.event, st = liveView.status, favs = loadFavs();
+    var ended = st === "ended";
+    var pill = ended
+      ? '<span class="live-pill off"><span class="dot"></span>' + escapeHtml(t("liveEndedShort")) + '</span>'
+      : '<span class="live-pill' + (st === "reconnecting" ? " off" : "") + '"><span class="dot"></span>' + t("watchingLive") + '</span>';
+    var msg = st === "reconnecting" ? t("liveReconnect") : (ended ? t("evViewerEnded") : t("evViewerBy"));
+    var html = '<div class="archived-bar live-bar">' + pill + '<span class="live-status">' + escapeHtml(msg) + '</span></div><main class="ev-main">';
+    html += '<h1 class="ev-h1">' + escapeHtml(ev.name || t("evTitle")) + '</h1>';
+    if (ev.rules) html += '<div class="ev-ruleline"><span>' + escapeHtml(rulesLabel(ev.rules)) + '</span></div>';
+    var days = evDaysOf(ev.matches);
+    if (!viewDay || days.indexOf(viewDay) === -1) viewDay = defaultViewDay(days);
+    if (days.length > 1) html += evDayChips(days, viewDay, "data-vday", false);
+    else if (days.length === 1) html += '<p class="section-label ev-dayonly">' + escapeHtml(dayLabel(days[0])) + '</p>';
+    var list = ev.matches.filter(function (m) { return m.date === viewDay; });
+    var mine = list.filter(function (m) { return favs.indexOf(String(m.id)) !== -1; });
+    var rest = list.filter(function (m) { return favs.indexOf(String(m.id)) === -1; });
+    var g = evGroups(rest);
+    var card = function (m) { return evViewerCard(m, favs); };
+    if (!ev.matches.length) html += '<p class="empty-state">' + escapeHtml(t("evNoMatches")) + '</p>';
+    else if (!list.length) html += '<p class="empty-state">' + escapeHtml(t("evNoMatchesDay")) + '</p>';
+    if (mine.length) {
+      var gm = evGroups(mine);
+      html += '<p class="section-label ev-sec">★ ' + t("evFollowing") + '</p>' + gm.live.concat(gm.next, gm.done).map(card).join("");
+    }
+    if (g.live.length) html += '<p class="section-label ev-sec">' + t("evLive") + ' · ' + g.live.length + '</p>' + g.live.map(card).join("");
+    if (g.next.length) html += '<p class="section-label ev-sec">' + t("evNext") + '</p>' + g.next.map(card).join("");
+    if (g.done.length) html += '<p class="section-label ev-sec">' + t("evDone") + '</p>' + g.done.map(card).join("");
+    html += '</main><div class="live-foot">Courtside</div>';
+    return html;
+  }
+  function bindEventViewer() {
+    var list = app.querySelectorAll("[data-evfav]"), i;
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var id = this.getAttribute("data-evfav"), favs = loadFavs(), at = favs.indexOf(id);
+      if (at === -1) favs.push(id); else favs.splice(at, 1);
+      saveFavs(favs); render();
+    };
+    list = app.querySelectorAll("[data-vday]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { viewDay = this.getAttribute("data-vday"); render(); };
+    if (!evViewTimer) evViewTimer = setInterval(function () { if (liveView && liveView.event) render(); }, 30000);
+  }
+  function applyEventLiveData(raw, ended) {
+    var o = null;
+    try { o = JSON.parse(raw.slice(1)); } catch (e) { o = null; }
+    var ev = evFromPublic(o);
+    if (!ev) return;
+    liveView.raw = raw; liveView.event = ev; liveView.hasData = true;
+    liveView.status = ended ? "ended" : "live";
+    render();
+  }
+
+  // Arşivden açılan "sadece skor" maçı.
+  function renderScoreOnlyView(m) {
+    var html = renderArchivedBar(m) + '<main class="ev-main">';
+    var em = { a: m.names.a, b: m.names.b, sets: m.sets || [], status: "done", winner: m.matchOver ? m.winner : null,
+      g: { a: 0, b: 0 }, p: { a: 0, b: 0 }, stbNow: false };
+    if (!m.matchOver && m.games && (m.games.a || m.games.b)) { em.status = "live"; em.g = m.games; }
+    html += '<div class="ev-card st-done">' +
+      '<div class="ev-head"><span class="ev-meta">' + escapeHtml([m.eventName, m.court, fmtDateTR(m.startedAt)].filter(Boolean).join(" · ")) + '</span></div>' +
+      evBoard(em) + '</div>' +
+      (m.matchOver ? '<p class="ev-result">' + t("evWon", { name: escapeHtml(m.names[m.winner] || "") }) + '</p>' : '<p class="ev-result arc-unfinished">' + t("unfinished") + '</p>') +
+      '<p class="zone-table-note">' + escapeHtml(t("evScoreOnlyNote")) + '</p>';
+    html += '</main>';
+    return html;
+  }
+
+  // Açılışta: yayındaki turnuvalar kaldığı yerden devam etsin.
+  if (!extractLiveCode(location.hash)) tournaments.forEach(function (ev) { if (ev.live) scheduleEventPush(ev); });
 
   applyDocLang();
   var launchLiveCode = extractLiveCode(location.hash);
