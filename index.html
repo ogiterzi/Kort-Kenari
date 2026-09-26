@@ -1435,7 +1435,10 @@
   }
   .live-row .live-act.stop { color: var(--text-dim); }
   .live-note { width: 100%; font-size: 11.5px; color: var(--clay); }
-  .mb-live { flex: none; font-size: 10px; padding: 3px 8px; }
+  .mb-live { flex: none; font-size: 10px; padding: 3px 8px; border: none; font-family: inherit; cursor: pointer; }
+  .mb-live::after { content: "▾"; font-size: 9px; opacity: .8; margin-left: -2px; }
+  .live-stop-yes { background: #C0392B !important; border-color: #C0392B !important; color: #fff !important; }
+  .live-share-again { display: block; width: 100%; margin-top: 10px; background: none; border: none; color: var(--brass); font-family: inherit; font-size: 13.5px; cursor: pointer; padding: 8px; }
   .live-bar { justify-content: space-between; }
   .live-bar .live-status { font-size: 12px; color: var(--text-dim); text-align: right; }
   .live-wait { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px 24px; text-align: center; color: var(--text-dim); }
@@ -1643,7 +1646,9 @@
       savedPlayers: "Kayıtlı oyuncular", savePlayer: "Oyuncuyu kaydet", editSaved: "Düzenle", doneEdit: "Bitti",
       savedHint: "İsmin yanındaki ☆ ile oyuncuyu kaydet; bir dahaki maçta tek dokunuşla seç.",
       goLive: "📡 Canlı yayınla", liveStarting: "Yayın başlatılıyor…", liveOn: "CANLI YAYINDA",
-      liveShare: "Linki paylaş", liveStop: "Bitir", liveOffline: "Bağlantı bekleniyor · puanlar bağlantı gelince gönderilir",
+      liveShare: "Linki paylaş", liveStop: "Bitir",
+      liveStopQ: "Canlı yayını kapatmak istiyor musunuz?", liveStopSub: "Linki açanlar \"Yayın sona erdi\" görecek. Maç kaydı devam eder.",
+      liveStopYes: "Yayını kapat", liveKeep: "Devam et", liveShareAgain: "🔗 Linki tekrar paylaş", liveOffline: "Bağlantı bekleniyor · puanlar bağlantı gelince gönderilir",
       liveErr: "Yayın başlatılamadı. İnternet bağlantını kontrol edip tekrar dene.",
       liveModalTitle: "Canlı yayın başladı 📡",
       liveModalSub: "Bu linki açan herkes maçı uygulama indirmeden, puan puan canlı izleyebilir.",
@@ -1788,7 +1793,9 @@
       savedPlayers: "Saved players", savePlayer: "Save player", editSaved: "Edit", doneEdit: "Done",
       savedHint: "Tap ☆ next to a name to save the player and pick them with one tap next time.",
       goLive: "📡 Go live", liveStarting: "Starting broadcast…", liveOn: "LIVE",
-      liveShare: "Share link", liveStop: "End", liveOffline: "Waiting for connection · points will be sent when back online",
+      liveShare: "Share link", liveStop: "End",
+      liveStopQ: "Stop the live broadcast?", liveStopSub: "Viewers will see \"Broadcast ended\". Your match tracking continues.",
+      liveStopYes: "Stop broadcast", liveKeep: "Keep live", liveShareAgain: "🔗 Share the link again", liveOffline: "Waiting for connection · points will be sent when back online",
       liveErr: "Couldn't start the broadcast. Check your internet connection and try again.",
       liveModalTitle: "You're live 📡",
       liveModalSub: "Anyone with this link can follow the match point by point — no app needed.",
@@ -3196,6 +3203,7 @@
   var AUTH_KEY = "courtside-auth-v1";
   var liveStatus = null;       // null | "starting" | "ok" | "offline" | "error"
   var liveModalOpen = false;
+  var liveStopAsk = false;     // üstteki CANLI'ya basınca: yayını kapat sorusu
   var livePushTimer = null, liveRetryTimer = null, livePushing = false, livePushAgain = false;
 
   function liveUrl(code) { return shareBaseUrl() + "#" + LIVE_PREFIX + code; }
@@ -3246,8 +3254,7 @@
   function setLiveStatus(st) {
     if (liveStatus === st) return;
     liveStatus = st;
-    var row = document.getElementById("liveRow");
-    if (row) render();
+    if (!state.setup && !archiveOpen && !viewingArchived) render();
   }
   function pushLiveNow() {
     if (!state.live || viewingArchived) return;
@@ -3278,7 +3285,7 @@
     if (!state.live) return;
     var code = state.live.code, snap = JSON.parse(JSON.stringify(state));
     putLive(code, snap, true).catch(function () {});
-    delete state.live; liveStatus = null; liveModalOpen = false;
+    delete state.live; liveStatus = null; liveModalOpen = false; liveStopAsk = false;
     saveState(); render();
   }
   function liveShareText(m) { return t("liveShareText", { a: m.names.a, b: m.names.b }); }
@@ -3302,14 +3309,23 @@
         (liveStatus === "error" ? '<div class="live-note">' + escapeHtml(t("liveErr")) + '</div>' : '') +
       '</div>';
     }
-    return '<div class="live-row" id="liveRow">' +
-      '<span class="live-pill' + (liveStatus === "offline" ? " off" : "") + '"><span class="dot"></span>' + t("liveOn") + '</span>' +
-      '<button class="live-act" id="liveShareBtn" type="button">' + t("liveShare") + '</button>' +
-      '<button class="live-act stop" id="liveStopBtn" type="button">' + t("liveStop") + '</button>' +
-      (liveStatus === "offline" ? '<div class="live-note">' + escapeHtml(t("liveOffline")) + '</div>' : '') +
-    '</div>';
+    // Yayındayken burada düğme yok: yayın üst çubuktaki CANLI işaretinden yönetilir.
+    return liveStatus === "offline"
+      ? '<div class="live-row" id="liveRow"><div class="live-note">' + escapeHtml(t("liveOffline")) + '</div></div>'
+      : '';
   }
   function renderLiveModal() {
+    if (liveStopAsk && state.live) {
+      return '<div class="zone-modal" id="liveStopModal"><div class="zone-card">' +
+        '<div class="zone-title">' + t("liveStopQ") + '</div>' +
+        '<div class="zone-sub">' + escapeHtml(t("liveStopSub")) + '</div>' +
+        '<div class="zone-actions">' +
+          '<button id="liveStopNo" type="button">' + t("liveKeep") + '</button>' +
+          '<button id="liveStopYes" class="primary live-stop-yes" type="button">' + t("liveStopYes") + '</button>' +
+        '</div>' +
+        '<button class="live-share-again" id="liveShareAgain" type="button">' + t("liveShareAgain") + '</button>' +
+      '</div></div>';
+    }
     if (!liveModalOpen || !state.live) return "";
     var url = liveUrl(state.live.code);
     var canNative = IS_NATIVE || (!!navigator.share && !inPreviewFrame());
@@ -3330,6 +3346,11 @@
     if ((el = document.getElementById("liveGo"))) el.onclick = function () { startLive(); };
     if ((el = document.getElementById("liveShareBtn"))) el.onclick = function () { liveModalOpen = true; render(); };
     if ((el = document.getElementById("liveStopBtn"))) el.onclick = function () { stopLive(); };
+    if ((el = document.getElementById("liveHeaderBtn"))) el.onclick = function () { liveStopAsk = true; render(); };
+    if ((el = document.getElementById("liveStopYes"))) el.onclick = function () { stopLive(); };
+    if ((el = document.getElementById("liveStopNo"))) el.onclick = function () { liveStopAsk = false; render(); };
+    if ((el = document.getElementById("liveStopModal"))) el.onclick = function (ev) { if (ev.target === this) { liveStopAsk = false; render(); } };
+    if ((el = document.getElementById("liveShareAgain"))) el.onclick = function () { liveStopAsk = false; liveModalOpen = true; render(); };
     if ((el = document.getElementById("liveModalClose"))) el.onclick = function () { liveModalOpen = false; render(); };
     if ((el = document.getElementById("liveModal"))) el.onclick = function (ev) { if (ev.target === this) { liveModalOpen = false; render(); } };
     if ((el = document.getElementById("liveNativeBtn"))) el.onclick = function () { shareLiveLink(); };
@@ -4264,8 +4285,8 @@
       '<header class="matchbar"><div class="matchbar-inner">' +
         '<div class="matchbar-top">' +
           (state.live && !viewingArchived && !m.matchOver
-            ? '<span class="mb-left"><span class="live-pill mb-live"><span class="dot"></span>' + t("liveOn") + '</span></span>'
-            : '<span class="live-dot mb-left"><span class="dot"></span>' + (m.matchOver ? t("matchOver") : t("liveTracking")) + '</span>') +
+            ? '<span class="mb-left"><button class="live-pill mb-live' + (liveStatus === "offline" ? " off" : "") + '" id="liveHeaderBtn" type="button"><span class="dot"></span>' + t("liveOn") + '</button></span>'
+            : '<span class="mb-left"></span>') + // yayın yokken sol üst boş kalır
           '<span class="mb-info">' + (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? t("ruleNoAdShort") : t("ruleAdShort")) + ' · ' + t("nSets", { n: m.setsToPlay }) + (m.finalSetSuperTB ? t("finalSTBShort") : "") + ' · ' + t("pointsLogged", { n: m.log.length }) + '</span>' +
           '<span class="mb-right">' + (viewingArchived ? '' : '<button class="new-match-btn" data-newmatch="1" type="button">' + t("newShort") + '</button>') + '</span>' +
         '</div>' +
