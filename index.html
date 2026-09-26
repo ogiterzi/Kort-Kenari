@@ -1488,6 +1488,14 @@
   .ev-result { text-align: center; font-weight: 600; margin: 12px 0 4px; }
   .ev-form .field input { width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: 16px; }
   .ev-2col { display: flex; gap: 10px; }
+  .ev-form input[type="date"] { -webkit-appearance: none; appearance: none; display: block; min-width: 0; width: 100%; max-width: 100%; text-align: left; min-height: 46px; }
+  .ev-form input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+  .ev-form .field { min-width: 0; }
+  .resume-card { background: var(--panel); border: 1px solid var(--brass); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+  .resume-card .rc-lbl { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .resume-card .rc-names { font-size: 17px; font-weight: 600; }
+  .resume-card .rc-score { font-size: 20px; color: var(--brass); font-variant-numeric: tabular-nums; }
+  .resume-card .btn-primary { margin-top: 8px; }
   .ev-2col .field { flex: 1; min-width: 0; }
   .ev-fmts { display: flex; flex-wrap: wrap; gap: 6px; }
   .ev-fmts button { padding: 8px 11px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 13px; cursor: pointer; }
@@ -1692,6 +1700,8 @@
       secMoments: "Dönüm noktaları", nMoments: "{n} an",
       pdfReportBtn: "Maç raporunu PDF olarak kaydet", archiveBtn: "🗂 Maç arşivi",
       resetQ: "Mevcut kayıt silinsin mi?", resetYes: "Evet, yeni maç", newMatch: "Yeni maç başlat",
+      goHome: "⌂ Ana ekran", resumeLbl: "Devam eden maç", lastLbl: "Son maç", resumeBtn: "Maça dön", openLastBtn: "Maçı aç",
+      evTimeBad: "Saati 17:30 gibi yaz.", evCourtN: "Kort {n}",
       newShort: "＋ Yeni maç", newConfirmQ: "Yeni maça geçilsin mi?", newConfirmSub: "{a} – {b} maçı silinmez. Geçmiş maçlar'a kaydedilir; istediğin zaman açıp istatistiklerine bakabilirsin.",
       newConfirmSubDone: "{a} – {b} maçı Geçmiş maçlar'da kayıtlı; istediğin zaman açıp istatistiklerine bakabilirsin.",
       newConfirmSubEmpty: "{a} – {b} maçında henüz puan girilmedi, bu yüzden arşive kaydedilmeyecek.",
@@ -1839,6 +1849,8 @@
       secMoments: "Key moments", nMoments: "{n} moments",
       pdfReportBtn: "Save match report as PDF", archiveBtn: "🗂 Match archive",
       resetQ: "Delete the current match?", resetYes: "Yes, new match", newMatch: "Start new match",
+      goHome: "⌂ Home", resumeLbl: "Match in progress", lastLbl: "Last match", resumeBtn: "Back to match", openLastBtn: "Open match",
+      evTimeBad: "Enter the time like 17:30.", evCourtN: "Court {n}",
       newShort: "＋ New match", newConfirmQ: "Move on to a new match?", newConfirmSub: "The {a} vs {b} match won't be deleted. It's saved to Past matches, where you can open it and see its stats any time.",
       newConfirmSubDone: "The {a} vs {b} match is saved in Past matches; you can open it and see its stats any time.",
       newConfirmSubEmpty: "No points have been logged in {a} vs {b} yet, so it won't be saved to the archive.",
@@ -3794,6 +3806,7 @@
   var pendingShotType = null;
   var lastMomentumPoints = null;
   var pulseFlag = null; // "point" | "game" | "set" | "match" — consumed once by the next renderHeader
+  var homeOpen = true;              // ana ekran (kurulum) açık mı; açılışta ana ekranla başlanır
   var newMatchConfirm = false;     // üst çubuktaki "Yeni maç" onay penceresi açık mı
   var resetConfirmPending = false; // native confirm() doesn't work inside the artifact sandbox, so we use an inline confirm row instead
   var quickMode = loadQuickMode(); // "Hızlı mod" — forehand/backhand ve bölge sorulmadan kaydet
@@ -4022,7 +4035,7 @@
     if (liveView && !liveView.hasData) { app.innerHTML = renderLiveWaiting(); bindLiveEvents(); return; }
     if (archiveOpen) { app.innerHTML = renderArchiveScreen() + renderShareOverlays(); bindEvents(); bindShareEvents(); return; }
     if (viewingArchived && state.scoreOnly && !liveView) { app.innerHTML = renderScoreOnlyView(state); bindEvents(); return; }
-    if (state.setup) {
+    if (state.setup || (homeOpen && !viewingArchived)) {
       renderSetup();
       var overlays = renderShareOverlays();
       if (overlays) app.insertAdjacentHTML("beforeend", overlays);
@@ -4189,6 +4202,22 @@
       tabsHtml + '<main>' + body + '</main>';
   }
 
+  function resumeScoreText(m) {
+    var parts = (m.sets || []).map(function (s) { return s.superTB ? "[" + s.a + "-" + s.b + "]" : s.a + "-" + s.b; });
+    if (!m.matchOver) parts.push(m.tiebreak ? "TB " + m.tb.a + "-" + m.tb.b : m.games.a + "-" + m.games.b + (m.points.a || m.points.b ? " (" + localScore(scoreLabel(m)) + ")" : ""));
+    return parts.join("  ");
+  }
+  // Ana ekrandan yeni maç başlatılırken süren maç kaybolmasın: arşive yazılır, yayını kapatılır.
+  function retireCurrentMatch() {
+    if (state.setup || viewingArchived) return;
+    clearOverlays();
+    if (state.live) {
+      putLive(state.live.code, JSON.parse(JSON.stringify(state)), true).catch(function () {});
+      liveStatus = null; liveModalOpen = false;
+    }
+    if (state.log && state.log.length) archiveMatch(state);
+    zonePrompt = null; zonePick = null; clearPending();
+  }
   function renderSetup() {
     var knownNames = archivePlayerNames();
     loadPlayers().forEach(function (p) {
@@ -4208,6 +4237,14 @@
           '<h1>🎾 Courtside</h1>' +
           '<p class="lede">' + t("lede") + '</p>' +
         '</div>' +
+        (!state.setup && state.log
+          ? '<div class="resume-card">' +
+              '<div class="rc-lbl">' + (state.live && !state.matchOver ? '<span class="live-pill ev-tlive"><span class="dot"></span>' + t("liveOn") + '</span> ' : '') + t(state.matchOver ? "lastLbl" : "resumeLbl") + '</div>' +
+              '<div class="rc-names">' + escapeHtml(state.names.a) + ' <span class="arc-vs">vs</span> ' + escapeHtml(state.names.b) + '</div>' +
+              '<div class="rc-score scorefont">' + escapeHtml(resumeScoreText(state)) + '</div>' +
+              '<button class="btn-primary" id="resumeBtn" type="button">' + t(state.matchOver ? "openLastBtn" : "resumeBtn") + '</button>' +
+            '</div>'
+          : '') +
         knownNamesHtml +
         '<div class="field"><label>' + t("playerA") + '</label><div class="name-row"><input id="nameA" type="text" placeholder="' + escapeAttr(t("phA")) + '" maxlength="24"' + nameListAttr + '>' +
           '<button class="star-btn" data-star="nameA" type="button" aria-label="' + escapeAttr(t("savePlayer")) + '">☆</button></div></div>' +
@@ -4393,7 +4430,11 @@
     if (openArcSetup) {
       openArcSetup.onclick = function () { openArchive(); };
     }
+    var resumeBtn = document.getElementById("resumeBtn");
+    if (resumeBtn) resumeBtn.onclick = function () { homeOpen = false; activeTab = state.matchOver ? "stats" : "live"; render(); window.scrollTo(0, 0); };
     document.getElementById("startBtn").onclick = function () {
+      retireCurrentMatch();
+      homeOpen = false;
       var nA = document.getElementById("nameA").value.trim() || t("playerA");
       var nB = document.getElementById("nameB").value.trim() || t("playerB");
       saveMode(modeVal);
@@ -4437,7 +4478,7 @@
             ? '<span class="mb-left"><button class="live-pill mb-live' + (liveStatus === "offline" ? " off" : "") + '" id="liveHeaderBtn" type="button"><span class="dot"></span>' + t("liveOn") + '</button></span>'
             : '<span class="mb-left"></span>') + // yayın yokken sol üst boş kalır
           '<span class="mb-info">' + (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? t("ruleNoAdShort") : t("ruleAdShort")) + ' · ' + t("nSets", { n: m.setsToPlay }) + (m.finalSetSuperTB ? t("finalSTBShort") : "") + ' · ' + t("pointsLogged", { n: m.log.length }) + '</span>' +
-          '<span class="mb-right">' + (viewingArchived ? '' : '<button class="new-match-btn" data-newmatch="1" type="button">' + t("newShort") + '</button>') + '</span>' +
+          '<span class="mb-right">' + (viewingArchived ? '' : '<button class="new-match-btn" id="goHomeBtn" type="button">' + t("goHome") + '</button>') + '</span>' +
         '</div>' +
         '<div class="board">' +
           '<div class="bd-name bd-a">' + (m.server === "a" && !m.matchOver ? '<span class="serve-ball"></span>' : '') +
@@ -5544,6 +5585,8 @@
     if (resetYes) {
       resetYes.onclick = function () { startNewMatch(); };
     }
+    var goHomeBtn = document.getElementById("goHomeBtn");
+    if (goHomeBtn) goHomeBtn.onclick = function () { homeOpen = true; zonePrompt = null; zonePick = null; render(); window.scrollTo(0, 0); };
     var newBtns = app.querySelectorAll("[data-newmatch]");
     for (var nb = 0; nb < newBtns.length; nb++) {
       newBtns[nb].onclick = function () {
@@ -5788,7 +5831,7 @@
     rec.archivedAt = Date.now();
     rec.abandoned = !rec.matchOver;
     rec.scoreOnly = true;
-    rec.court = m.court || "";
+    rec.court = courtLabel(m.court);
     rec.eventName = eventState ? evName(eventState) : "";
     var arr = loadArchive().filter(function (x) { return x.archiveId !== rec.archiveId; });
     arr.unshift(rec);
@@ -5920,10 +5963,12 @@
     }
     return '<div class="ev-board">' + row("a") + row("b") + '</div>';
   }
+  // Sadece numara yazıldıysa ("3") "Kort 3" diye göster.
+  function courtLabel(c) { c = String(c || "").trim(); return /^\d{1,3}$/.test(c) ? t("evCourtN", { n: c }) : c; }
   function evMeta(m) {
     var bits = [];
     if (m.time) bits.push(escapeHtml(m.time));
-    if (m.court) bits.push(escapeHtml(m.court));
+    if (m.court) bits.push(escapeHtml(courtLabel(m.court)));
     return bits.join(" · ") || "&nbsp;";
   }
   function evDaysOf(list, extra) {
@@ -6071,7 +6116,7 @@
         '<div class="zone-title">' + t(md.kind === "edit" ? "evEditTitle" : "evAddTitle") + '</div>' + dl +
         '<div class="field"><label>' + t("evDate") + '</label><input id="evfDate" type="date" value="' + val("date", evDay) + '"></div>' +
         '<div class="ev-2col">' +
-          '<div class="field"><label>' + t("evTime") + '</label><input id="evfTime" type="time" value="' + val("time", "") + '"></div>' +
+          '<div class="field"><label>' + t("evTime") + '</label><input id="evfTime" type="text" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="10:30" value="' + val("time", "") + '"></div>' +
           '<div class="field"><label>' + t("evCourt") + '</label><input id="evfCourt" type="text" maxlength="16" placeholder="' + escapeAttr(t("evCourtPh")) + '" value="' + val("court", "") + '"></div>' +
         '</div>' +
         '<div class="field"><label>' + t("evP1") + '</label><input id="evfA" type="text" maxlength="24" list="evKnown" autocomplete="off" value="' + val("a", "") + '"></div>' +
@@ -6134,6 +6179,19 @@
     }
     return "";
   }
+  // Elle yazılan saati "HH:MM" yapar: 9 → 09:00, 930 → 09:30, 1730 → 17:30, 17.30 → 17:30. Geçersizse null.
+  function normTime(v) {
+    v = String(v || "").trim();
+    if (!v) return "";
+    var h, mi, mt = /^(\d{1,2})[:.,\s](\d{1,2})$/.exec(v);
+    if (mt) { h = +mt[1]; mi = +mt[2]; }
+    else if (/^\d{1,4}$/.test(v)) {
+      if (v.length <= 2) { h = +v; mi = 0; }
+      else { h = +v.slice(0, v.length - 2); mi = +v.slice(-2); }
+    } else return null;
+    if (h > 23 || mi > 59) return null;
+    return ("0" + h).slice(-2) + ":" + ("0" + mi).slice(-2);
+  }
   function evReadForm() {
     var g = function (id) { var el = document.getElementById(id); return el ? el.value : undefined; };
     return { date: g("evfDate") || "", court: (g("evfCourt") || "").trim().slice(0, 16), time: g("evfTime") || "",
@@ -6143,6 +6201,9 @@
     var d = evReadForm();
     if (!validDay(d.date)) d.date = evDay;
     if (!d.a || !d.b) { evModal.err = t("evNeedNames"); evModal.draft = d; render(); return; }
+    var nt = normTime(d.time);
+    if (nt === null) { evModal.err = t("evTimeBad"); evModal.draft = d; render(); return; }
+    d.time = nt;
     if (evModal.kind === "add") {
       var maxOrder = 0;
       eventState.matches.forEach(function (x) { if ((x.order || 0) > maxOrder) maxOrder = x.order; });
@@ -6208,6 +6269,15 @@
     list = app.querySelectorAll("[data-evedit]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () { evModal = { kind: "edit", id: this.getAttribute("data-evedit") }; render(); };
     if ((el = document.getElementById("evfCancel"))) el.onclick = function () { evModal = null; render(); };
+    if ((el = document.getElementById("evfTime"))) {
+      // Yazarken iki nokta kendiliğinden gelsin: 1730 → 17:30
+      el.oninput = function () {
+        var v = this.value.replace(/[^0-9:.]/g, "").replace(".", ":");
+        if (/^\d{3,4}$/.test(v) && v.length === 4) v = v.slice(0, 2) + ":" + v.slice(2);
+        this.value = v;
+      };
+      el.onblur = function () { var n = normTime(this.value); if (n) this.value = n; };
+    }
     if ((el = document.getElementById("evFormModal"))) el.onclick = function (ev) { if (ev.target === this) { evModal = null; render(); } };
     if ((el = document.getElementById("evfSave"))) el.onclick = function () { evSaveForm(false); };
     if ((el = document.getElementById("evfSaveNext"))) el.onclick = function () { evSaveForm(true); };
