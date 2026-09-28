@@ -2087,7 +2087,7 @@
     evTitle: "Turnuva", evAdd: "+ Maç ekle", evLive: "Oynanıyor", evNext: "Sıradaki", evDone: "Bitenler", evFollowing: "Takip ettiklerin",
     evEmptyDay: "Bu güne henüz maç yok. \"+ Maç ekle\" ile programı gir; veliler saatleri ve kortları görür.",
     evStart: "▶ Başlat", evEdit: "Düzenle", evUndo: "↩ Geri al", evCourt: "Kort", evTime: "Saat",
-    evCourtPh: "Kort 1", evP1: "1. oyuncu", evP2: "2. oyuncu",
+    evCourtPh: "Örn. 3", evP1: "1. oyuncu", evP2: "2. oyuncu",
     evScore: "Skor", evScoreHint: "Boşluklarla yaz: 6-4 3-2 · Tie-break: 7-6(5) · Süper TB: 10-7",
     evScoreBad: "Skor anlaşılamadı. Örnek: 6-4 3-2",
     evSave: "Kaydet", evSaveNext: "Kaydet, yenisini ekle", evDelete: "Maçı sil", evDeleteSure: "Emin misin? Sil",
@@ -2119,7 +2119,7 @@
     evTitle: "Tournament", evAdd: "+ Add match", evLive: "In play", evNext: "Up next", evDone: "Finished", evFollowing: "Following",
     evEmptyDay: "No matches on this day yet. Use \"+ Add match\" to enter the schedule; parents will see times and courts.",
     evStart: "▶ Start", evEdit: "Edit", evUndo: "↩ Undo", evCourt: "Court", evTime: "Time",
-    evCourtPh: "Court 1", evP1: "Player 1", evP2: "Player 2",
+    evCourtPh: "e.g. 3", evP1: "Player 1", evP2: "Player 2",
     evScore: "Score", evScoreHint: "Separate with spaces: 6-4 3-2 · Tie-break: 7-6(5) · Super TB: 10-7",
     evScoreBad: "Couldn't read that score. Example: 6-4 3-2",
     evSave: "Save", evSaveNext: "Save & add another", evDelete: "Delete match", evDeleteSure: "Sure? Delete",
@@ -6930,7 +6930,7 @@
         '<div class="field"><label>' + t("evDate") + '</label><input id="evfDate" type="date" value="' + val("date", evDay) + '"></div>' +
         '<div class="ev-2col">' +
           '<div class="field"><label>' + t("evTime") + '</label><input id="evfTime" type="text" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="10:30" value="' + val("time", "") + '"></div>' +
-          '<div class="field"><label>' + t("evCourt") + '</label><input id="evfCourt" type="text" maxlength="16" placeholder="' + escapeAttr(t("evCourtPh")) + '" value="' + val("court", "") + '"></div>' +
+          '<div class="field"><label>' + t("evCourt") + '</label><input id="evfCourt" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="16" autocomplete="off" placeholder="' + escapeAttr(t("evCourtPh")) + '" value="' + val("court", "") + '"></div>' +
         '</div>' +
         '<div class="field"><label>' + t("evRound") + '</label><div class="ev-fmts ev-rounds">' +
           (function () {
