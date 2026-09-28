@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Courtside Destek</title>
+<meta name="description" content="Courtside: Tenis İstatistik uygulaması için destek ve iletişim.">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#14212B;--panel:#1C2C38;--text:#F4F1E8;--dim:#AEBAC2;--line:#34495A;--brass:#C79A54;color-scheme:dark}
+  @media (prefers-color-scheme: light){:root{--bg:#EFEAE0;--panel:#FFFFFF;--text:#1C2A33;--dim:#5C6A72;--line:#DAD2C0;--brass:#A9793C;color-scheme:light}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 "IBM Plex Sans",system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%}
+  main{max-width:680px;margin:0 auto;padding:40px 16px 64px}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+  .brand img{width:48px;height:48px;border-radius:12px}
+  .brand b{font:600 20px "Fraunces",Georgia,serif;display:block}
+  .brand span{color:var(--dim);font-size:14px}
+  h1{font:600 30px/1.2 "Fraunces",Georgia,serif;margin:0 0 8px}
+  h2{font:600 20px/1.3 "Fraunces",Georgia,serif;margin:32px 0 10px;color:var(--brass)}
+  p,li{color:var(--text)}
+  .lead{color:var(--dim);margin:0 0 24px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 14px}
+  .card h3{margin:0 0 6px;font-size:16px;font-weight:600}
+  .card p{margin:0;color:var(--dim)}
+  .mail{display:inline-block;margin-top:6px;padding:12px 18px;border-radius:12px;background:var(--brass);color:#14212B;font-weight:600;text-decoration:none;word-break:break-all}
+  .lang{display:flex;gap:8px;margin:0 0 24px}
+  .lang a{color:var(--dim);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:14px}
+  hr{border:0;border-top:1px solid var(--line);margin:48px 0}
+  footer{color:var(--dim);font-size:14px;margin-top:40px}
+  footer a{color:var(--brass)}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">
+    <img src="icon-192.png" alt="">
+    <div><b>Courtside</b><span>Tenis İstatistik</span></div>
+  </div>
+  <div class="lang"><a href="#tr">Türkçe</a><a href="#en">English</a></div>
+
+  <section id="tr" lang="tr">
+    <h1>Destek</h1>
+    <p class="lead">Bir sorun mu yaşıyorsun, bir önerin mi var? Bize yaz, en kısa sürede dönelim.</p>
+    <a class="mail" href="mailto:ogulcanitk@hotmail.com?subject=Courtside%20Destek">ogulcanitk@hotmail.com</a>
+
+    <h2>Sık sorulanlar</h2>
+    <div class="card"><h3>Hesap açmak zorunlu mu?</h3><p>Hayır. Uygulamanın tüm özellikleri hesapsız çalışır. Hesap açarsan maçların, oyuncuların, turnuvaların ve yoklamaların buluta yedeklenir; telefonu değiştirsen ya da uygulamayı silsen bile aynı hesapla girince geri gelir.</p></div>
+    <div class="card"><h3>Verilerim başka bir cihazda neden görünmüyor?</h3><p>İki cihazda da aynı e-posta ile giriş yaptığından emin ol. Uygulamayı açınca eşitleme otomatik yapılır; Hesap sayfasındaki “Şimdi eşitle” ile elle de başlatabilirsin. İnternet bağlantısı gerekir.</p></div>
+    <div class="card"><h3>Canlı skoru nasıl paylaşırım?</h3><p>Maç sırasında canlı yayını başlat ve oluşan kodu ya da linki paylaş. Linki açan herkes skoru anlık izler; uygulamayı indirmesine gerek yoktur.</p></div>
+    <div class="card"><h3>Yoklamada bir öğrenciye iki kez nasıl “var” yazarım?</h3><p>İsme bir kez dokun: o gün geldi (yeşil). Aynı gün ikinci kez dokun: iki antrenman (×2). Üçüncü dokunuş sıfırlar.</p></div>
+    <div class="card"><h3>Hesabımı nasıl silerim?</h3><p>Uygulamada sol üstteki baş harflerine dokun → Hesap sayfasının altındaki “Hesabı sil”. Hesabın ve buluttaki tüm verilerin kalıcı olarak silinir. Telefonundaki veriler cihazda kalır.</p></div>
+    <p>Gizlilikle ilgili bilgiler için: <a href="gizlilik.html" style="color:var(--brass)">Gizlilik Politikası</a></p>
+  </section>
+
+  <hr>
+
+  <section id="en" lang="en">
+    <h1>Support</h1>
+    <p class="lead">Having an issue or have a suggestion? Write to us and we'll get back to you as soon as possible.</p>
+    <a class="mail" href="mailto:ogulcanitk@hotmail.com?subject=Courtside%20Support">ogulcanitk@hotmail.com</a>
+
+    <h2>FAQ</h2>
+    <div class="card"><h3>Do I need an account?</h3><p>No. Every feature works without an account. If you create one, your matches, players, tournaments and attendance are backed up to the cloud and come back when you sign in on a new phone or after reinstalling.</p></div>
+    <div class="card"><h3>My data doesn't show up on another device</h3><p>Make sure you're signed in with the same email on both devices. Sync runs automatically when the app opens; you can also tap “Sync now” on the Account page. An internet connection is required.</p></div>
+    <div class="card"><h3>How do I share a live score?</h3><p>Start a live broadcast during a match and share the code or link. Anyone with the link can follow the score in real time without installing the app.</p></div>
+    <div class="card"><h3>How do I delete my account?</h3><p>Tap your initials in the top-left corner → “Delete account” at the bottom of the Account page. Your account and all cloud data are permanently deleted. Data on your phone stays on the device.</p></div>
+    <p>For privacy details see our <a href="gizlilik.html#en" style="color:var(--brass)">Privacy Policy</a>.</p>
+  </section>
+
+  <footer>© 2026 Courtside</footer>
+</main>
+</body>
+</html>
