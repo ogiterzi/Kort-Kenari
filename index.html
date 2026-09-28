@@ -1683,6 +1683,19 @@
     .intro .intro-word { opacity: 1; top: calc(50% + 17vh); }
   }
 
+  /* ---- Hesap ---- */
+  .hub .hub-top { justify-content: space-between; align-items: center; gap: 8px; }
+  .acct-chip { display: inline-flex; align-items: center; gap: 7px; flex: none; background: none; border: 1px solid var(--hairline); color: var(--text-dim); border-radius: 999px; padding: 6px 12px; font-family: inherit; font-size: 12.5px; cursor: pointer; white-space: nowrap; }
+  .acct-chip.out { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .acct-chip .cdot { width: 7px; height: 7px; border-radius: 50%; background: var(--grass); flex: none; }
+  .acct-chip .cdot.sync { background: var(--brass); }
+  .acct-chip .cdot.off { background: var(--clay); }
+  .ac-card { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 14px; }
+  .ac-email { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
+  .ac-sync { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
+  .ac-actions { display: flex; flex-direction: column; gap: 10px; }
+  .ac-actions .btn-primary, .ac-actions .csv-btn { margin-top: 0; }
+
   /* ---- Yoklama ---- */
   :root { --yk-on: #4F8F63; --yk-two: #2C6743; --yk-on-ink: #FFFFFF; --yk-ball: #CFE21B; --yk-ball-ink: #1E2A0A; }
   .yk-main { display: flex; flex-direction: column; gap: 14px; }
@@ -1749,6 +1762,28 @@
 <script>
 (function () {
   "use strict";
+
+  // ---------- Bulut eşitleme kancası ----------
+  // Uygulama verisi (maç, arşiv, oyuncular, turnuvalar, yoklama) localStorage'a her yazıldığında
+  // bulut modülü haberdar edilir. Asıl eşitleme aşağıdaki "Hesap ve bulut" bölümünde.
+  var CLOUD_KEYS = ["courtside-match-v1", "courtside-archive-v1", "courtside-players-v1", "courtside-tournaments-v1", "courtside-attendance-v1"];
+  var CLOUD_META_KEY = "courtside-sync-v1";
+  var _lsSet = null, _lsRemove = null, cloudHook = null;
+  function isLS(s) { try { return s === window.localStorage; } catch (e) { return false; } }
+  try {
+    _lsSet = Storage.prototype.setItem; _lsRemove = Storage.prototype.removeItem;
+    Storage.prototype.setItem = function (k, v) {
+      _lsSet.call(this, k, v);
+      if (cloudHook && CLOUD_KEYS.indexOf(k) !== -1 && isLS(this)) cloudHook(k);
+    };
+    Storage.prototype.removeItem = function (k) {
+      _lsRemove.call(this, k);
+      if (cloudHook && CLOUD_KEYS.indexOf(k) !== -1 && isLS(this)) cloudHook(k);
+    };
+  } catch (e) {}
+  // Buluttan gelen veriyi yazarken kancayı tetiklemeden yazar.
+  function rawSet(k, v) { try { (_lsSet || Storage.prototype.setItem).call(localStorage, k, v); } catch (e) {} }
+  function rawRemove(k) { try { (_lsRemove || Storage.prototype.removeItem).call(localStorage, k); } catch (e) {} }
 
   // ---------- iOS uygulaması (Capacitor) ----------
   // Aynı dosya hem web'de hem App Store uygulamasında çalışır. Uygulamada sayfa
@@ -2261,6 +2296,41 @@
     ykGroupInfo: "Group details", ykSave: "Save", ykSaved: "Saved ✓",
     ykDelGroup: "Delete group", ykDelGroupSure: "Sure? The group and its attendance will be deleted",
     ykDeviceNote: "Attendance is stored on this device.", ykGroups: "Groups"
+  });
+  // ---------- Hesap ve bulut metinleri ----------
+  Object.assign(I18N.tr, {
+    acChipIn: "☁ Giriş yap", acChipOk: "Bulutta", acChipSync: "Eşitleniyor…", acChipOff: "Çevrimdışı",
+    acTitle: "Hesap", acHeadOut: "Kayıtların kaybolmasın",
+    acWhy: "Giriş yaptığında maçların, arşivin, oyuncuların, turnuvaların ve yoklamaların buluta kaydedilir. Uygulama silinse ya da telefon değişse bile aynı e-postayla giriş yapınca hepsi geri gelir.",
+    acEmail: "E-posta", acPass: "Şifre (en az 6 karakter)", acLogin: "Giriş yap", acSignup: "Yeni hesap oluştur", acForgot: "Şifremi unuttum",
+    acNote: "Bu telefondaki mevcut kayıtların silinmez; ilk girişte hesabına eklenir.",
+    acWorking: "Bekle…", acResetSent: "Şifre yenileme bağlantısı e-postana gönderildi.", acNeedEmail: "Önce e-posta adresini yaz.", acNeedBoth: "E-posta ve şifreyi yaz.",
+    acHeadIn: "Bulut kaydı açık", acLast: "Son eşitleme: {time}", acNever: "Henüz eşitlenmedi", acSyncing: "Eşitleniyor…",
+    acOffline: "Bağlantı yok · internet gelince kaydedilir", acSyncNow: "Şimdi eşitle", acSynced: "Eşitlendi ✓", acLogout: "Çıkış yap",
+    acInNote: "Başka bir telefonda ya da web'de aynı e-postayla giriş yapınca bütün kayıtların gelir. Çıkış yapsan da bu telefondaki kayıtlar silinmez.",
+    acDelete: "Hesabı sil", acDeleteSure: "Emin misin? Hesap ve buluttaki kayıtlar silinir", acDeleted: "Hesap silindi. Kayıtların bu telefonda duruyor.",
+    errEmailExists: "Bu e-postayla zaten bir hesap var. \"Giriş yap\"a bas.", errInvalidEmail: "E-posta adresi geçersiz.",
+    errWeakPass: "Şifre en az 6 karakter olmalı.", errBadLogin: "E-posta ya da şifre hatalı.",
+    errTooMany: "Çok fazla deneme yapıldı. Biraz bekleyip tekrar dene.", errNotAllowed: "E-posta ile giriş henüz açılmadı.",
+    errNet: "Bağlantı kurulamadı. İnternetini kontrol edip tekrar dene.", errRelogin: "Güvenlik için yeniden giriş yapman gerekiyor. Çıkış yapıp tekrar gir, sonra yeniden dene.",
+    ykCloudOn: "Yoklamalar hesabınla buluta kaydediliyor.", ykCloudOff: "Yoklamalar şu an sadece bu telefonda. Kaybolmaması için hesapla giriş yap."
+  });
+  Object.assign(I18N.en, {
+    acChipIn: "☁ Sign in", acChipOk: "Backed up", acChipSync: "Syncing…", acChipOff: "Offline",
+    acTitle: "Account", acHeadOut: "Keep your records safe",
+    acWhy: "When you sign in, your matches, archive, players, tournaments and attendance are saved to the cloud. Even if the app is deleted or you change phones, signing in with the same email brings everything back.",
+    acEmail: "Email", acPass: "Password (at least 6 characters)", acLogin: "Sign in", acSignup: "Create new account", acForgot: "Forgot password",
+    acNote: "Records already on this phone are kept and added to your account the first time you sign in.",
+    acWorking: "Please wait…", acResetSent: "A password reset link was sent to your email.", acNeedEmail: "Enter your email first.", acNeedBoth: "Enter your email and password.",
+    acHeadIn: "Cloud backup is on", acLast: "Last synced: {time}", acNever: "Not synced yet", acSyncing: "Syncing…",
+    acOffline: "No connection · changes are saved when you're back online", acSyncNow: "Sync now", acSynced: "Synced ✓", acLogout: "Sign out",
+    acInNote: "Sign in with the same email on another phone or on the web to get all your records. Signing out does not delete the records on this phone.",
+    acDelete: "Delete account", acDeleteSure: "Sure? The account and its cloud records will be deleted", acDeleted: "Account deleted. Your records are still on this phone.",
+    errEmailExists: "An account with this email already exists. Tap \"Sign in\".", errInvalidEmail: "That email address isn't valid.",
+    errWeakPass: "The password must be at least 6 characters.", errBadLogin: "Wrong email or password.",
+    errTooMany: "Too many attempts. Wait a little and try again.", errNotAllowed: "Email sign-in isn't turned on yet.",
+    errNet: "Couldn't connect. Check your internet and try again.", errRelogin: "For security you need to sign in again. Sign out, sign back in, then try again.",
+    ykCloudOn: "Attendance is saved to the cloud with your account.", ykCloudOff: "Attendance is only on this phone right now. Sign in so it isn't lost."
   });
   var LANG = detectLang();
   function t(key, params) {
@@ -3666,7 +3736,7 @@
         body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(a.refreshToken)
       }).then(function (r) { if (!r.ok) throw new Error("refresh"); return r.json(); })
         .then(function (j) {
-          var na = { uid: j.user_id, idToken: j.id_token, refreshToken: j.refresh_token, exp: Date.now() + Number(j.expires_in || 3600) * 1000 };
+          var na = { uid: j.user_id, idToken: j.id_token, refreshToken: j.refresh_token, exp: Date.now() + Number(j.expires_in || 3600) * 1000, email: a.email || null };
           saveAuth(na); return na;
         });
     }
@@ -4324,10 +4394,11 @@
   var app = document.getElementById("app");
 
   // Ekranlar arası geçiş: derinliğe göre ileri (sağdan) ya da geri (soldan) kayar.
-  var SCREEN_DEPTH = { hub: 0, viewer: 0, setup: 1, tlist: 1, archive: 1, players: 1, match: 2, tform: 2, tscreen: 2, player: 2, archmatch: 3, yklist: 1, ykgroup: 2, ykkid: 3 };
+  var SCREEN_DEPTH = { hub: 0, viewer: 0, setup: 1, tlist: 1, archive: 1, players: 1, match: 2, tform: 2, tscreen: 2, player: 2, archmatch: 3, yklist: 1, ykgroup: 2, ykkid: 3, account: 1 };
   var lastScreen = null, screenEntering = false;
   function currentScreen() {
     if (liveView) return "viewer";
+    if (acctOpen) return "account";
     if (ykOpen) return ykKid ? "ykkid" : (ykGroupId ? "ykgroup" : "yklist");
     if (eventOpen) return evRulesForm ? "tform" : (eventState ? "tscreen" : "tlist");
     if (archiveOpen) return "archive";
@@ -4352,6 +4423,7 @@
   app.addEventListener("animationend", function (e) { if (e.target === app) app.classList.remove("scr-fwd", "scr-back"); });
   function renderScreen() {
     if (liveView && liveView.event) { app.innerHTML = renderEventViewer(); bindEventViewer(); return; }
+    if (acctOpen && !liveView) { app.innerHTML = renderAccount(); bindAccount(); return; }
     if (ykOpen && !liveView) { app.innerHTML = renderYkScreens(); bindYkScreens(); return; }
     if (eventOpen && !liveView) { app.innerHTML = renderTournamentScreens(); bindTournamentScreens(); return; }
     if (playersOpen && !viewingArchived && !archiveOpen && !liveView) { app.innerHTML = renderPlayersScreens(); bindPlayersScreens(); return; }
@@ -4597,7 +4669,7 @@
       : '';
     var off = resume ? 1 : 0;
     return '<div class="hub' + (animate ? ' hub-anim' : '') + '">' +
-      '<div class="hub-top">' + langSwitchHtml() + '</div>' +
+      '<div class="hub-top">' + acctChipHtml() + langSwitchHtml() + '</div>' +
       '<div class="hub-hero">' + ballSVG("hub-ball") +
         '<div><div class="hub-word">Courtside</div><div class="hub-tag">' + escapeHtml(t("hubTag")) + '</div></div></div>' +
       resume +
@@ -4619,6 +4691,7 @@
     if ((el = document.getElementById("openArchiveSetup"))) el.onclick = function () { openArchive(); };
     if ((el = document.getElementById("hubPlayers"))) el.onclick = function () { openPlayersScreen(); };
     if ((el = document.getElementById("hubYk"))) el.onclick = function () { openYkScreen(); };
+    if ((el = document.getElementById("acctChip"))) el.onclick = function () { openAccount(); };
     if ((el = document.getElementById("resumeBtn"))) el.onclick = function () { homeOpen = false; homeView = "hub"; activeTab = state.matchOver ? "stats" : "live"; render(); };
   }
 
@@ -7719,7 +7792,8 @@
     } else {
       html += '<button class="btn-primary ev-add" id="ykNew" type="button">' + t("ykNewGroup") + '</button>';
     }
-    html += '<p class="yk-note" style="text-align:center">' + escapeHtml(t("ykDeviceNote")) + '</p>';
+    html += '<p class="yk-note" style="text-align:center">' + escapeHtml(t(cloudUser() ? "ykCloudOn" : "ykCloudOff")) + '</p>' +
+      (cloudUser() ? '' : '<button class="acct-chip out" id="ykAcct" type="button" style="align-self:center">' + t("acChipIn") + '</button>');
     return html + '</main>';
   }
 
@@ -7865,6 +7939,7 @@
       render();
     };
     // Liste
+    if ((el = document.getElementById("ykAcct"))) el.onclick = function () { openAccount(); };
     if ((el = document.getElementById("ykNew"))) el.onclick = function () {
       ykForm = { name: "", time: "" }; render();
       var n = document.getElementById("ykfName"); if (n) n.focus();
@@ -7972,6 +8047,321 @@
   }
   function openYkScreen() { ykOpen = true; ykGroupId = null; ykKid = null; ykForm = null; ykArm = null; render(); }
 
+  // ================= Hesap ve bulut eşitleme =================
+  // Antrenör e-posta + şifreyle hesap açar (Firebase Auth, REST). Hesap, canlı yayın için zaten
+  // açılmış anonim hesaba bağlanır; böylece uid değişmez ve yayınlar bozulmaz.
+  // Veri: /users/{uid}/data/{anahtar} = { v: localStorage'daki JSON metni, t: değişiklik zamanı }.
+  // Her anahtar için "son yazan kazanır". İlk girişte telefondaki kayıtlarla buluttakiler birleştirilir.
+  function loadCloudMeta() {
+    try {
+      var m = JSON.parse(localStorage.getItem(CLOUD_META_KEY) || "null");
+      if (m && typeof m === "object") { m.t = m.t || {}; m.dirty = m.dirty || {}; return m; }
+    } catch (e) {}
+    return { owner: null, t: {}, dirty: {}, last: 0 };
+  }
+  var cloudMeta = loadCloudMeta();
+  function saveCloudMeta() { rawSet(CLOUD_META_KEY, JSON.stringify(cloudMeta)); }
+  function cloudUser() { var a = loadAuth(); return a && a.email && a.refreshToken ? a : null; }
+  var cloudStatus = null;            // null | "syncing" | "ok" | "offline"
+  var cloudPushTimer = null, cloudBusy = false, cloudAgain = false, cloudLastPull = 0;
+
+  cloudHook = function (k) {
+    cloudMeta.t[k] = Date.now();
+    cloudMeta.dirty[k] = 1;
+    saveCloudMeta();
+    if (cloudUser()) scheduleCloudPush();
+  };
+  function scheduleCloudPush(delay) {
+    clearTimeout(cloudPushTimer);
+    cloudPushTimer = setTimeout(cloudPush, delay === undefined ? 1500 : delay);
+  }
+  function userUrl(uid, path, tok) { return FB.db + "/users/" + uid + (path ? "/" + path : "") + ".json?auth=" + encodeURIComponent(tok); }
+
+  function cloudPush() {
+    if (!cloudUser()) return Promise.resolve();
+    var keys = Object.keys(cloudMeta.dirty).filter(function (k) { return CLOUD_KEYS.indexOf(k) !== -1; });
+    if (!keys.length) { if (cloudStatus === "syncing") setCloudStatus("ok"); return Promise.resolve(); }
+    if (cloudBusy) { cloudAgain = true; return Promise.resolve(); }
+    cloudBusy = true; setCloudStatus("syncing");
+    var body = {};
+    keys.forEach(function (k) {
+      var v = null; try { v = localStorage.getItem(k); } catch (e) {}
+      body[k] = { v: v, t: cloudMeta.t[k] || Date.now() };
+    });
+    return getIdToken().then(function (a) {
+      return fetch(userUrl(a.uid, "data", a.idToken), { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+        .then(function (r) { if (!r.ok) throw new Error("push " + r.status); });
+    }).then(function () {
+      keys.forEach(function (k) { if (cloudMeta.t[k] === body[k].t) delete cloudMeta.dirty[k]; });
+      cloudMeta.last = Date.now(); saveCloudMeta();
+      cloudBusy = false; setCloudStatus("ok");
+      if (cloudAgain || Object.keys(cloudMeta.dirty).length) { cloudAgain = false; scheduleCloudPush(300); }
+    }, function () {
+      cloudBusy = false; cloudAgain = false; setCloudStatus("offline");
+      scheduleCloudPush(20000);
+    });
+  }
+
+  // İlk girişte telefondaki kayıtlarla buluttakileri birleştirir (hiçbir kayıt kaybolmasın).
+  function cloudMerge(k, localStr, remoteStr) {
+    var L, R;
+    try { L = JSON.parse(localStr); R = JSON.parse(remoteStr); } catch (e) { return remoteStr; }
+    var out, seen = {};
+    function union(arr, keyFn) {
+      var res = [];
+      arr.forEach(function (x) { var id = x ? keyFn(x) : ""; if (!id || seen[id]) return; seen[id] = 1; res.push(x); });
+      return res;
+    }
+    if (k === "courtside-archive-v1" && Array.isArray(L) && Array.isArray(R)) {
+      out = union(R.concat(L), function (x) { return String(x.archiveId); })
+        .sort(function (x, y) { return (y.startedAt || 0) - (x.startedAt || 0); }).slice(0, ARCHIVE_MAX);
+    } else if (k === "courtside-players-v1" && Array.isArray(L) && Array.isArray(R)) {
+      out = union(R.concat(L), function (p) { return nameKey(p.name); })
+        .sort(function (x, y) { return String(x.name).localeCompare(String(y.name), "tr"); });
+    } else if (k === "courtside-tournaments-v1" && Array.isArray(L) && Array.isArray(R)) {
+      out = union(R.concat(L), function (x) { return String(x.id); });
+    } else if (k === "courtside-attendance-v1" && L && R) {
+      out = { groups: union((R.groups || []).concat(L.groups || []), function (g) { return String(g.id); }), att: {} };
+      [R.att || {}, L.att || {}].forEach(function (src) {
+        Object.keys(src).forEach(function (gid) {
+          var dst = out.att[gid] || (out.att[gid] = {});
+          Object.keys(src[gid] || {}).forEach(function (day) {
+            var dd = dst[day] || (dst[day] = {});
+            Object.keys(src[gid][day] || {}).forEach(function (n) { dd[n] = Math.max(dd[n] || 0, src[gid][day][n] || 0); });
+          });
+        });
+      });
+    } else {
+      // Süren maç: telefondakinde puan varsa o kalır, yoksa buluttaki gelir.
+      out = (L && L.log && L.log.length) ? L : R;
+    }
+    return JSON.stringify(out);
+  }
+
+  // Buluttakini çeker. Dönen söz: telefondaki veri değişti mi (değiştiyse sayfa yeniden yüklenir).
+  function cloudPull() {
+    if (!cloudUser()) return Promise.resolve(false);
+    setCloudStatus("syncing");
+    return getIdToken().then(function (a) {
+      return fetch(userUrl(a.uid, "data", a.idToken)).then(function (r) {
+        if (!r.ok) throw new Error("pull " + r.status);
+        return r.json();
+      }).then(function (remote) {
+        remote = remote || {};
+        // merge: bu telefon ilk kez bir hesaba bağlanıyor. replace: telefonda başka hesabın kayıtları var.
+        var mode = !cloudMeta.owner ? "merge" : (cloudMeta.owner !== a.uid ? "replace" : "normal");
+        var changed = false, now = Date.now();
+        CLOUD_KEYS.forEach(function (k) {
+          var rv = remote[k] || null, rStr = rv && typeof rv.v === "string" ? rv.v : null, rt = (rv && rv.t) || 0;
+          var local = null; try { local = localStorage.getItem(k); } catch (e) {}
+          if (mode === "merge") {
+            if (rStr !== null && local !== null) {
+              var merged = cloudMerge(k, local, rStr);
+              if (merged !== local) { rawSet(k, merged); changed = true; }
+              if (merged !== rStr) { cloudMeta.dirty[k] = 1; cloudMeta.t[k] = now; } else { cloudMeta.t[k] = rt; delete cloudMeta.dirty[k]; }
+            } else if (rStr !== null) {
+              rawSet(k, rStr); changed = true; cloudMeta.t[k] = rt; delete cloudMeta.dirty[k];
+            } else if (local !== null) {
+              cloudMeta.dirty[k] = 1; cloudMeta.t[k] = cloudMeta.t[k] || now;
+            }
+          } else if (mode === "replace") {
+            if (rStr !== null) { if (rStr !== local) { rawSet(k, rStr); changed = true; } }
+            else if (local !== null) { rawRemove(k); changed = true; }
+            cloudMeta.t[k] = rt; delete cloudMeta.dirty[k];
+          } else {
+            var lt = cloudMeta.t[k] || 0;
+            if (rv && rt > lt) {
+              if (rStr === null) { if (local !== null) { rawRemove(k); changed = true; } }
+              else if (rStr !== local) { rawSet(k, rStr); changed = true; }
+              cloudMeta.t[k] = rt; delete cloudMeta.dirty[k];
+            } else if (lt > rt && (local !== null || rv)) {
+              cloudMeta.dirty[k] = 1;
+            }
+          }
+        });
+        cloudMeta.owner = a.uid; cloudMeta.last = now; cloudLastPull = now;
+        saveCloudMeta(); setCloudStatus("ok");
+        return cloudPush().then(function () { return changed; });
+      });
+    }).catch(function () { setCloudStatus("offline"); return false; });
+  }
+  // Buluttan veri geldiyse uygulama baştan açılır; bütün ekranlar yeni veriyi okur.
+  function cloudReload() {
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    location.reload();
+  }
+  function cloudSync() { return cloudPull().then(function (changed) { if (changed) cloudReload(); return changed; }); }
+
+  // --- Giriş işlemleri (Firebase Auth REST) ---
+  function authCall(method, body) {
+    return fetch(FB.authBase + "/v1/accounts:" + method + "?key=" + FB.apiKey, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) throw new Error((j && j.error && j.error.message) || ("HTTP " + r.status));
+        return j;
+      });
+    });
+  }
+  function storeAuthFrom(j, email) {
+    var na = { uid: j.localId, idToken: j.idToken, refreshToken: j.refreshToken,
+      exp: Date.now() + Number(j.expiresIn || 3600) * 1000, email: email || j.email || null };
+    saveAuth(na);
+    return na;
+  }
+  function authErrorText(err) {
+    var m = String((err && err.message) || "");
+    if (m.indexOf("EMAIL_EXISTS") !== -1) return t("errEmailExists");
+    if (m.indexOf("INVALID_EMAIL") !== -1 || m.indexOf("MISSING_EMAIL") !== -1) return t("errInvalidEmail");
+    if (m.indexOf("WEAK_PASSWORD") !== -1 || m.indexOf("MISSING_PASSWORD") !== -1) return t("errWeakPass");
+    if (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND|USER_DISABLED/.test(m)) return t("errBadLogin");
+    if (m.indexOf("TOO_MANY_ATTEMPTS") !== -1) return t("errTooMany");
+    if (m.indexOf("OPERATION_NOT_ALLOWED") !== -1 || m.indexOf("PASSWORD_LOGIN_DISABLED") !== -1) return t("errNotAllowed");
+    if (/CREDENTIAL_TOO_OLD|TOKEN_EXPIRED|INVALID_ID_TOKEN|USER_NOT_FOUND/.test(m)) return t("errRelogin");
+    return t("errNet");
+  }
+  function cloudSignUp(email, pass) {
+    var a = loadAuth();
+    var viaNew = function () { return authCall("signUp", { email: email, password: pass, returnSecureToken: true }); };
+    // Telefonun anonim hesabı varsa ona e-posta eklenir: uid ve açık canlı yayınlar aynı kalır.
+    var p = (a && a.refreshToken && !a.email)
+      ? getIdToken().then(function (cur) {
+          return authCall("update", { idToken: cur.idToken, email: email, password: pass, returnSecureToken: true });
+        }).catch(function (err) {
+          if (/EMAIL_EXISTS|INVALID_EMAIL|WEAK_PASSWORD|OPERATION_NOT_ALLOWED|TOO_MANY/.test(String(err && err.message))) throw err;
+          return viaNew();
+        })
+      : viaNew();
+    return p.then(function (j) { storeAuthFrom(j, email); });
+  }
+  function cloudSignIn(email, pass) {
+    return authCall("signInWithPassword", { email: email, password: pass, returnSecureToken: true })
+      .then(function (j) { storeAuthFrom(j, email); });
+  }
+  function cloudSignOut() {
+    clearTimeout(cloudPushTimer);
+    try { localStorage.removeItem("courtside-auth-v1"); } catch (e) {}
+    cloudStatus = null;
+  }
+  function cloudDeleteAccount() {
+    return getIdToken().then(function (a) {
+      return fetch(userUrl(a.uid, "", a.idToken), { method: "DELETE" }).then(function (r) {
+        if (!r.ok) throw new Error("delete " + r.status);
+        return authCall("delete", { idToken: a.idToken });
+      });
+    }).then(function () {
+      cloudSignOut();
+      cloudMeta.owner = null; cloudMeta.last = 0; saveCloudMeta();
+    });
+  }
+
+  // --- Görünüm ---
+  function acctChipHtml() {
+    if (!cloudUser()) return '<button class="acct-chip out" id="acctChip" type="button">' + t("acChipIn") + '</button>';
+    return '<button class="acct-chip" id="acctChip" type="button">' + acctChipInner() + '</button>';
+  }
+  function acctChipInner() {
+    var st = cloudStatus;
+    return '<span class="cdot' + (st === "syncing" ? " sync" : st === "offline" ? " off" : "") + '"></span>' +
+      escapeHtml(t(st === "syncing" ? "acChipSync" : st === "offline" ? "acChipOff" : "acChipOk"));
+  }
+  function acSyncLine() {
+    if (cloudStatus === "syncing") return t("acSyncing");
+    if (cloudStatus === "offline") return t("acOffline");
+    if (!cloudMeta.last) return t("acNever");
+    var s;
+    try { s = new Date(cloudMeta.last).toLocaleString(locale(), { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); } catch (e) { s = ""; }
+    return t("acLast", { time: s });
+  }
+  // Durum değişince ekranı baştan çizmeden yalnızca ilgili yazılar güncellenir (yazılan şifre silinmesin).
+  function setCloudStatus(st) {
+    cloudStatus = st;
+    var chip = document.getElementById("acctChip");
+    if (chip && cloudUser()) chip.innerHTML = acctChipInner();
+    var line = document.getElementById("acSyncLine");
+    if (line) line.textContent = acSyncLine();
+  }
+
+  var acctOpen = false, acctMsg = "", acctErr = false, acctBusy = false, acctDelArm = false, acctEmail = "";
+  function openAccount() { acctOpen = true; acctMsg = ""; acctErr = false; acctDelArm = false; render(); }
+  function renderAccount() {
+    var u = cloudUser();
+    var html = navBarHtml("acBack", t("acTitle"), "", ykOpen ? t("ykTitle") : t("homeBack")) + '<main class="ev-main yk-main">';
+    var status = '<div class="share-status' + (acctErr ? ' err' : '') + '" id="acStatus">' + escapeHtml(acctMsg) + '</div>';
+    if (!u) {
+      html += '<div><h1 class="ev-h1" style="margin:0 0 6px">' + t("acHeadOut") + '</h1><p class="yk-note">' + escapeHtml(t("acWhy")) + '</p></div>' +
+        '<div class="yk-form">' +
+          '<div class="field"><label for="acEmail">' + t("acEmail") + '</label><input id="acEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120" value="' + escapeAttr(acctEmail) + '"></div>' +
+          '<div class="field"><label for="acPass">' + t("acPass") + '</label><input id="acPass" type="password" autocomplete="current-password" maxlength="128"></div>' +
+          '<div class="ac-actions">' +
+            '<button class="btn-primary" id="acLogin" type="button"' + (acctBusy ? ' disabled' : '') + '>' + (acctBusy ? t("acWorking") : t("acLogin")) + '</button>' +
+            '<button class="csv-btn" id="acSignup" type="button"' + (acctBusy ? ' disabled' : '') + '>' + t("acSignup") + '</button>' +
+          '</div>' + status +
+          '<button class="share-close" id="acReset" type="button">' + t("acForgot") + '</button>' +
+        '</div>' +
+        '<p class="yk-note">' + escapeHtml(t("acNote")) + '</p>';
+    } else {
+      html += '<div><h1 class="ev-h1" style="margin:0">' + t("acHeadIn") + '</h1></div>' +
+        '<div class="ac-card"><span class="pl-av">☁</span><div style="min-width:0">' +
+          '<div class="ac-email">' + escapeHtml(u.email) + '</div>' +
+          '<div class="ac-sync" id="acSyncLine">' + escapeHtml(acSyncLine()) + '</div></div></div>' +
+        '<div class="ac-actions">' +
+          '<button class="btn-primary" id="acSync" type="button"' + (acctBusy ? ' disabled' : '') + '>' + (acctBusy ? t("acWorking") : t("acSyncNow")) + '</button>' +
+          '<button class="csv-btn" id="acLogout" type="button">' + t("acLogout") + '</button>' +
+        '</div>' + status +
+        '<p class="yk-note">' + escapeHtml(t("acInNote")) + '</p>' +
+        '<div class="reset-row" style="margin-top:8px"><button id="acDelete" type="button"' + (acctDelArm ? ' style="border-color:var(--clay);color:var(--clay);font-weight:600"' : '') + '>' +
+          t(acctDelArm ? "acDeleteSure" : "acDelete") + '</button></div>';
+    }
+    return html + '</main>';
+  }
+  function bindAccount() {
+    var el;
+    var readEmail = function () { var e = document.getElementById("acEmail"); acctEmail = e ? e.value.trim() : acctEmail; return acctEmail; };
+    var readPass = function () { var p = document.getElementById("acPass"); return p ? p.value : ""; };
+    var fail = function (err) { acctBusy = false; acctErr = true; acctMsg = authErrorText(err); render(); };
+    var done = function () {
+      acctBusy = false; acctErr = false; acctMsg = "";
+      return cloudPull().then(function (changed) { if (changed) cloudReload(); else render(); });
+    };
+    if ((el = document.getElementById("acBack"))) el.onclick = function () { acctOpen = false; acctMsg = ""; acctDelArm = false; render(); };
+    var go = function (fn) {
+      var email = readEmail(), pass = readPass();
+      if (!email || !pass) { acctErr = true; acctMsg = t("acNeedBoth"); render(); return; }
+      acctBusy = true; acctMsg = ""; render();
+      fn(email, pass).then(done, fail);
+    };
+    if ((el = document.getElementById("acLogin"))) el.onclick = function () { go(cloudSignIn); };
+    if ((el = document.getElementById("acSignup"))) el.onclick = function () { go(cloudSignUp); };
+    if ((el = document.getElementById("acPass"))) el.onkeydown = function (e) { if (e.key === "Enter") go(cloudSignIn); };
+    if ((el = document.getElementById("acEmail"))) el.onkeydown = function (e) { if (e.key === "Enter") { var p = document.getElementById("acPass"); if (p) p.focus(); } };
+    if ((el = document.getElementById("acReset"))) el.onclick = function () {
+      var email = readEmail();
+      if (!email) { acctErr = true; acctMsg = t("acNeedEmail"); render(); return; }
+      authCall("sendOobCode", { requestType: "PASSWORD_RESET", email: email }).then(function () {
+        acctErr = false; acctMsg = t("acResetSent"); render();
+      }, fail);
+    };
+    if ((el = document.getElementById("acSync"))) el.onclick = function () {
+      acctBusy = true; acctMsg = ""; render();
+      cloudPull().then(function (changed) {
+        if (changed) { cloudReload(); return; }
+        acctBusy = false;
+        acctErr = cloudStatus === "offline";
+        acctMsg = acctErr ? t("errNet") : t("acSynced");
+        render();
+      });
+    };
+    if ((el = document.getElementById("acLogout"))) el.onclick = function () { cloudSignOut(); acctDelArm = false; acctMsg = ""; render(); };
+    if ((el = document.getElementById("acDelete"))) el.onclick = function () {
+      if (!acctDelArm) { acctDelArm = true; render(); return; }
+      acctBusy = true; render();
+      cloudDeleteAccount().then(function () {
+        acctBusy = false; acctDelArm = false; acctErr = false; acctMsg = t("acDeleted"); render();
+      }, function (err) { acctDelArm = false; fail(err); });
+    };
+  }
+
   // Açılışta: yayındaki turnuvalar kaldığı yerden devam etsin.
   if (!extractLiveCode(location.hash)) tournaments.forEach(function (ev) { if (ev.live) scheduleEventPush(ev); });
 
@@ -7986,6 +8376,15 @@
     if (state.live && !state.setup) scheduleLivePush();
   }
   render();
+  // Hesapla giriş yapılmışsa: açılışta buluttakini al, uygulamaya dönülünce ve internet gelince tekrar eşitle.
+  if (!launchLiveCode) {
+    if (cloudUser()) setTimeout(cloudSync, 300);
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible" && cloudUser() && Date.now() - cloudLastPull > 30000) cloudSync();
+      else if (document.visibilityState === "hidden" && cloudUser()) cloudPush();
+    });
+    window.addEventListener("online", function () { if (cloudUser()) cloudPush(); });
+  }
 })();
 </script>
 <script>
