@@ -1571,6 +1571,63 @@
   .hub-link:active { opacity: .6; }
   .hub .resume-card { box-shadow: 0 10px 24px -16px rgba(0,0,0,.35); }
 
+  /* ---- Rapor ---- */
+  .ev-rd { color: var(--brass); font-weight: 700; }
+  .ev-rounds button { padding: 7px 10px; font-size: 12.5px; }
+  .ev-draws { flex-wrap: wrap; }
+  .ev-draws button { flex: 1 0 15%; padding: 12px 4px; font-weight: 600; }
+  .ev-draws button[data-evdraw="wk"] { flex-basis: 100%; }
+  .ev-report { width: 100%; margin-top: 18px; }
+  .pl-grep { margin-left: 4px; padding: 3px 9px; font-size: 11.5px; }
+  .rep-card { max-width: 420px; }
+  .rep-preview { max-height: 56vh; overflow: auto; border-radius: 12px; border: 1px solid var(--hairline); background: #14212B; }
+  .rep-preview img { display: block; width: 100%; height: auto; }
+
+  /* ---- Oyuncu seçici ---- */
+  .ac-wrap { position: relative; }
+  .ac-wrap input { width: 100%; }
+  .ac-list { position: relative; margin-top: 6px; background: var(--panel); border: 1px solid var(--hairline); border-radius: 12px; box-shadow: 0 14px 30px -12px rgba(0,0,0,.4); max-height: 236px; overflow-y: auto; padding: 4px; }
+  .ac-list[hidden] { display: none; }
+  .ac-item { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 9px 10px; border: none; border-radius: 9px; background: none; color: var(--text); font-family: inherit; font-size: 15px; cursor: pointer; }
+  .ac-item.first, .ac-item:hover, .ac-item:active { background: var(--panel-2); }
+  .ac-av { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; background: var(--panel-2); color: var(--text-dim); border: 1px solid var(--hairline); }
+  .ac-av.mine { background: var(--brass); color: var(--ink); border-color: var(--brass); }
+  .ac-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ac-tag { flex: none; font-size: 11px; color: var(--brass); font-weight: 600; }
+
+  /* ---- Oyuncularım ---- */
+  .pl-addrow { display: flex; gap: 8px; margin-bottom: 14px; }
+  .pl-addrow input { flex: 1; min-width: 0; background: var(--panel); border: 1px solid var(--hairline); border-radius: 12px; padding: 12px 14px; font-size: 16px; color: var(--text); font-family: inherit; }
+  .pl-addrow input:focus { outline: 2px solid var(--brass); outline-offset: 1px; }
+  .pl-addrow .btn-primary { margin: 0; padding: 12px 16px; font-size: 15px; white-space: nowrap; }
+  .pl-card { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px 12px 12px 14px; margin-bottom: 8px; border-radius: 16px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; cursor: pointer; transition: transform .16s ease; }
+  .pl-card:active { transform: scale(.98); }
+  .pl-av { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--panel-2); color: var(--brass); font-weight: 700; font-size: 15px; border: 1px solid var(--hairline); }
+  .pl-av.big { width: 58px; height: 58px; font-size: 20px; background: var(--brass); color: var(--ink); border: none; }
+  .pl-main-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .pl-name { font-weight: 600; font-size: 15.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pl-sub { font-size: 12.5px; color: var(--text-dim); }
+  .pl-form { display: inline-flex; gap: 3px; flex-wrap: wrap; }
+  .pl-form i { font-style: normal; width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; }
+  .pf-w { background: rgba(111,163,127,.22); color: #3E7A52; }
+  .pf-l { background: rgba(192,107,87,.2); color: #A1503C; }
+  .pf-u, .pf-b { background: var(--panel-2); color: var(--text-dim); }
+  .ev-row.bye .ev-name { color: var(--text-dim); font-style: italic; }
+  .pl-head { display: flex; align-items: center; gap: 14px; margin: 4px 0 16px; }
+  .pl-sum { grid-template-columns: repeat(2, 1fr); }
+  .pl-group { background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 12px 12px 6px; margin-top: 12px; }
+  .pl-ghead { display: flex; align-items: center; gap: 8px; }
+  .pl-gname { flex: 1; min-width: 0; font-weight: 600; font-size: 14.5px; }
+  .pl-grec { flex: none; font-size: 12px; font-weight: 700; color: var(--brass); }
+  .pl-gdate { font-size: 11.5px; color: var(--text-dim); margin: 2px 0 6px; }
+  .pl-match { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 9px 2px; border: none; border-top: 1px solid var(--hairline); background: none; color: var(--text); font-family: inherit; cursor: pointer; }
+  .pl-res { flex: none; width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .pl-mtxt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .pl-opp { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pl-mmeta { font-size: 11.5px; color: var(--text-dim); }
+  .pl-score { flex: none; font-size: 15px; color: var(--text); }
+  .pl-report { width: 100%; margin-top: 18px; }
+
   /* Giriş: ana ekran kartları sırayla yukarı süzülür */
   @keyframes hubUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   @keyframes hubBall { from { opacity: 0; transform: rotate(-120deg) scale(.6); } to { opacity: 1; transform: none; } }
@@ -1770,9 +1827,28 @@
       hubMatchT: "Maç takibi", hubMatchS: "Tek maçı puan puan izle; skor ve istatistik otomatik.",
       hubTourT: "Turnuva modu", hubTourS: "Program, kortlar ve canlı skor paylaşımı.",
       hubArcT: "Geçmiş maçlar", hubArcS: "{n} maç · oyuncu istatistikleri", hubArcS0: "Biten maçların burada birikir.",
+      hubPlayersT: "Oyuncularım", hubPlayersS: "Oyuncu profilleri, maç ve turnuva geçmişi, rapor.",
+      plTitle: "Oyuncularım", plAdd: "+ Ekle", plAddPh: "Ad Soyad", plAddThis: "☆ Oyuncularıma ekle",
+      plEmpty: "Henüz oyuncu yok. Sorumlu olduğun oyuncuları ad soyadla ekle; maç takibinde ve turnuvalarda bu isimle girilen bütün maçlar profillerinde toplanır.",
+      plNoMatches: "Henüz maçı yok. Maç takibinde ya da turnuvada bu isimle girilen maçlar burada görünür.", plNoMatchesShort: "Henüz maç yok",
+      plCardSub: "{n} maç · {w}G {l}M", plHeadSub: "{n} maç · {tn} turnuva", plMatches: "Maç", plWL: "G – M", plWinPct: "Galibiyet", plSets: "Set",
+      plForm: "Son maçlar", plPractice: "Maç takibi", plStats: "İstatistik · {n} detaylı maçtan", plPtsWon: "Kazandığı puan",
+      plReport: "📄 Raporu paylaş", plReportTitle: "{name} · Oyuncu raporu", plCopied: "Rapor kopyalandı ✓",
+      plDelete: "Oyuncularımdan çıkar", plDeleteSure: "Emin misin? Çıkar", plDeleteNote: "Maç kayıtları silinmez.",
+      plVs: "vs {name}", plW: "G", plL: "M", plWon: "Kazandı", plLost: "Kaybetti", plUnfinished: "Bitmedi",
+      plDate: "Tarih", plEvent: "Turnuva", plOpp: "Rakip", plResult: "Sonuç", plBackTo: "← {name}",
       hubImport: "Paylaşılan maçı ekle", hubActive: "{n} aktif", homeBack: "Ana ekran", setupTitle: "Yeni maç",
       goHome: "⌂ Ana ekran", resumeLbl: "Devam eden maç", lastLbl: "Son maç", resumeBtn: "Maça dön", openLastBtn: "Maçı aç",
-      evTimeBad: "Saati 17:30 gibi yaz.", evCourtN: "Kort {n}",
+      evRound: "Tur", rdNone: "—", rdGrp: "Grup", rdR1: "1. Tur", rdR2: "2. Tur", rdR3: "3. Tur", rdR32: "Son 32", rdR16: "Son 16", rdR64: "Son 64", rdR128: "Son 128", rdQ: "Ön eleme", rdNth: "{n}. Tur", rdM1: "1. Maç", rdM2: "2. Maç", rdM3: "3. Maç", rdM4: "4. Maç", drawWk: "Hafta sonu turnuvası (her oyuncu 4 maç)", rDrawWk: "hafta sonu formatı",
+      drawQ: "Ana tablo kaç kişilik?", drawHelp: "Turlar buna göre adlandırılır: 32'lik tabloda Son 32 = 1. Tur, 64'lükte 2. Tur. Hafta sonu turnuvasında maçlar 1–4. Maç olarak seçilir.", rDraw: "{n}'lik tablo", rdQF: "Çeyrek final", rdSF: "Yarı final", rdP3: "3.lük maçı", rdF: "Final",
+      repBtnT: "📊 Sonuç raporu", repGroupBtn: "📄 Rapor", repModalTitle: "Sonuç raporu", repPreparing: "Rapor hazırlanıyor…",
+      repImg: "🖼 Görsel", repPdf: "📄 PDF", repSaved: "İndirildi ✓", repNone: "Raporlanacak maç yok.",
+      repMyPlayers: "Oyuncularım", repAllPlayers: "Tüm oyuncular", repChampion: "🏆 Şampiyon", repFinalist: "Finalist",
+      repOngoing: "devam ediyor", repMatchN: "{n}. maç", repFooter: "Courtside ile hazırlandı · {date}",
+      spQ: "Durum", spNormal: "Normal", spBye: "Bye", spWO: "Hükmen (W.O.)", spRet: "Çekilme (ret.)", spWinner: "Kazanan",
+      spNeedWinner: "Kazananı seç.", spByeHint: "Sadece turu bye ile geçen oyuncuyu yaz. Bye galibiyet ya da maç sayılmaz.",
+      spRetHint: "Rakip çekildiği andaki skoru yaz: 6-3 2-1", byeName: "Bye", byeShort: "B", byePassed: "Bye ile geçti",
+      evTimeBad: "Saati 17:30 gibi yaz.", acPh: "Ara ya da yaz", acMine: "Oyuncum", evCourtN: "Kort {n}",
       newShort: "＋ Yeni maç", newConfirmQ: "Yeni maça geçilsin mi?", newConfirmSub: "{a} – {b} maçı silinmez. Geçmiş maçlar'a kaydedilir; istediğin zaman açıp istatistiklerine bakabilirsin.",
       newConfirmSubDone: "{a} – {b} maçı Geçmiş maçlar'da kayıtlı; istediğin zaman açıp istatistiklerine bakabilirsin.",
       newConfirmSubEmpty: "{a} – {b} maçında henüz puan girilmedi, bu yüzden arşive kaydedilmeyecek.",
@@ -1924,9 +2000,28 @@
       hubMatchT: "Match tracking", hubMatchS: "Follow one match point by point; score and stats are automatic.",
       hubTourT: "Tournament mode", hubTourS: "Schedules, courts and live score sharing.",
       hubArcT: "Past matches", hubArcS: "{n} matches · player stats", hubArcS0: "Finished matches collect here.",
+      hubPlayersT: "My players", hubPlayersS: "Player profiles, match and tournament history, reports.",
+      plTitle: "My players", plAdd: "+ Add", plAddPh: "First and last name", plAddThis: "☆ Add to my players",
+      plEmpty: "No players yet. Add the players you coach by full name; every match entered with that name in match tracking or tournaments collects in their profile.",
+      plNoMatches: "No matches yet. Matches entered with this name in match tracking or tournaments show up here.", plNoMatchesShort: "No matches yet",
+      plCardSub: "{n} matches · {w}W {l}L", plHeadSub: "{n} matches · {tn} tournaments", plMatches: "Matches", plWL: "W – L", plWinPct: "Win rate", plSets: "Sets",
+      plForm: "Recent matches", plPractice: "Match tracking", plStats: "Stats · from {n} detailed matches", plPtsWon: "Points won",
+      plReport: "📄 Share report", plReportTitle: "{name} · Player report", plCopied: "Report copied ✓",
+      plDelete: "Remove from my players", plDeleteSure: "Sure? Remove", plDeleteNote: "Match records are not deleted.",
+      plVs: "vs {name}", plW: "W", plL: "L", plWon: "Won", plLost: "Lost", plUnfinished: "Unfinished",
+      plDate: "Date", plEvent: "Tournament", plOpp: "Opponent", plResult: "Result", plBackTo: "← {name}",
       hubImport: "Add a shared match", hubActive: "{n} active", homeBack: "Home", setupTitle: "New match",
       goHome: "⌂ Home", resumeLbl: "Match in progress", lastLbl: "Last match", resumeBtn: "Back to match", openLastBtn: "Open match",
-      evTimeBad: "Enter the time like 17:30.", evCourtN: "Court {n}",
+      evRound: "Round", rdNone: "—", rdGrp: "Group", rdR1: "Round 1", rdR2: "Round 2", rdR3: "Round 3", rdR32: "Last 32", rdR16: "Last 16", rdR64: "Last 64", rdR128: "Last 128", rdQ: "Qualifying", rdNth: "Round {n}", rdM1: "Match 1", rdM2: "Match 2", rdM3: "Match 3", rdM4: "Match 4", drawWk: "Weekend tournament (4 matches each)", rDrawWk: "weekend format",
+      drawQ: "Main draw size", drawHelp: "Rounds are named from this: in a 32 draw the Last 32 is Round 1, in a 64 draw it is Round 2.", rDraw: "{n} draw", rdQF: "Quarterfinal", rdSF: "Semifinal", rdP3: "3rd place", rdF: "Final",
+      repBtnT: "📊 Results report", repGroupBtn: "📄 Report", repModalTitle: "Results report", repPreparing: "Preparing report…",
+      repImg: "🖼 Image", repPdf: "📄 PDF", repSaved: "Downloaded ✓", repNone: "No matches to report.",
+      repMyPlayers: "My players", repAllPlayers: "All players", repChampion: "🏆 Champion", repFinalist: "Finalist",
+      repOngoing: "in progress", repMatchN: "Match {n}", repFooter: "Made with Courtside · {date}",
+      spQ: "Status", spNormal: "Normal", spBye: "Bye", spWO: "Walkover (W.O.)", spRet: "Retired (ret.)", spWinner: "Winner",
+      spNeedWinner: "Pick the winner.", spByeHint: "Only enter the player who got the bye. A bye doesn't count as a win or a match.",
+      spRetHint: "Enter the score when the opponent retired: 6-3 2-1", byeName: "Bye", byeShort: "B", byePassed: "Advanced with a bye",
+      evTimeBad: "Enter the time like 17:30.", acPh: "Search or type", acMine: "My player", evCourtN: "Court {n}",
       newShort: "＋ New match", newConfirmQ: "Move on to a new match?", newConfirmSub: "The {a} vs {b} match won't be deleted. It's saved to Past matches, where you can open it and see its stats any time.",
       newConfirmSubDone: "The {a} vs {b} match is saved in Past matches; you can open it and see its stats any time.",
       newConfirmSubEmpty: "No points have been logged in {a} vs {b} yet, so it won't be saved to the archive.",
@@ -2108,7 +2203,7 @@
 
   // ---------- Maç arşivi ----------
   var ARCHIVE_KEY = "courtside-archive-v1";
-  var ARCHIVE_MAX = 60;
+  var ARCHIVE_MAX = 300; // antrenörün oyuncu raporları için geniş tutuldu
   function loadArchive() {
     try {
       var raw = localStorage.getItem(ARCHIVE_KEY);
@@ -2157,7 +2252,7 @@
     return -1;
   }
   function toggleSavedPlayer(name) {
-    name = String(name || "").trim().slice(0, 24);
+    name = String(name || "").trim().slice(0, 32);
     if (!name) return false;
     var arr = loadPlayers(), i = findSavedPlayer(name);
     if (i >= 0) { arr.splice(i, 1); writePlayers(arr); return false; }
@@ -2192,7 +2287,7 @@
       return byName[key];
     }
     archive.forEach(function (r) {
-      if (!r.names) return;
+      if (!r.names || r.special === "bye") return;
       ["a", "b"].forEach(function (k) {
         var nm = (r.names[k] || "").trim();
         if (!nm) return;
@@ -2223,7 +2318,7 @@
   function computeHeadToHead(archive) {
     var pairs = {};
     archive.forEach(function (r) {
-      if (!r.matchOver || !r.names) return;
+      if (!r.matchOver || !r.names || r.special === "bye") return;
       var nA = (r.names.a || "").trim(), nB = (r.names.b || "").trim();
       if (!nA || !nB) return;
       var ordered = [nA, nB].slice().sort(function (x, y) { return x.toLowerCase() < y.toLowerCase() ? -1 : 1; });
@@ -4107,12 +4202,13 @@
   var app = document.getElementById("app");
 
   // Ekranlar arası geçiş: derinliğe göre ileri (sağdan) ya da geri (soldan) kayar.
-  var SCREEN_DEPTH = { hub: 0, viewer: 0, setup: 1, tlist: 1, archive: 1, match: 2, tform: 2, tscreen: 2, archmatch: 2 };
+  var SCREEN_DEPTH = { hub: 0, viewer: 0, setup: 1, tlist: 1, archive: 1, players: 1, match: 2, tform: 2, tscreen: 2, player: 2, archmatch: 3 };
   var lastScreen = null, screenEntering = false;
   function currentScreen() {
     if (liveView) return "viewer";
     if (eventOpen) return evRulesForm ? "tform" : (eventState ? "tscreen" : "tlist");
     if (archiveOpen) return "archive";
+    if (playersOpen && !viewingArchived) return playerView ? "player" : "players";
     if (viewingArchived) return "archmatch";
     if (state.setup || homeOpen) return homeView === "hub" ? "hub" : "setup";
     return "match";
@@ -4134,6 +4230,7 @@
   function renderScreen() {
     if (liveView && liveView.event) { app.innerHTML = renderEventViewer(); bindEventViewer(); return; }
     if (eventOpen && !liveView) { app.innerHTML = renderTournamentScreens(); bindTournamentScreens(); return; }
+    if (playersOpen && !viewingArchived && !archiveOpen && !liveView) { app.innerHTML = renderPlayersScreens(); bindPlayersScreens(); return; }
     if (liveView && !liveView.hasData) { app.innerHTML = renderLiveWaiting(); bindLiveEvents(); return; }
     if (archiveOpen) { app.innerHTML = renderArchiveScreen() + renderShareOverlays(); bindEvents(); bindShareEvents(); return; }
     if (viewingArchived && state.scoreOnly && !liveView) { app.innerHTML = renderScoreOnlyView(state); bindEvents(); return; }
@@ -4239,7 +4336,7 @@
   function renderArchivedBar(m) {
     if (liveView) return renderLiveViewerBar(m);
     return '<div class="archived-bar">' +
-      '<button id="backToArchive" type="button">' + t("backArchive") + '</button>' +
+      '<button id="backToArchive" type="button">' + (archReturn === "player" && playerView ? escapeHtml(t("plBackTo", { name: shortName({ names: { a: playerView } }, "a") })) : t("backArchive")) + '</button>' +
       '<span>' + escapeHtml(t("viewingArchived", { date: fmtDateTR(m.archiveId || m.startedAt) })) + '</span>' +
       '</div>';
   }
@@ -4268,7 +4365,7 @@
         if (r.imported) meta.push(t("fromShare"));
         return '<div class="arc-item">' +
           '<div class="arc-main">' +
-            '<div class="arc-names">' + escapeHtml(r.names.a || "A") + ' <span class="arc-vs">vs</span> ' + escapeHtml(r.names.b || "B") + '</div>' +
+            '<div class="arc-names">' + escapeHtml(r.names.a || "A") + ' <span class="arc-vs">vs</span> ' + escapeHtml(r.special === "bye" ? t("byeName") : (r.names.b || "B")) + '</div>' +
             '<div class="arc-score scorefont">' + escapeHtml(setsScoreText(r)) + '</div>' +
             '<div class="arc-meta">' + winTxt + ' · ' + escapeHtml(meta.join(" · ")) + '</div>' +
           '</div>' +
@@ -4338,6 +4435,7 @@
   };
   // Topçuk: Courtside'ın maskotu (tenis topu). Ana ekran kartlarında kullanılır.
   var TOPCUK = {
+    coach: '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballK"><circle cx="30" cy="36" r="18"/></clipPath></defs><circle cx="30" cy="36" r="18" fill="#D4E32A"/><g clip-path="url(#tpballK)" fill="none" stroke="#F8FBE0" stroke-width="2.3"><path d="M18 19 Q25 36 18 53"/><path d="M42 19 Q35 36 42 53"/></g><circle cx="30" cy="36" r="18" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/><path d="M12.5 29 Q13 15 30 14 Q47 15 47.5 29 Z" fill="#4A7399" stroke="#2F5878" stroke-width="1.3" stroke-linejoin="round"/><path d="M44 27.5 Q55 26.5 59 30 Q52 32.5 44 31 Z" fill="#2F5878"/><circle cx="30" cy="15" r="1.8" fill="#2F5878"/><text x="30" y="25.5" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="8" font-weight="700" fill="#F8FBE0">C</text><circle cx="24" cy="36" r="2.1" fill="#1C2A33"/><circle cx="36" cy="36" r="2.1" fill="#1C2A33"/><circle cx="24.7" cy="35.3" r=".7" fill="#fff"/><circle cx="36.7" cy="35.3" r=".7" fill="#fff"/><circle cx="20" cy="41" r="2.3" fill="#E57A6B" fill-opacity=".4"/><circle cx="40" cy="41" r="2.3" fill="#E57A6B" fill-opacity=".4"/><path d="M26 41.5 Q30 45 34 41.5" fill="none" stroke="#1C2A33" stroke-width="1.8" stroke-linecap="round"/><path d="M19 47 Q30 56 42 50" fill="none" stroke="#C06B57" stroke-width="1.4"/><path d="M41 47 h9 a3.5 3.5 0 0 1 0 7 h-6 l-3 -3 z" fill="#C79A54" stroke="#8A7350" stroke-width="1.2" stroke-linejoin="round"/><circle cx="49.5" cy="50.5" r="1.4" fill="#8A7350"/></svg>',
     match: '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballA"><circle cx="30" cy="35" r="19"/></clipPath></defs> <g transform="rotate(8 52 46)"> <rect x="42" y="33" width="17" height="23" rx="2.5" fill="#fff" stroke="#8A7350" stroke-width="1.6"/> <rect x="47" y="31" width="7" height="4" rx="1.2" fill="#8A7350"/> <path d="M45.5 40h10M45.5 44.5h10M45.5 49h6" stroke="#C79A54" stroke-width="1.6" stroke-linecap="round"/> </g> <circle cx="30" cy="35" r="19" fill="#D4E32A"/> <g clip-path="url(#tpballA)" fill="none" stroke="#F8FBE0" stroke-width="2.4"> <path d="M17 17 Q25 35 17 53"/><path d="M43 17 Q35 35 43 53"/> </g> <circle cx="30" cy="35" r="19" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/> <path d="M26.6 31.5 Q30 29.5 33.4 31.5" fill="none" stroke="#1C2A33" stroke-width="2"/> <circle cx="21.5" cy="32.5" r="6" fill="#fff" fill-opacity=".55" stroke="#1C2A33" stroke-width="2.2"/> <circle cx="38.5" cy="32.5" r="6" fill="#fff" fill-opacity=".55" stroke="#1C2A33" stroke-width="2.2"/> <circle cx="24" cy="33" r="2.2" fill="#1C2A33"/><circle cx="41" cy="33" r="2.2" fill="#1C2A33"/> <circle cx="24.8" cy="32.2" r=".7" fill="#fff"/><circle cx="41.8" cy="32.2" r=".7" fill="#fff"/> <path d="M16.5 24 Q21 21 25.5 23.5" fill="none" stroke="#1C2A33" stroke-width="1.8" stroke-linecap="round"/> <path d="M34.5 23.5 Q39 21 43.5 24" fill="none" stroke="#1C2A33" stroke-width="1.8" stroke-linecap="round"/> <circle cx="17.5" cy="41" r="2.4" fill="#E57A6B" fill-opacity=".4"/><circle cx="42.5" cy="41" r="2.4" fill="#E57A6B" fill-opacity=".4"/> <path d="M26.5 42 Q30.5 45.5 34.5 42" fill="none" stroke="#1C2A33" stroke-width="1.8" stroke-linecap="round"/> </svg>',
     tour: '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballB"><circle cx="32" cy="37" r="18"/></clipPath></defs> <rect x="8" y="12" width="4" height="4" rx="1" fill="#C79A54" transform="rotate(20 10 14)"/> <rect x="52" y="10" width="4" height="4" rx="1" fill="#6FA37F" transform="rotate(-15 54 12)"/> <circle cx="55" cy="26" r="2" fill="#4A7399"/><circle cx="9" cy="28" r="1.8" fill="#C06B57"/> <circle cx="32" cy="37" r="18" fill="#D4E32A"/> <g clip-path="url(#tpballB)" fill="none" stroke="#F8FBE0" stroke-width="2.4"> <path d="M20 20 Q27 37 20 55"/><path d="M44 20 Q37 37 44 55"/> </g> <circle cx="32" cy="37" r="18" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/> <path d="M21 21 L23 11 L28 17 L32 8 L36 17 L41 11 L43 21 Z" fill="#E8B645" stroke="#A87724" stroke-width="1.4" stroke-linejoin="round"/> <circle cx="32" cy="15.5" r="1.8" fill="#C06B57"/> <path d="M23 36 Q26 32.5 29 36" fill="none" stroke="#1C2A33" stroke-width="2" stroke-linecap="round"/> <path d="M35 36 Q38 32.5 41 36" fill="none" stroke="#1C2A33" stroke-width="2" stroke-linecap="round"/> <circle cx="22" cy="41" r="2.6" fill="#E57A6B" fill-opacity=".45"/><circle cx="42" cy="41" r="2.6" fill="#E57A6B" fill-opacity=".45"/> <path d="M27.5 41.5 Q32 47.5 36.5 41.5 Z" fill="#1C2A33"/> <path d="M29.5 44.2 Q32 45.6 34.5 44.2" fill="none" stroke="#E57A6B" stroke-width="1.4"/> </svg>',
     arc: '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballC"><circle cx="27" cy="33" r="17"/></clipPath></defs> <circle cx="27" cy="33" r="17" fill="#D4E32A"/> <g clip-path="url(#tpballC)" fill="none" stroke="#F8FBE0" stroke-width="2.3"> <path d="M15.5 17 Q22 33 15.5 49"/><path d="M38.5 17 Q32 33 38.5 49"/> </g> <circle cx="27" cy="33" r="17" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/> <path d="M18.5 28.5 Q22 27 25 28.5" fill="none" stroke="#1C2A33" stroke-width="1.5" stroke-linecap="round"/> <path d="M29 28.5 Q32 27 35.5 28.5" fill="none" stroke="#1C2A33" stroke-width="1.5" stroke-linecap="round"/> <circle cx="22.5" cy="36" r="1.6" fill="#1C2A33"/><circle cx="32.5" cy="36" r="1.6" fill="#1C2A33"/> <rect x="18" y="32.5" width="8" height="5" rx="2.4" fill="#fff" fill-opacity=".5" stroke="#1C2A33" stroke-width="1.6"/> <rect x="28" y="32.5" width="8" height="5" rx="2.4" fill="#fff" fill-opacity=".5" stroke="#1C2A33" stroke-width="1.6"/> <path d="M26 34.5h2" stroke="#1C2A33" stroke-width="1.6"/> <path d="M25 41 Q27 42.3 29 41" fill="none" stroke="#1C2A33" stroke-width="1.6" stroke-linecap="round"/> <path d="M20 46 Q33 42 43 46 L43 60 Q33 56 20 60 Z" fill="#fff" stroke="#8A7350" stroke-width="1.5" stroke-linejoin="round"/> <path d="M43 46 Q53 42 60 46 L60 60 Q53 56 43 60 Z" fill="#F6F2E8" stroke="#8A7350" stroke-width="1.5" stroke-linejoin="round"/> <text x="31.5" y="54.5" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="7" font-weight="700" fill="#A87724">6-4</text> <path d="M47 50.5h9M47 54h6" stroke="#C79A54" stroke-width="1.4" stroke-linecap="round"/> <circle cx="51" cy="18" r="8" fill="#fff" stroke="#8A7350" stroke-width="1.6"/> <path d="M51 13.5V18l3 2" fill="none" stroke="#1C2A33" stroke-width="1.6" stroke-linecap="round"/> </svg>',
@@ -4372,9 +4470,10 @@
         hubTile("hubMatch", "match", t("hubMatchT"), t("hubMatchS"), "", "primary", off) +
         hubTile("openEventBtn", "tour", t("hubTourT"), t("hubTourS"),
           tournaments.length ? (anyLiveT ? '<span class="dot"></span>' : '') + escapeHtml(t("hubActive", { n: tournaments.length })) : "", anyLiveT ? "live" : "", off + 1) +
-        hubTile("openArchiveSetup", "arc", t("hubArcT"), arcN ? t("hubArcS", { n: arcN }) : t("hubArcS0"), "", "", off + 2) +
+        hubTile("hubPlayers", "coach", t("hubPlayersT"), t("hubPlayersS"), loadPlayers().length ? escapeHtml(String(loadPlayers().length)) : "", "", off + 2) +
+        hubTile("openArchiveSetup", "arc", t("hubArcT"), arcN ? t("hubArcS", { n: arcN }) : t("hubArcS0"), "", "", off + 3) +
       '</div>' +
-      '<button class="hub-link hub-in" data-import="1" type="button" style="--i:' + (off + 3) + '"><span class="hl-ico">' + TOPCUK.imp + '</span>' + escapeHtml(t("hubImport")) + '</button>' +
+      '<button class="hub-link hub-in" data-import="1" type="button" style="--i:' + (off + 4) + '"><span class="hl-ico">' + TOPCUK.imp + '</span>' + escapeHtml(t("hubImport")) + '</button>' +
     '</div>';
   }
   function bindHub() {
@@ -4382,6 +4481,7 @@
     if ((el = document.getElementById("hubMatch"))) el.onclick = function () { homeView = "setup"; render(); };
     if ((el = document.getElementById("openEventBtn"))) el.onclick = function () { openEventScreen(); };
     if ((el = document.getElementById("openArchiveSetup"))) el.onclick = function () { openArchive(); };
+    if ((el = document.getElementById("hubPlayers"))) el.onclick = function () { openPlayersScreen(); };
     if ((el = document.getElementById("resumeBtn"))) el.onclick = function () { homeOpen = false; homeView = "hub"; activeTab = state.matchOver ? "stats" : "live"; render(); };
   }
 
@@ -4401,9 +4501,9 @@
       navBarHtml("setupBack", t("setupTitle")) +
       '<div class="setup setup-form">' +
         knownNamesHtml +
-        '<div class="field"><label>' + t("playerA") + '</label><div class="name-row"><input id="nameA" type="text" placeholder="' + escapeAttr(t("phA")) + '" maxlength="24"' + nameListAttr + '>' +
+        '<div class="field"><label>' + t("playerA") + '</label><div class="name-row"><input id="nameA" type="text" placeholder="' + escapeAttr(t("phA")) + '" maxlength="32"' + nameListAttr + '>' +
           '<button class="star-btn" data-star="nameA" type="button" aria-label="' + escapeAttr(t("savePlayer")) + '">☆</button></div></div>' +
-        '<div class="field"><label>' + t("playerB") + '</label><div class="name-row"><input id="nameB" type="text" placeholder="' + escapeAttr(t("phB")) + '" maxlength="24"' + nameListAttr + '>' +
+        '<div class="field"><label>' + t("playerB") + '</label><div class="name-row"><input id="nameB" type="text" placeholder="' + escapeAttr(t("phB")) + '" maxlength="32"' + nameListAttr + '>' +
           '<button class="star-btn" data-star="nameB" type="button" aria-label="' + escapeAttr(t("savePlayer")) + '">☆</button></div></div>' +
         '<div class="saved-players" id="savedPlayers"></div>' +
         '<div class="field">' +
@@ -5469,7 +5569,7 @@
     var arcBack = document.getElementById("archiveBack");
     if (arcBack) arcBack.onclick = function () { closeArchive(); };
     var backToArchive = document.getElementById("backToArchive");
-    if (backToArchive) backToArchive.onclick = function () { archiveOpen = true; render(); };
+    if (backToArchive) backToArchive.onclick = function () { if (archReturn === "player") { returnToPlayer(); return; } archiveOpen = true; render(); };
     var arcOpenBtns = app.querySelectorAll("[data-arcopen]");
     for (var ao = 0; ao < arcOpenBtns.length; ao++) {
       arcOpenBtns[ao].onclick = function () { openArchivedMatch(this.getAttribute("data-arcopen")); };
@@ -5790,6 +5890,549 @@
     setTimeout(finish, reduce ? 500 : 1450);
   }
 
+  // ================= Turlar ve sonuç raporu (görsel + PDF) =================
+  // Tur, tablodaki aşama olarak saklanır (Son 32, Çeyrek final…). "Kaçıncı tur" olduğu ana
+  // tablonun büyüklüğüne göre hesaplanır: 32'lik tabloda Son 32 = 1. Tur, 64'lükte 2. Tur.
+  // r1/r2/r3 önceki sürümden kalan eski kayıtlar için.
+  var DRAW_SIZES = [8, 16, 32, 64, 128, "wk"]; // "wk": hafta sonu turnuvası, her oyuncu 4 maç
+  var STAGE_SIZE = { r128: 128, r64: 64, r32: 32, r16: 16, qf: 8, sf: 4, f: 2 };
+  var ROUND_ORDER = { m1: 1, m2: 2, m3: 3, m4: 4, q: -1, grp: 0, r1: 1, r2: 2, r3: 3, r128: 1, r64: 2, r32: 3, r16: 4, qf: 5, sf: 6, p3: 6.5, f: 7 };
+  var ROUND_KEY = { m1: "rdM1", m2: "rdM2", m3: "rdM3", m4: "rdM4", q: "rdQ", grp: "rdGrp", r1: "rdR1", r2: "rdR2", r3: "rdR3", r128: "rdR128", r64: "rdR64", r32: "rdR32", r16: "rdR16", qf: "rdQF", sf: "rdSF", p3: "rdP3", f: "rdF" };
+  function roundsForDraw(draw) {
+    if (draw === "wk") return ["m1", "m2", "m3", "m4"];
+    var out = ["q", "grp"];
+    ["r128", "r64", "r32", "r16", "qf", "sf"].forEach(function (k) { if (!draw || STAGE_SIZE[k] <= draw) out.push(k); });
+    return out.concat(["p3", "f"]);
+  }
+  function roundLabel(r, draw) {
+    if (!ROUND_KEY[r]) return "";
+    var base = t(ROUND_KEY[r]);
+    if (draw && STAGE_SIZE[r] && STAGE_SIZE[r] >= 16 && STAGE_SIZE[r] <= draw) {
+      var n = Math.round(Math.log(draw / STAGE_SIZE[r]) / Math.LN2) + 1;
+      return t("rdNth", { n: n }) + " · " + base;
+    }
+    return base;
+  }
+  function roundShort(r, draw) { // seçim düğmeleri için kısa hali
+    if (draw && STAGE_SIZE[r] && STAGE_SIZE[r] >= 16 && STAGE_SIZE[r] <= draw) return t("rdNth", { n: Math.round(Math.log(draw / STAGE_SIZE[r]) / Math.LN2) + 1 }) + " (" + STAGE_SIZE[r] + ")";
+    return roundLabel(r);
+  }
+  function validRound(r) { return ROUND_KEY.hasOwnProperty(r) ? r : ""; }
+  function drawOf(m) {
+    return (m && m.rules && m.rules.draw) || (m && m.draw) ||
+      (eventState && eventState.rules && eventState.rules.draw) ||
+      (liveView && liveView.event && liveView.event.rules && liveView.event.rules.draw) || 0;
+  }
+
+  // Özel sonuçlar: bye (tur atlama), wo (hükmen), ret (çekilme). Bye galibiyet sayılmaz.
+  function spOf(x) { return x && (x.special === "bye" || x.special === "wo" || x.special === "ret") ? x.special : ""; }
+  function scoreWithSpecial(sets, k, sp, retG) {
+    if (sp === "bye") return t("byeName");
+    if (sp === "wo") return "W.O.";
+    var sc = setsScoreFor(sets, k);
+    if (sp === "ret") { if (retG && (retG.a || retG.b)) sc += (sc ? "  " : "") + retG[k] + "-" + retG[otherKey(k)]; sc += " ret."; }
+    return sc;
+  }
+  function setsScoreFor(sets, k) {
+    var o = otherKey(k);
+    return (sets || []).map(function (s) {
+      if (s.superTB) return "[" + s[k] + "-" + s[o] + "]";
+      return s[k] + "-" + s[o] + (s.tb ? "(" + Math.min(s.tb.a, s.tb.b) + ")" : "");
+    }).join("  ");
+  }
+  // Bir oyuncunun turnuvadaki gidişatı: şampiyon / finalist / ulaştığı en ileri tur.
+  function reachedText(rows) {
+    var best = null;
+    rows.forEach(function (r) { if (r.round && (best === null || ROUND_ORDER[r.round] > ROUND_ORDER[best.round])) best = r; });
+    if (!best || /^m\d$/.test(best.round)) return ""; // hafta sonu formatında aşama yok, kayıt yeterli
+    if (best.round === "f" && best.res === "w") return t("repChampion");
+    if (best.round === "f" && best.res === "l") return t("repFinalist");
+    return roundLabel(best.round, best.draw);
+  }
+  function blockFromRows(name, rows) {
+    rows.sort(function (x, y) {
+      var ox = x.round ? ROUND_ORDER[x.round] : -1, oy = y.round ? ROUND_ORDER[y.round] : -1;
+      return ox !== oy ? ox - oy : (x.t || 0) - (y.t || 0);
+    });
+    var w = rows.filter(function (r) { return r.res === "w"; }).length, l = rows.filter(function (r) { return r.res === "l"; }).length;
+    return { name: name, rec: w + t("plW") + " " + l + t("plL"), reached: reachedText(rows), rows: rows };
+  }
+
+  // Turnuva ekranından: antrenörün oyuncuları (yoksa herkes), başlamış ya da bitmiş maçlar.
+  function tournamentReportData(ev) {
+    var roster = loadPlayers().map(function (p) { return nameKey(p.name); });
+    var played = ev.matches.filter(function (m) { return m.status !== "sched"; });
+    var byName = {}, order = [];
+    played.forEach(function (m) {
+      ["a", "b"].forEach(function (k) {
+        var nm = m[k]; if (!nm) return;
+        var key = nameKey(nm);
+        if (!byName[key]) { byName[key] = { name: nm, rows: [] }; order.push(key); }
+        var res = m.special === "bye" ? "b" : (m.status === "done" ? (m.winner === k ? "w" : "l") : "u");
+        var sc = scoreWithSpecial(m.sets, k, spOf(m), m.retG);
+        if (m.status === "live") sc = (sc ? sc + "  " : "") + (m.stbNow ? "[" + m.p[k] + "-" + m.p[otherKey(k)] + "]" : m.g[k] + "-" + m.g[otherKey(k)]) + " · " + t("repOngoing");
+        byName[key].rows.push({ round: validRound(m.round), draw: drawOf(m), score: sc || "—", res: res, t: m.startedAt || 0 });
+      });
+    });
+    var mine = order.filter(function (k) { return roster.indexOf(k) !== -1; });
+    var keys = mine.length ? mine : order;
+    var dates = ev.matches.filter(function (m) { return m.status !== "sched"; }).map(function (m) { return m.date; }).filter(validDay).sort();
+    return {
+      title: evName(ev),
+      sub: [dates.length ? dayRangeText(dates[0], dates[dates.length - 1]) : "", rulesLabel(ev.rules), mine.length ? t("repMyPlayers") : t("repAllPlayers")].filter(Boolean).join(" · "),
+      blocks: keys.sort(function (x, y) { return byName[x].name.localeCompare(byName[y].name, "tr"); }).map(function (k) { return blockFromRows(byName[k].name, byName[k].rows); }),
+      icon: "tour"
+    };
+  }
+  function dayRangeText(a, b) {
+    var f = function (d) { try { return dayFromStr(d).toLocaleDateString(locale(), { day: "numeric", month: "long", year: "numeric" }); } catch (e) { return d; } };
+    return a === b ? f(a) : f(a) + " – " + f(b);
+  }
+  // Oyuncu profilinden: arşivdeki maçlar, turnuvaya göre bloklar (tek turnuva ya da hepsi).
+  function playerReportData(name, onlyEvent) {
+    var list = playerMatches(name);
+    if (onlyEvent !== undefined) list = list.filter(function (it) { return (it.r.eventName || "") === onlyEvent; });
+    var groups = {}, order = [];
+    list.forEach(function (it) {
+      var g = it.r.eventName || t("plPractice");
+      if (!groups[g]) { groups[g] = []; order.push(g); }
+      groups[g].push({ round: validRound(it.r.round), draw: it.r.draw || 0, score: scoreWithSpecial(it.r.sets, it.k, spOf(it.r), it.r.retG) || "—", res: resultOf(it.r, it.k), t: it.r.startedAt || 0 });
+    });
+    var s = playerSummary(list);
+    return {
+      title: name,
+      sub: onlyEvent !== undefined ? (onlyEvent || t("plPractice")) : t("plCardSub", { n: s.n, w: s.w, l: s.l }),
+      blocks: order.map(function (g) { var b = blockFromRows(g, groups[g]); b.isEvent = true; return b; }),
+      icon: onlyEvent ? "tour" : "coach"
+    };
+  }
+
+  // --- Çizim ---
+  function loadSvgImage(svg) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { resolve(null); };
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" '));
+    });
+  }
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  function fitText(ctx, txt, maxW) {
+    if (ctx.measureText(txt).width <= maxW) return txt;
+    while (txt.length > 1 && ctx.measureText(txt + "…").width > maxW) txt = txt.slice(0, -1);
+    return txt + "…";
+  }
+  function drawReport(data) {
+    var W = 1080, P = 64, ROW = 76, HEAD = 300;
+    var H = HEAD + 40;
+    data.blocks.forEach(function (b) { H += (b.reached ? 150 : 104) + b.rows.length * ROW + 28; });
+    if (!data.blocks.length) H += 160;
+    H += 110;
+    var serif = "Fraunces, Georgia, 'Times New Roman', serif", sans = "'IBM Plex Sans', -apple-system, 'Segoe UI', Roboto, sans-serif";
+    var C = { bg: "#14212B", panel: "#1C2C38", line: "#34495A", text: "#F4F1E8", dim: "#AEBAC2", brass: "#C79A54", win: "#6FA37F", loss: "#C06B57" };
+    var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready.catch(function () {}) : Promise.resolve();
+    return ready.then(function () { return loadSvgImage(TOPCUK[data.icon] || TOPCUK.tour); }).then(function (img) {
+      var cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+      var ctx = cv.getContext("2d");
+      ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+      // üst şerit
+      ctx.fillStyle = C.brass; ctx.fillRect(0, 0, W, 10);
+      if (img) ctx.drawImage(img, P - 8, 56, 170, 170);
+      ctx.fillStyle = C.text; ctx.textBaseline = "alphabetic";
+      ctx.font = "700 62px " + serif;
+      ctx.fillText(fitText(ctx, data.title, W - P - 200 - P), P + 190, 138);
+      ctx.fillStyle = C.dim; ctx.font = "400 30px " + sans;
+      var sub = data.sub, lines = [], cur = "";
+      sub.split(" · ").forEach(function (part) {
+        var tryL = cur ? cur + " · " + part : part;
+        if (ctx.measureText(tryL).width > W - P - 190 - P && cur) { lines.push(cur); cur = part; } else cur = tryL;
+      });
+      if (cur) lines.push(cur);
+      lines.slice(0, 2).forEach(function (ln, i) { ctx.fillText(ln, P + 190, 190 + i * 42); });
+      var y = HEAD;
+      if (!data.blocks.length) {
+        ctx.fillStyle = C.dim; ctx.font = "400 32px " + sans; ctx.fillText(t("repNone"), P, y + 60); y += 160;
+      }
+      data.blocks.forEach(function (b) {
+        var top = b.reached ? 150 : 104, bh = top + b.rows.length * ROW;
+        roundRect(ctx, P, y, W - 2 * P, bh, 28); ctx.fillStyle = C.panel; ctx.fill();
+        ctx.strokeStyle = C.line; ctx.lineWidth = 2; ctx.stroke();
+        // başlık: isim + kayıt, altında ulaşılan tur
+        ctx.fillStyle = C.text; ctx.font = "700 44px " + serif;
+        var recW; ctx.save(); ctx.font = "700 34px " + sans; recW = ctx.measureText(b.rec).width; ctx.restore();
+        ctx.fillText(fitText(ctx, (b.isEvent ? "🏆 " : "") + b.name, W - 2 * P - 80 - recW), P + 36, y + 68);
+        ctx.fillStyle = C.brass; ctx.font = "700 34px " + sans; ctx.textAlign = "right"; ctx.fillText(b.rec, W - P - 36, y + 66); ctx.textAlign = "left";
+        if (b.reached) {
+          ctx.font = "600 26px " + sans; var rw = ctx.measureText(b.reached).width + 36;
+          roundRect(ctx, P + 36, y + 88, rw, 42, 21); ctx.fillStyle = "rgba(199,154,84,.18)"; ctx.fill();
+          ctx.fillStyle = C.brass; ctx.fillText(b.reached, P + 54, y + 118);
+        }
+        var ry = y + top;
+        b.rows.forEach(function (r, i) {
+          ctx.strokeStyle = C.line; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(P + 36, ry); ctx.lineTo(W - P - 36, ry); ctx.stroke();
+          var cy = ry + ROW / 2 + 11;
+          // sonuç rozeti
+          var bx = P + 36, by = ry + 16;
+          roundRect(ctx, bx, by, 44, 44, 12);
+          ctx.fillStyle = r.res === "w" ? "rgba(111,163,127,.25)" : r.res === "l" ? "rgba(192,107,87,.25)" : "rgba(174,186,194,.18)"; ctx.fill();
+          ctx.fillStyle = r.res === "w" ? C.win : r.res === "l" ? C.loss : C.dim; ctx.font = "700 24px " + sans; ctx.textAlign = "center";
+          ctx.fillText(r.res === "w" ? t("plW") : r.res === "l" ? t("plL") : r.res === "b" ? t("byeShort") : "…", bx + 22, by + 31); ctx.textAlign = "left";
+          ctx.fillStyle = C.dim; ctx.font = "500 30px " + sans;
+          ctx.fillText(r.round ? roundLabel(r.round, r.draw) : t("repMatchN", { n: i + 1 }), bx + 66, cy);
+          ctx.fillStyle = C.text; ctx.font = "600 36px " + serif; ctx.textAlign = "right";
+          ctx.fillText(fitText(ctx, r.score, 520), W - P - 36, cy); ctx.textAlign = "left";
+          ry += ROW;
+        });
+        y += bh + 28;
+      });
+      // alt bilgi
+      ctx.fillStyle = C.dim; ctx.font = "400 26px " + sans;
+      ctx.fillText(t("repFooter", { date: fmtDateTR(Date.now()) }), P, H - 48);
+      ctx.fillStyle = C.brass; ctx.font = "700 30px " + serif; ctx.textAlign = "right"; ctx.fillText("Courtside", W - P, H - 48); ctx.textAlign = "left";
+      return cv;
+    });
+  }
+
+  // --- Tek sayfalık PDF (içinde JPEG) ---
+  function b64ToBytes(b64) { var bin = atob(b64), u = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; }
+  function bytesToB64(u) { var s = ""; for (var i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); }
+  function jpegToPdf(jpeg, w, h) {
+    var pw = 595.28, ph = +(h * pw / w).toFixed(2);
+    var enc = new TextEncoder(), parts = [], len = 0, offs = [];
+    var push = function (x) { var b = typeof x === "string" ? enc.encode(x) : x; parts.push(b); len += b.length; };
+    var obj = function (n, body) { offs[n] = len; push(n + " 0 obj\n"); body(); push("\nendobj\n"); };
+    var content = "q " + pw + " 0 0 " + ph + " 0 0 cm /Im0 Do Q";
+    push("%PDF-1.4\n%âãÏÓ\n");
+    obj(1, function () { push("<< /Type /Catalog /Pages 2 0 R >>"); });
+    obj(2, function () { push("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"); });
+    obj(3, function () { push("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + pw + " " + ph + "] /Resources << /XObject << /Im0 5 0 R >> >> /Contents 4 0 R >>"); });
+    obj(4, function () { push("<< /Length " + content.length + " >>\nstream\n" + content + "\nendstream"); });
+    obj(5, function () { push("<< /Type /XObject /Subtype /Image /Width " + w + " /Height " + h + " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " + jpeg.length + " >>\nstream\n"); push(jpeg); push("\nendstream"); });
+    var xref = len;
+    var x = "xref\n0 6\n0000000000 65535 f \n";
+    for (var i = 1; i <= 5; i++) x += ("0000000000" + offs[i]).slice(-10) + " 00000 n \n";
+    push(x + "trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n" + xref + "\n%%EOF");
+    var out = new Uint8Array(len), p = 0;
+    parts.forEach(function (b) { out.set(b, p); p += b.length; });
+    return out;
+  }
+
+  // --- Paylaşma penceresi ---
+  var repModal = null; // { data, png, cv, busy, status }
+  function reportFileBase(data) {
+    return "courtside-" + String(data.title || "rapor").toLocaleLowerCase("tr").replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + ymd(new Date());
+  }
+  function openReport(data) {
+    repModal = { data: data, png: null, busy: true, status: "" };
+    renderReportModal();
+    drawReport(data).then(function (cv) {
+      if (!repModal) return;
+      repModal.cv = cv; repModal.png = cv.toDataURL("image/png"); repModal.busy = false;
+      renderReportModal();
+    });
+  }
+  function renderReportModal() {
+    var old = document.getElementById("repModal");
+    if (old) old.parentNode.removeChild(old);
+    if (!repModal) return;
+    var el = document.createElement("div");
+    el.className = "zone-modal"; el.id = "repModal";
+    el.innerHTML = '<div class="zone-card rep-card">' +
+      '<div class="zone-title">' + escapeHtml(t("repModalTitle")) + '</div>' +
+      (repModal.busy ? '<div class="zone-readout">' + t("repPreparing") + '</div>'
+        : '<div class="rep-preview"><img src="' + repModal.png + '" alt=""></div>' +
+          '<div class="zone-actions"><button id="repImg" type="button">' + t("repImg") + '</button><button id="repPdf" class="primary" type="button">' + t("repPdf") + '</button></div>') +
+      '<div class="share-status" id="repStatus">' + escapeHtml(repModal.status || "") + '</div>' +
+      '<button class="share-close" id="repClose" type="button">' + t("close") + '</button></div>';
+    document.body.appendChild(el);
+    el.onclick = function (e) { if (e.target === el) closeReport(); };
+    document.getElementById("repClose").onclick = closeReport;
+    var bi = document.getElementById("repImg"), bp = document.getElementById("repPdf");
+    if (bi) bi.onclick = function () { shareReportFile("png"); };
+    if (bp) bp.onclick = function () { shareReportFile("pdf"); };
+  }
+  function closeReport() { repModal = null; renderReportModal(); }
+  function setRepStatus(msg) { if (!repModal) return; repModal.status = msg; var s = document.getElementById("repStatus"); if (s) s.textContent = msg; }
+  function shareReportFile(kind) {
+    if (!repModal || !repModal.cv) return;
+    var base = reportFileBase(repModal.data), name, b64, mime;
+    if (kind === "pdf") {
+      var jpg = repModal.cv.toDataURL("image/jpeg", 0.92).split(",")[1];
+      var pdf = jpegToPdf(b64ToBytes(jpg), repModal.cv.width, repModal.cv.height);
+      name = base + ".pdf"; b64 = bytesToB64(pdf); mime = "application/pdf";
+    } else {
+      name = base + ".png"; b64 = repModal.png.split(",")[1]; mime = "image/png";
+    }
+    var title = repModal.data.title;
+    // iOS uygulaması: dosyayı yaz, paylaşım menüsünü aç
+    var fs = nativePlugin("Filesystem"), sh = nativePlugin("Share");
+    if (fs && sh) {
+      fs.writeFile({ path: name, data: b64, directory: "CACHE" }).then(function (res) {
+        return sh.share({ title: title, url: res.uri, dialogTitle: title });
+      }).catch(function (err) { if (!isShareCancel(err)) setRepStatus(t("fileSaveFail")); });
+      return;
+    }
+    var blob = new Blob([b64ToBytes(b64)], { type: mime });
+    try {
+      var file = new File([blob], name, { type: mime });
+      if (navigator.canShare && navigator.canShare({ files: [file] }) && !inPreviewFrame()) {
+        navigator.share({ files: [file], title: title }).catch(function (err) { if (!isShareCancel(err)) downloadBlobFile(blob, name); });
+        return;
+      }
+    } catch (e) {}
+    downloadBlobFile(blob, name);
+  }
+  function downloadBlobFile(blob, name) {
+    try {
+      var url = URL.createObjectURL(blob), a = document.createElement("a");
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      setRepStatus(t("repSaved"));
+    } catch (e) { setRepStatus(t("fileDownloadFail")); }
+  }
+
+  // ================= Oyuncularım: antrenörün oyuncuları ve profil raporu =================
+  // Oyuncu listesi kayıtlı oyuncularla aynıdır. Profil, arşivdeki bütün maçları (maç takibi
+  // ve turnuva) isimle eşleştirip tek ekranda toplar; antrenör buradan rapor paylaşır.
+  var playersOpen = false;      // Oyuncularım ekranları açık mı
+  var playerView = null;        // açık profilin adı (null: liste)
+  var plDelArm = false;         // "listeden çıkar" onayı
+  var archReturn = null;        // arşivden açılan maçtan geri dönülecek yer ("player")
+
+  function nameKey(n) { return String(n || "").trim().toLocaleLowerCase("tr"); }
+  function sideOf(r, name) {
+    if (!r || !r.names) return null;
+    var k = nameKey(name);
+    if (nameKey(r.names.a) === k) return "a";
+    if (nameKey(r.names.b) === k) return "b";
+    return null;
+  }
+  // Oyuncunun arşivdeki maçları, en yeniden eskiye.
+  function playerMatches(name) {
+    return loadArchive().map(function (r) { var s = sideOf(r, name); return s ? { r: r, k: s } : null; })
+      .filter(Boolean)
+      .sort(function (x, y) { return (y.r.startedAt || 0) - (x.r.startedAt || 0); });
+  }
+  function playerSummary(list) {
+    var o = { n: 0, w: 0, l: 0, sw: 0, sl: 0, unfinished: 0, tours: {}, byes: 0 };
+    list.forEach(function (it) {
+      var r = it.r, k = it.k, ok = otherKey(k);
+      if (r.eventName) o.tours[r.eventName] = 1;
+      if (r.special === "bye") { o.byes++; return; } // bye maç sayılmaz
+      o.n++;
+      if (r.matchOver) { if (r.winner === k) o.w++; else o.l++; } else o.unfinished++;
+      (r.sets || []).forEach(function (s) { if (s[k] > s[ok]) o.sw++; else if (s[ok] > s[k]) o.sl++; });
+      if (r.eventName) o.tours[r.eventName] = 1;
+    });
+    o.pct = (o.w + o.l) ? Math.round(o.w / (o.w + o.l) * 100) : null;
+    o.tourCount = Object.keys(o.tours).length;
+    return o;
+  }
+  // Skoru oyuncunun bakış açısından yazar: 6-4 7-6(5)
+  function scoreFor(r, k) {
+    if (spOf(r)) return scoreWithSpecial(r.sets, k, spOf(r), r.retG) || "—";
+    var ok = otherKey(k);
+    return (r.sets || []).map(function (s) {
+      if (s.superTB) return "[" + s[k] + "-" + s[ok] + "]";
+      return s[k] + "-" + s[ok] + (s.tb ? "(" + Math.min(s.tb.a, s.tb.b) + ")" : "");
+    }).join(" ") || "—";
+  }
+  function resultOf(r, k) { return r.special === "bye" ? "b" : (!r.matchOver ? "u" : (r.winner === k ? "w" : "l")); }
+  function formDots(list, max) {
+    return '<span class="pl-form">' + list.filter(function (it) { return it.r.special !== "bye"; }).slice(0, max).map(function (it) {
+      var res = resultOf(it.r, it.k);
+      return '<i class="pf-' + res + '" title="' + (res === "w" ? t("plW") : res === "l" ? t("plL") : "–") + '">' + (res === "w" ? t("plW") : res === "l" ? t("plL") : "–") + '</i>';
+    }).join("") + '</span>';
+  }
+  function initials(n) {
+    var p = String(n || "").trim().split(/\s+/);
+    return ((p[0] || "").charAt(0) + (p.length > 1 ? p[p.length - 1].charAt(0) : "")).toLocaleUpperCase("tr") || "?";
+  }
+
+  // --- Liste ---
+  function renderPlayersList() {
+    var players = loadPlayers();
+    var html = navBarHtml("plBack", t("plTitle")) + '<main class="ev-main pl-main">' +
+      '<div class="pl-addrow"><input id="plNewName" type="text" maxlength="32" autocomplete="off" placeholder="' + escapeAttr(t("plAddPh")) + '">' +
+      '<button class="btn-primary" id="plAddBtn" type="button">' + t("plAdd") + '</button></div>';
+    if (!players.length) html += '<p class="empty-state">' + escapeHtml(t("plEmpty")) + '</p>';
+    html += players.map(function (p, i) {
+      var list = playerMatches(p.name), s = playerSummary(list);
+      return '<button class="pl-card" data-plopen="' + escapeAttr(p.name) + '" type="button" style="--i:' + i + '">' +
+        '<span class="pl-av">' + escapeHtml(initials(p.name)) + '</span>' +
+        '<span class="pl-main-txt"><span class="pl-name">' + escapeHtml(p.name) + '</span>' +
+          '<span class="pl-sub">' + (s.n ? escapeHtml(t("plCardSub", { n: s.n, w: s.w, l: s.l })) : escapeHtml(t("plNoMatchesShort"))) + '</span></span>' +
+        (s.n ? formDots(list, 5) : '') +
+        '<span class="ht-chev" aria-hidden="true">›</span></button>';
+    }).join("");
+    return html + '</main>';
+  }
+
+  // --- Profil ---
+  function renderPlayerProfile(name) {
+    var list = playerMatches(name), s = playerSummary(list);
+    var html = navBarHtml("plBack", "", "", t("plTitle")) + '<main class="ev-main pl-main">';
+    html += '<div class="pl-head"><span class="pl-av big">' + escapeHtml(initials(name)) + '</span><div>' +
+      '<h1 class="ev-h1" style="margin:0">' + escapeHtml(name) + '</h1>' +
+      '<div class="pl-sub">' + escapeHtml(t("plHeadSub", { n: s.n, tn: s.tourCount })) + '</div></div></div>';
+    if (!list.length) {
+      html += '<p class="empty-state">' + escapeHtml(t("plNoMatches")) + '</p>';
+    } else {
+      html += '<div class="stats-summary pl-sum">' +
+        '<div class="card"><div class="n">' + s.n + '</div><div class="lbl">' + t("plMatches") + '</div></div>' +
+        '<div class="card"><div class="n">' + s.w + '–' + s.l + '</div><div class="lbl">' + t("plWL") + '</div></div>' +
+        '<div class="card"><div class="n">' + (s.pct === null ? "—" : "%" + s.pct) + '</div><div class="lbl">' + t("plWinPct") + '</div></div>' +
+        '<div class="card"><div class="n">' + s.sw + '–' + s.sl + '</div><div class="lbl">' + t("plSets") + '</div></div>' +
+      '</div>';
+      html += '<p class="section-label ev-sec">' + t("plForm") + '</p>' + formDots(list, 10);
+      // Turnuvalara göre grupla; turnuva dışı maçlar ayrı.
+      var groups = {}, order = [];
+      list.forEach(function (it) {
+        var g = it.r.eventName || "";
+        if (!groups[g]) { groups[g] = []; order.push(g); }
+        groups[g].push(it);
+      });
+      order.sort(function (x, y) { return (x === "") - (y === ""); });
+      order.forEach(function (g) {
+        var items = groups[g], gs = playerSummary(items);
+        var dates = items.map(function (it) { return it.r.startedAt; }).filter(Boolean);
+        var range = dates.length ? fmtDateTR(Math.min.apply(null, dates)) + (Math.min.apply(null, dates) !== Math.max.apply(null, dates) && fmtDateTR(Math.min.apply(null, dates)) !== fmtDateTR(Math.max.apply(null, dates)) ? " – " + fmtDateTR(Math.max.apply(null, dates)) : "") : "";
+        html += '<div class="pl-group"><div class="pl-ghead"><span class="pl-gname">' + (g ? '🏆 ' + escapeHtml(g) : escapeHtml(t("plPractice"))) + '</span>' +
+          '<span class="pl-grec">' + gs.w + t("plW") + ' ' + gs.l + t("plL") + '</span>' +
+          '<button class="ev-more pl-grep" data-plrep="' + escapeAttr(g) + '" type="button">' + t("repGroupBtn") + '</button></div>' +
+          (range ? '<div class="pl-gdate">' + escapeHtml(range) + '</div>' : '') +
+          items.map(function (it) {
+            var r = it.r, res = resultOf(r, it.k), opp = r.special === "bye" ? "" : (r.names[otherKey(it.k)] || "—");
+            return '<button class="pl-match" data-plmatch="' + escapeAttr(String(r.archiveId)) + '" type="button">' +
+              '<span class="pl-res pf-' + res + '">' + (res === "w" ? t("plW") : res === "l" ? t("plL") : res === "b" ? t("byeShort") : "–") + '</span>' +
+              '<span class="pl-mtxt"><span class="pl-opp">' + escapeHtml(r.special === "bye" ? t("byePassed") : t("plVs", { name: opp })) + '</span>' +
+                '<span class="pl-mmeta">' + escapeHtml([r.round ? roundLabel(r.round, r.draw) : "", fmtDateTR(r.startedAt), r.court].filter(Boolean).join(" · ")) + '</span></span>' +
+              '<span class="pl-score scorefont">' + escapeHtml(scoreFor(r, it.k)) + '</span></button>';
+          }).join("") + '</div>';
+      });
+      // Detaylı maçlardan toplam istatistik
+      var det = list.filter(function (it) { return !it.r.scoreOnly && it.r.mode !== "simple" && it.r.stats && it.r.stats[it.k]; });
+      if (det.length) {
+        var tot = { aces: 0, doubleFaults: 0, winners: 0, unforcedErrors: 0, pointsWon: 0, pointsLost: 0 };
+        det.forEach(function (it) {
+          var st = it.r.stats[it.k], so = it.r.stats[otherKey(it.k)] || {};
+          ["aces", "doubleFaults", "winners", "unforcedErrors", "pointsWon"].forEach(function (f) { tot[f] += st[f] || 0; });
+          tot.pointsLost += so.pointsWon || 0;
+        });
+        var ptsPct = (tot.pointsWon + tot.pointsLost) ? Math.round(tot.pointsWon / (tot.pointsWon + tot.pointsLost) * 100) : null;
+        html += '<p class="section-label ev-sec">' + escapeHtml(t("plStats", { n: det.length })) + '</p>' +
+          '<table class="stat-table"><tbody>' +
+          '<tr><td>' + t("plPtsWon") + '</td><td class="num">' + tot.pointsWon + (ptsPct !== null ? ' (%' + ptsPct + ')' : '') + '</td></tr>' +
+          '<tr><td>' + t("sAce") + '</td><td class="num">' + tot.aces + '</td></tr>' +
+          '<tr><td>' + t("sDouble") + '</td><td class="num">' + tot.doubleFaults + '</td></tr>' +
+          '<tr><td>' + t("sWinners") + '</td><td class="num">' + tot.winners + '</td></tr>' +
+          '<tr><td>' + t("sUnforced") + '</td><td class="num">' + tot.unforcedErrors + '</td></tr>' +
+          '</tbody></table>';
+      }
+      html += '<button class="btn-primary pl-report" id="plReport" type="button">' + t("plReport") + '</button>' +
+        '<div class="share-status" id="plReportStatus"></div>';
+    }
+    var saved = findSavedPlayer(name) >= 0;
+    html += '<div class="reset-row"><button id="plRemove" type="button">' + (saved ? t(plDelArm ? "plDeleteSure" : "plDelete") : t("plAddThis")) + '</button></div>' +
+      (saved ? '<p class="zone-table-note" style="text-align:center">' + escapeHtml(t("plDeleteNote")) + '</p>' : '');
+    return html + '</main>';
+  }
+
+  // --- Rapor ---
+  function playerReportText(name) {
+    var list = playerMatches(name), s = playerSummary(list);
+    var lines = [t("plReportTitle", { name: name }) + " · " + fmtDateTR(Date.now()), "",
+      t("plMatches") + ": " + s.n + " · " + t("plWL") + ": " + s.w + "–" + s.l + (s.pct !== null ? " (%" + s.pct + ")" : "") + " · " + t("plSets") + ": " + s.sw + "–" + s.sl, ""];
+    var byT = {};
+    list.forEach(function (it) { var g = it.r.eventName || t("plPractice"); (byT[g] = byT[g] || []).push(it); });
+    Object.keys(byT).forEach(function (g) {
+      var gs = playerSummary(byT[g]);
+      lines.push(g + " (" + gs.w + t("plW") + " " + gs.l + t("plL") + ")");
+      byT[g].forEach(function (it) {
+        var r = it.r, res = resultOf(r, it.k);
+        lines.push("  " + fmtDateTR(r.startedAt) + " · " + t("plVs", { name: r.names[otherKey(it.k)] }) + " · " + scoreFor(r, it.k) + " · " + (res === "w" ? t("plWon") : res === "l" ? t("plLost") : t("plUnfinished")));
+      });
+      lines.push("");
+    });
+    lines.push("Courtside");
+    return lines.join("\n");
+  }
+  function playerReportHTML(name) {
+    var list = playerMatches(name), s = playerSummary(list);
+    var rows = list.map(function (it) {
+      var r = it.r, res = resultOf(r, it.k);
+      return '<tr><td>' + escapeHtml(fmtDateTR(r.startedAt)) + '</td><td>' + escapeHtml(r.eventName || t("plPractice")) + '</td><td>' +
+        escapeHtml(r.names[otherKey(it.k)] || "") + '</td><td>' + escapeHtml(scoreFor(r, it.k)) + '</td><td>' +
+        (res === "w" ? t("plWon") : res === "l" ? t("plLost") : t("plUnfinished")) + '</td></tr>';
+    }).join("");
+    return '<!doctype html><html lang="' + LANG + '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<title>' + escapeHtml(t("plReportTitle", { name: name })) + '</title><style>' +
+      'body{font-family:-apple-system,"Segoe UI",Roboto,sans-serif;color:#1c2a33;max-width:720px;margin:0 auto;padding:28px;}' +
+      'h1{font-family:Georgia,serif;margin:0 0 4px;font-size:24px}.sub{color:#5c6a72;font-size:13px;margin-bottom:18px}' +
+      '.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.c{border:1px solid #e2dccd;border-radius:10px;padding:10px;text-align:center}' +
+      '.c b{display:block;font-size:20px;font-family:Georgia,serif}.c span{font-size:11px;color:#5c6a72}' +
+      'table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:7px 6px;border-bottom:1px solid #e2dccd}th{color:#5c6a72;font-weight:600}' +
+      '.f{margin-top:18px;font-size:11px;color:#8a8378}@media print{.hint{display:none}}' +
+      '</style></head><body><h1>' + escapeHtml(name) + '</h1><div class="sub">' + escapeHtml(t("plReportTitle", { name: name })) + ' · ' + escapeHtml(fmtDateTR(Date.now())) + '</div>' +
+      '<div class="grid"><div class="c"><b>' + s.n + '</b><span>' + t("plMatches") + '</span></div><div class="c"><b>' + s.w + '–' + s.l + '</b><span>' + t("plWL") + '</span></div>' +
+      '<div class="c"><b>' + (s.pct === null ? "—" : "%" + s.pct) + '</b><span>' + t("plWinPct") + '</span></div><div class="c"><b>' + s.sw + '–' + s.sl + '</b><span>' + t("plSets") + '</span></div></div>' +
+      '<table><thead><tr><th>' + t("plDate") + '</th><th>' + t("plEvent") + '</th><th>' + t("plOpp") + '</th><th>' + t("evScore") + '</th><th>' + t("plResult") + '</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<div class="f">Courtside</div><script>window.onload=function(){setTimeout(function(){try{window.print()}catch(e){}},300)}<\/script></body></html>';
+  }
+  function sharePlayerReport(name) {
+    var st = document.getElementById("plReportStatus");
+    var text = playerReportText(name);
+    var sh = nativePlugin("Share");
+    if (sh) { sh.share({ title: t("plReportTitle", { name: name }), text: text, dialogTitle: t("plReportTitle", { name: name }) }).catch(function () {}); return; }
+    var win = null;
+    try { win = window.open("", "_blank"); } catch (e) { win = null; }
+    if (win) { win.document.open(); win.document.write(playerReportHTML(name)); win.document.close(); return; }
+    copyText(text).then(function () { if (st) st.textContent = t("plCopied"); }, function () {});
+  }
+
+  function renderPlayersScreens() { return playerView ? renderPlayerProfile(playerView) : renderPlayersList(); }
+  function bindPlayersScreens() {
+    var el, i, list;
+    if ((el = document.getElementById("plBack"))) el.onclick = function () {
+      if (playerView) { playerView = null; plDelArm = false; } else playersOpen = false;
+      render();
+    };
+    var add = function () {
+      var inp = document.getElementById("plNewName"), v = inp ? inp.value.trim() : "";
+      if (!v) { if (inp) inp.focus(); return; }
+      if (findSavedPlayer(v) < 0) toggleSavedPlayer(v);
+      render();
+      var n = document.getElementById("plNewName"); if (n) n.focus();
+    };
+    if ((el = document.getElementById("plAddBtn"))) el.onclick = add;
+    if ((el = document.getElementById("plNewName"))) el.onkeydown = function (e) { if (e.key === "Enter") add(); };
+    list = app.querySelectorAll("[data-plopen]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { playerView = this.getAttribute("data-plopen"); plDelArm = false; render(); };
+    list = app.querySelectorAll("[data-plmatch]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { archReturn = "player"; openArchivedMatch(this.getAttribute("data-plmatch")); };
+    if ((el = document.getElementById("plReport"))) el.onclick = function () { openReport(playerReportData(playerView)); };
+    list = app.querySelectorAll("[data-plrep]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { openReport(playerReportData(playerView, this.getAttribute("data-plrep"))); };
+    if ((el = document.getElementById("plRemove"))) el.onclick = function () {
+      if (findSavedPlayer(playerView) < 0) { toggleSavedPlayer(playerView); render(); return; }
+      if (!plDelArm) { plDelArm = true; render(); return; }
+      toggleSavedPlayer(playerView); plDelArm = false; playerView = null; render();
+    };
+  }
+  function openPlayersScreen() { playersOpen = true; playerView = null; plDelArm = false; render(); }
+  // Arşivden açılan maçtan oyuncu profiline dön.
+  function returnToPlayer() {
+    viewingArchived = false;
+    state = stashedState || freshMatch();
+    stashedState = null;
+    archReturn = null;
+    activeTab = "live"; statsSetFilter = "all";
+    render();
+  }
+
   // ================= Turnuva modu: birden çok maçı oyun oyun takip et =================
   // Yönetici turnuvayı adı ve kurallarıyla kurar, günlere maç programı girer (ileri tarih
   // dahil), maç sırasında her oyunda tek dokunuşla skor işler. Turnuva başına tek canlı
@@ -5809,7 +6452,7 @@
     r = r || DEFAULT_RULES;
     var bits = [r.preset === "fast4" ? "Fast4" : (r.preset === "proset" ? "Pro Set" : t("rStandard"))];
     if (r.preset !== "proset") { bits.push(t("rSets", { n: r.sets === 5 ? 5 : 3 })); if (r.finalSTB) bits.push(t("rFinalSTB")); }
-    bits.push(r.noAd ? t("rNoAd") : t("rAd"));
+    if (r.draw) bits.push(r.draw === "wk" ? t("rDrawWk") : t("rDraw", { n: r.draw }));
     return bits.join(" · ");
   }
   function evFmt(m) { return rulesFmt(m.rules || (eventState && eventState.rules)); }
@@ -5878,7 +6521,7 @@
   }
   function evSnapshot(m) {
     m.hist = m.hist || [];
-    m.hist.push(JSON.stringify({ sets: m.sets, g: m.g, p: m.p, stbNow: m.stbNow, status: m.status, winner: m.winner }));
+    m.hist.push(JSON.stringify({ sets: m.sets, g: m.g, p: m.p, stbNow: m.stbNow, status: m.status, winner: m.winner, special: m.special || "", retG: m.retG || null, b: m.b }));
     if (m.hist.length > 40) m.hist.shift();
   }
   function evAfterSet(m) {
@@ -5912,6 +6555,7 @@
     var wasDone = m.status === "done";
     var s = JSON.parse(m.hist.pop());
     m.sets = s.sets; m.g = s.g; m.p = s.p; m.stbNow = s.stbNow; m.status = s.status; m.winner = s.winner;
+    m.special = s.special || ""; m.retG = s.retG || null; if (s.b !== undefined) m.b = s.b;
     if (m.status !== "done") m.endedAt = null;
     m.updatedAt = Date.now();
     if (wasDone && m.status !== "done") deleteArchived(evArchiveId(m));
@@ -5955,18 +6599,20 @@
     return m;
   }
   function evScoreText(m) {
+    if (m.special === "bye" || m.special === "wo") return "";
     var parts = m.sets.map(function (s) {
       if (s.superTB) return s.a + "-" + s.b;
       return s.a + "-" + s.b + (s.tb ? "(" + Math.min(s.tb.a, s.tb.b) + ")" : "");
     });
     if (m.status === "live") parts.push(m.stbNow ? m.p.a + "-" + m.p.b : m.g.a + "-" + m.g.b);
+    if (m.special === "ret" && m.retG && (m.retG.a || m.retG.b)) parts.push(m.retG.a + "-" + m.retG.b);
     return parts.join(" ");
   }
 
   // --- Arşiv ---
   function evArchiveId(m) { return "ev" + m.id; }
   function evArchive(m) {
-    if (!m.sets.length && !m.g.a && !m.g.b) return;
+    if (!spOf(m) && !m.sets.length && !m.g.a && !m.g.b) return;
     var r = m.rules || DEFAULT_RULES, f = rulesFmt(r);
     var rec = freshMatch({ a: m.a, b: m.b }, !!r.noAd, f.sets === 5 ? 5 : 3, f.stb,
       { setGamesTarget: f.target, setWinByTwo: true, tbTriggerAt: f.tbAt, forceSingleSet: f.sets === 1, mode: "simple" });
@@ -5981,6 +6627,10 @@
     rec.abandoned = !rec.matchOver;
     rec.scoreOnly = true;
     rec.court = courtLabel(m.court);
+    rec.round = m.round || "";
+    rec.special = spOf(m);
+    rec.retG = m.retG || null;
+    rec.draw = drawOf(m);
     rec.eventName = eventState ? evName(eventState) : "";
     var arr = loadArchive().filter(function (x) { return x.archiveId !== rec.archiveId; });
     arr.unshift(rec);
@@ -5994,7 +6644,8 @@
     return {
       v: 2, n: evName(ev), r: ev.rules || DEFAULT_RULES,
       m: ev.matches.map(function (m) {
-        var o = { i: m.id, dt: m.date, c: m.court || "", tm: m.time || "", a: m.a, b: m.b, st: m.status, s: m.sets, u: m.updatedAt || 0 };
+        var o = { i: m.id, dt: m.date, c: m.court || "", tm: m.time || "", a: m.a, b: m.b, st: m.status, s: m.sets, u: m.updatedAt || 0, rd: m.round || "" };
+        if (spOf(m)) { o.sp = m.special; if (m.retG) o.rg = m.retG; }
         if (m.status === "live") { o.g = m.g; if (m.stbNow) { o.stb = 1; o.p = m.p; } if (evInTBOf(ev, m)) o.tb = 1; }
         if (m.winner) o.w = m.winner;
         return o;
@@ -6099,6 +6750,7 @@
     if (mn < 60) return t("agoMin", { n: mn });
     return t("agoHour", { n: Math.floor(mn / 60) });
   }
+  function spTag(sp) { return sp === "bye" ? "Bye" : sp === "wo" ? "W.O." : sp === "ret" ? "ret." : ""; }
   function evBoard(m) {
     var live = m.status === "live";
     function row(k) {
@@ -6108,7 +6760,10 @@
         return '<span class="ev-set' + (s[k] > s[o] ? ' w' : '') + '">' + s[k] + sup + '</span>';
       }).join("");
       if (live) cells += '<span class="ev-set cur">' + (m.stbNow ? m.p[k] : m.g[k]) + '</span>';
-      return '<div class="ev-row' + (win ? ' win' : '') + '"><span class="ev-name">' + escapeHtml(m[k]) + (win ? ' <span class="ev-trophy">🏆</span>' : '') + '</span>' + cells + '</div>';
+      if (m.special === "ret" && m.retG && (m.retG.a || m.retG.b)) cells += '<span class="ev-set">' + m.retG[k] + '</span>';
+      var nm = m[k] || (m.special === "bye" && k === "b" ? t("byeName") : "");
+      var trophy = win && m.special !== "bye";
+      return '<div class="ev-row' + (win ? ' win' : '') + (!m[k] && m.special === "bye" ? ' bye' : '') + '"><span class="ev-name">' + escapeHtml(nm) + (trophy ? ' <span class="ev-trophy">🏆</span>' : '') + '</span>' + cells + '</div>';
     }
     return '<div class="ev-board">' + row("a") + row("b") + '</div>';
   }
@@ -6116,6 +6771,7 @@
   function courtLabel(c) { c = String(c || "").trim(); return /^\d{1,3}$/.test(c) ? t("evCourtN", { n: c }) : c; }
   function evMeta(m) {
     var bits = [];
+    if (m.round && roundLabel(m.round)) bits.push('<b class="ev-rd">' + escapeHtml(roundLabel(m.round, drawOf(m))) + '</b>');
     if (m.time) bits.push(escapeHtml(m.time));
     if (m.court) bits.push(escapeHtml(courtLabel(m.court)));
     return bits.join(" · ") || "&nbsp;";
@@ -6159,14 +6815,15 @@
         '<div class="field"><label>' + t("evTName") + '</label><input id="evTName" type="text" maxlength="48" placeholder="' + escapeAttr(t("evTNamePh")) + '" value="' + escapeAttr(d.name || "") + '"></div>' +
         '<div class="field"><label>' + t("matchFormat") + '</label><div class="server-pick">' +
           pick("evrStd", d.preset === "standard", t("fmtStandard")) + pick("evrFast4", d.preset === "fast4", "Fast4") + pick("evrPro", pro, "Pro Set") + '</div></div>' +
-        '<div class="field"><label>' + t("deuceRule") + '</label><div class="server-pick">' +
-          pick("evrAd", !d.noAd, t("ruleAd")) + pick("evrNoAd", !!d.noAd, t("ruleNoAd")) + '</div>' +
-          '<p style="font-size:12.5px;color:var(--text-dim);margin:2px 0 0;line-height:1.5;">' + escapeHtml(t("ruleHelp")) + '</p></div>' +
+        // Turnuvada oyun içi skor (15-30-40) girilmediği için 40-40 kuralı sorulmuyor.
         (pro ? '' :
         '<div class="field"><label>' + t("setsQ") + '</label><div class="server-pick">' +
           pick("evrS3", d.sets !== 5, t("sets3")) + pick("evrS5", d.sets === 5, t("sets5")) + '</div></div>' +
         '<div class="field"><label>' + t("finalSetQ") + '</label><div class="server-pick">' +
           pick("evrFinN", !d.finalSTB, t("finalNormal")) + pick("evrFinS", !!d.finalSTB, escapeHtml(t("finalSuperTB"))) + '</div></div>') +
+        '<div class="field"><label>' + t("drawQ") + '</label><div class="server-pick ev-draws">' +
+          DRAW_SIZES.map(function (n) { return '<button type="button" data-evdraw="' + n + '" aria-pressed="' + (d.draw === n) + '">' + (n === "wk" ? escapeHtml(t("drawWk")) : n) + '</button>'; }).join("") + '</div>' +
+          '<p style="font-size:12.5px;color:var(--text-dim);margin:2px 0 0;line-height:1.5;">' + escapeHtml(t("drawHelp")) + '</p></div>' +
         (f.mode === "edit" ? '<p class="ev-hint">' + escapeHtml(t("evRulesNote")) + '</p>' : '') +
         (f.err ? '<div class="share-status err">' + escapeHtml(f.err) + '</div>' : '') +
         '<button class="btn-primary" id="evRulesSave" type="button">' + t(f.mode === "create" ? "evCreate" : "evSaveRules") + '</button>' +
@@ -6186,6 +6843,8 @@
     set("evrS5", function () { d.sets = 5; });
     set("evrFinN", function () { d.finalSTB = false; });
     set("evrFinS", function () { d.finalSTB = true; });
+    var dbs = app.querySelectorAll("[data-evdraw]");
+    for (var di = 0; di < dbs.length; di++) dbs[di].onclick = function () { keepName(); var dv = this.getAttribute("data-evdraw"); d.draw = dv === "wk" ? "wk" : +dv; f.err = null; render(); };
     if ((el = document.getElementById("evRulesBack"))) el.onclick = function () {
       evRulesForm = null;
       if (f.mode === "create" && !tournaments.length) eventOpen = false;
@@ -6195,13 +6854,17 @@
       keepName();
       var name = String(d.name || "").trim().slice(0, 48);
       if (!name) { f.err = t("evNeedTName"); render(); return; }
-      var rules = { preset: d.preset, noAd: !!d.noAd, sets: d.sets === 5 ? 5 : 3, finalSTB: !!d.finalSTB };
+      var rules = { preset: d.preset, noAd: !!d.noAd, sets: d.sets === 5 ? 5 : 3, finalSTB: !!d.finalSTB, draw: DRAW_SIZES.indexOf(d.draw) !== -1 ? d.draw : 32 };
       if (f.mode === "create") {
         var ev = { id: Date.now(), name: name, rules: rules, createdAt: Date.now(), live: null, matches: [] };
         tournaments.unshift(ev); eventState = ev; evDay = todayStr();
       } else {
         eventState.name = name; eventState.rules = rules;
-        eventState.matches.forEach(function (m) { if (m.status === "sched") m.rules = rules; });
+        // Tablo büyüklüğü turnuvanın tamamı için geçerli; skor kuralları yalnızca başlamamış maçlara.
+        eventState.matches.forEach(function (m) {
+          if (m.status === "sched") m.rules = rules;
+          else m.rules = Object.assign({}, m.rules || DEFAULT_RULES, { draw: rules.draw });
+        });
       }
       evRulesForm = null; saveEvent(); render();
     };
@@ -6227,13 +6890,14 @@
     if (g.live.length) html += '<p class="section-label ev-sec">' + t("evLive") + ' · ' + g.live.length + '</p>' + g.live.map(evAdminCard).join("");
     if (g.next.length) html += '<p class="section-label ev-sec">' + t("evNext") + ' · ' + g.next.length + '</p>' + g.next.map(evAdminCard).join("");
     if (g.done.length) html += '<p class="section-label ev-sec">' + t("evDone") + ' · ' + g.done.length + '</p>' + g.done.map(evAdminCard).join("");
+    if (ev.matches.some(function (m) { return m.status !== "sched"; })) html += '<button class="btn-primary ev-report" id="evReportBtn" type="button">' + t("repBtnT") + '</button>';
     html += '<div class="reset-row"><button id="evFinishBtn" type="button">' + t("evFinish") + '</button></div>';
     html += '</main>';
     html += renderEventModal();
     return html;
   }
   function evAdminCard(m) {
-    var tag = m.status === "live" && m.stbNow ? '<span class="ev-tag">' + t("evSTB") + '</span>' : (evInTB(m) ? '<span class="ev-tag">' + t("evTB") + '</span>' : "");
+    var tag = spOf(m) ? '<span class="ev-tag">' + escapeHtml(spTag(m.special)) + '</span>' : (m.status === "live" && m.stbNow ? '<span class="ev-tag">' + t("evSTB") + '</span>' : (evInTB(m) ? '<span class="ev-tag">' + t("evTB") + '</span>' : ""));
     var head = '<div class="ev-head"><span class="ev-meta">' + evMeta(m) + '</span>' + tag +
       '<button class="ev-more" data-evedit="' + m.id + '" type="button">' + t("evEdit") + '</button></div>';
     var actions = "";
@@ -6257,10 +6921,10 @@
       var m = md.kind === "edit" ? evFind(md.id) : null;
       if (md.kind === "edit" && !m) return "";
       var d = md.draft || {};
-      var known = archivePlayerNames();
-      loadPlayers().forEach(function (p) { if (known.indexOf(p.name) === -1) known.push(p.name); });
-      var dl = '<datalist id="evKnown">' + known.map(function (n) { return '<option value="' + escapeAttr(n) + '"></option>'; }).join("") + '</datalist>';
+      var dl = ""; // oyuncu önerileri artık kendi seçicimizde (attachPlayerPicker)
       var val = function (k, def) { return escapeAttr(d[k] !== undefined ? d[k] : (m ? (m[k] || "") : def)); };
+      var sp = md.sp !== undefined ? md.sp : (m ? spOf(m) : "");
+      var spw = md.spw !== undefined ? md.spw : (m && spOf(m) ? m.winner : "");
       return '<div class="zone-modal" id="evFormModal"><div class="zone-card ev-form">' +
         '<div class="zone-title">' + t(md.kind === "edit" ? "evEditTitle" : "evAddTitle") + '</div>' + dl +
         '<div class="field"><label>' + t("evDate") + '</label><input id="evfDate" type="date" value="' + val("date", evDay) + '"></div>' +
@@ -6268,11 +6932,32 @@
           '<div class="field"><label>' + t("evTime") + '</label><input id="evfTime" type="text" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="10:30" value="' + val("time", "") + '"></div>' +
           '<div class="field"><label>' + t("evCourt") + '</label><input id="evfCourt" type="text" maxlength="16" placeholder="' + escapeAttr(t("evCourtPh")) + '" value="' + val("court", "") + '"></div>' +
         '</div>' +
-        '<div class="field"><label>' + t("evP1") + '</label><input id="evfA" type="text" maxlength="24" list="evKnown" autocomplete="off" value="' + val("a", "") + '"></div>' +
-        '<div class="field"><label>' + t("evP2") + '</label><input id="evfB" type="text" maxlength="24" list="evKnown" autocomplete="off" value="' + val("b", "") + '"></div>' +
-        (md.kind === "edit"
-          ? '<div class="field"><label>' + t("evScore") + '</label><input id="evfScore" type="text" autocomplete="off" placeholder="6-4 3-2" value="' + escapeAttr(d.score !== undefined ? d.score : evScoreText(m)) + '">' +
-            '<div class="ev-hint">' + escapeHtml(t("evScoreHint")) + '</div></div>'
+        '<div class="field"><label>' + t("evRound") + '</label><div class="ev-fmts ev-rounds">' +
+          (function () {
+            var cur = md.round !== undefined ? md.round : (d.round !== undefined ? d.round : (m ? (m.round || "") : ""));
+            var dr = (eventState.rules && eventState.rules.draw) || 0, opts = [""].concat(roundsForDraw(dr));
+            if (cur && opts.indexOf(cur) === -1) opts.push(cur);
+            return opts.map(function (r) {
+              return '<button type="button" data-evround="' + r + '" aria-pressed="' + (cur === r) + '">' + escapeHtml(r ? roundShort(r, dr) : t("rdNone")) + '</button>';
+            }).join("");
+          })() + '</div></div>' +
+        '<div class="field"><label>' + t("evP1") + '</label><div class="ac-wrap"><input id="evfA" type="text" maxlength="32" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="' + escapeAttr(t("acPh")) + '" value="' + val("a", "") + '"><div class="ac-list" id="evfAList" hidden></div></div></div>' +
+        '<div class="field"' + (sp === "bye" ? ' style="display:none"' : '') + '><label>' + t("evP2") + '</label><div class="ac-wrap"><input id="evfB" type="text" maxlength="32" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="' + escapeAttr(t("acPh")) + '" value="' + val("b", "") + '"><div class="ac-list" id="evfBList" hidden></div></div></div>' +
+        '<div class="field"><label>' + t("spQ") + '</label><div class="ev-fmts ev-sp">' +
+          [["", "spNormal"], ["bye", "spBye"], ["wo", "spWO"], ["ret", "spRet"]].map(function (o) {
+            return '<button type="button" data-evsp="' + o[0] + '" aria-pressed="' + (sp === o[0]) + '">' + escapeHtml(t(o[1])) + '</button>';
+          }).join("") + '</div>' +
+          (sp === "bye" ? '<div class="ev-hint">' + escapeHtml(t("spByeHint")) + '</div>' : '') + '</div>' +
+        (sp === "wo" || sp === "ret"
+          ? '<div class="field"><label>' + t("spWinner") + '</label><div class="server-pick">' +
+              ["a", "b"].map(function (k) {
+                var nm = (d[k] !== undefined ? d[k] : (m ? m[k] : "")) || t(k === "a" ? "evP1" : "evP2");
+                return '<button type="button" data-evspw="' + k + '" aria-pressed="' + (spw === k) + '">' + escapeHtml(nm) + '</button>';
+              }).join("") + '</div></div>'
+          : '') +
+        ((md.kind === "edit" && sp !== "bye" && sp !== "wo") || sp === "ret"
+          ? '<div class="field"><label>' + t("evScore") + '</label><input id="evfScore" type="text" autocomplete="off" placeholder="6-4 3-2" value="' + escapeAttr(d.score !== undefined ? d.score : (m ? evScoreText(m) : "")) + '">' +
+            '<div class="ev-hint">' + escapeHtml(t(sp === "ret" ? "spRetHint" : "evScoreHint")) + '</div></div>'
           : '') +
         (md.err ? '<div class="share-status err">' + escapeHtml(md.err) + '</div>' : '') +
         '<div class="zone-actions"><button id="evfCancel" type="button">' + t("cancel") + '</button>' +
@@ -6365,39 +7050,119 @@
     if (h > 23 || mi > 59) return null;
     return ("0" + h).slice(-2) + ":" + ("0" + mi).slice(-2);
   }
+  // Oyuncu seçici: antrenörün oyuncuları (Oyuncularım) önce, sonra daha önce maçı olan isimler.
+  // Arama Türkçe karakterlere duyarsız: "ogul" → "Oğulcan".
+  function foldTR(v) {
+    return String(v || "").toLocaleLowerCase("tr").replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c").replace(/â/g, "a").replace(/î/g, "i").replace(/û/g, "u");
+  }
+  function pickerCandidates(q, exclude) {
+    var fq = foldTR(q.trim()), ex = foldTR(exclude || ""), seen = {}, out = [];
+    var add = function (n, mine) {
+      var f = foldTR(n);
+      if (!n || seen[f] || (ex && f === ex)) return;
+      if (fq && f.indexOf(fq) === -1) return;
+      seen[f] = 1; out.push({ name: n, mine: mine, starts: fq ? f.indexOf(fq) === 0 || f.indexOf(" " + fq) !== -1 : true });
+    };
+    loadPlayers().forEach(function (p) { add(p.name, true); });
+    archivePlayerNames().forEach(function (n) { add(n, false); });
+    out.sort(function (x, y) { return (y.mine - x.mine) || (y.starts - x.starts) || x.name.localeCompare(y.name, "tr"); });
+    return out.slice(0, 8);
+  }
+  function attachPlayerPicker(inputId, listId, otherId, nextId) {
+    var inp = document.getElementById(inputId), box = document.getElementById(listId);
+    if (!inp || !box) return;
+    var hideTimer = null;
+    function show() {
+      var other = document.getElementById(otherId);
+      var items = pickerCandidates(inp.value, other ? other.value : "");
+      if (!items.length || (items.length === 1 && foldTR(items[0].name) === foldTR(inp.value.trim()))) { box.hidden = true; return; }
+      box.innerHTML = items.map(function (it, i) {
+        return '<button type="button" class="ac-item' + (i === 0 ? ' first' : '') + '" data-acname="' + escapeAttr(it.name) + '">' +
+          '<span class="ac-av' + (it.mine ? ' mine' : '') + '">' + escapeHtml(initials(it.name)) + '</span>' +
+          '<span class="ac-name">' + escapeHtml(it.name) + '</span>' +
+          (it.mine ? '<span class="ac-tag">★ ' + escapeHtml(t("acMine")) + '</span>' : '') + '</button>';
+      }).join("");
+      box.hidden = false;
+      try { box.scrollIntoView({ block: "nearest" }); } catch (e) {}
+      var btns = box.querySelectorAll("[data-acname]");
+      for (var i = 0; i < btns.length; i++) {
+        // pointerdown: odak kaybolmadan önce seç (blur listeyi kapatmasın)
+        btns[i].onpointerdown = function (e) {
+          e.preventDefault();
+          inp.value = this.getAttribute("data-acname");
+          box.hidden = true;
+          var nx = nextId && document.getElementById(nextId);
+          if (nx && !nx.value.trim()) nx.focus(); else inp.blur();
+        };
+      }
+    }
+    inp.addEventListener("focus", function () { clearTimeout(hideTimer); show(); });
+    inp.addEventListener("input", show);
+    inp.addEventListener("blur", function () { hideTimer = setTimeout(function () { box.hidden = true; }, 150); });
+    inp.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !box.hidden) {
+        var first = box.querySelector("[data-acname]");
+        if (first) { e.preventDefault(); first.onpointerdown({ preventDefault: function () {} }); }
+      } else if (e.key === "Escape") box.hidden = true;
+    });
+  }
   function evReadForm() {
     var g = function (id) { var el = document.getElementById(id); return el ? el.value : undefined; };
     return { date: g("evfDate") || "", court: (g("evfCourt") || "").trim().slice(0, 16), time: g("evfTime") || "",
-             a: (g("evfA") || "").trim().slice(0, 24), b: (g("evfB") || "").trim().slice(0, 24), score: g("evfScore") };
+             a: (g("evfA") || "").trim().slice(0, 32), b: (g("evfB") || "").trim().slice(0, 32), score: g("evfScore") };
   }
   function evSaveForm(andNext) {
     var d = evReadForm();
     if (!validDay(d.date)) d.date = evDay;
-    if (!d.a || !d.b) { evModal.err = t("evNeedNames"); evModal.draft = d; render(); return; }
+    var em = evModal.kind === "edit" ? evFind(evModal.id) : null;
+    var sp = evModal.sp !== undefined ? evModal.sp : (em ? spOf(em) : "");
+    var spw = evModal.spw !== undefined ? evModal.spw : (em && spOf(em) ? em.winner : "");
+    if (sp === "bye") d.b = "";
+    if (!d.a || (!d.b && sp !== "bye")) { evModal.err = t("evNeedNames"); evModal.draft = d; render(); return; }
+    if ((sp === "wo" || sp === "ret") && spw !== "a" && spw !== "b") { evModal.err = t("spNeedWinner"); evModal.draft = d; render(); return; }
+    var spParsed = null;
+    if (sp === "ret") {
+      spParsed = evParseScore(d.score || "", (em && em.rules) || eventState.rules);
+      if (!spParsed) { evModal.err = t("evScoreBad"); evModal.draft = d; render(); return; }
+    }
+    // Özel sonucu maça uygular (bye / hükmen / çekilme): maç biter, kazanan belli.
+    var applySpecial = function (mm) {
+      mm.special = sp; mm.stbNow = false; mm.p = { a: 0, b: 0 }; mm.g = { a: 0, b: 0 }; mm.retG = null;
+      if (sp === "bye") { mm.sets = []; mm.winner = "a"; }
+      else if (sp === "wo") { mm.sets = []; mm.winner = spw; }
+      else { mm.sets = spParsed.sets; mm.retG = spParsed.stbNow ? spParsed.p : spParsed.g; mm.winner = spw; }
+      mm.status = "done"; mm.startedAt = mm.startedAt || Date.now(); mm.endedAt = mm.endedAt || Date.now();
+    };
     var nt = normTime(d.time);
     if (nt === null) { evModal.err = t("evTimeBad"); evModal.draft = d; render(); return; }
     d.time = nt;
+    var roundSel = validRound(evModal.round !== undefined ? evModal.round : (evModal.draft && evModal.draft.round !== undefined ? evModal.draft.round : (evModal.kind === "edit" && evFind(evModal.id) ? evFind(evModal.id).round : "")));
     if (evModal.kind === "add") {
       var maxOrder = 0;
       eventState.matches.forEach(function (x) { if ((x.order || 0) > maxOrder) maxOrder = x.order; });
       var id = Date.now();
       while (evFind(id)) id++;
-      eventState.matches.push({ id: id, order: maxOrder + 1, date: d.date, court: d.court, time: d.time, a: d.a, b: d.b,
+      eventState.matches.push({ id: id, order: maxOrder + 1, date: d.date, court: d.court, time: d.time, a: d.a, b: d.b, round: roundSel,
         rules: eventState.rules || DEFAULT_RULES, status: "sched", sets: [], g: { a: 0, b: 0 }, p: { a: 0, b: 0 }, stbNow: false,
         winner: null, createdAt: Date.now(), updatedAt: Date.now(), hist: [] });
       evDay = d.date;
-      saveEvent();
-      evModal = andNext ? { kind: "add", draft: { date: d.date, time: d.time } } : null;
+      var nm2 = eventState.matches[eventState.matches.length - 1];
+      if (sp) { applySpecial(nm2); evAfterChange(nm2); } else saveEvent();
+      evModal = andNext ? { kind: "add", draft: { date: d.date, time: d.time, round: roundSel } } : null;
       render();
       if (andNext) { var f = document.getElementById("evfTime"); if (f) f.focus(); }
       return;
     }
     var m = evFind(evModal.id); if (!m) { evModal = null; render(); return; }
-    if (d.score !== undefined && d.score.trim() !== evScoreText(m)) {
-      var parsed = evParseScore(d.score, m.rules || eventState.rules);
+    var wasSp = spOf(m);
+    if (sp) {
+      evSnapshot(m); applySpecial(m);
+    } else if (wasSp || (d.score !== undefined && d.score.trim() !== evScoreText(m))) {
+      var parsed = evParseScore(d.score || "", m.rules || eventState.rules);
       if (!parsed) { evModal.err = t("evScoreBad"); evModal.draft = d; render(); return; }
       evSnapshot(m);
       var wasDone = m.status === "done";
+      if (wasSp) { m.special = ""; m.retG = null; }
       m.sets = parsed.sets; m.g = parsed.g; m.p = parsed.p; m.stbNow = parsed.stbNow;
       m.status = parsed.status; m.winner = parsed.winner;
       if (m.status !== "sched" && !m.startedAt) m.startedAt = Date.now();
@@ -6405,7 +7170,7 @@
       if (m.status !== "done") m.endedAt = null;
       if (wasDone && m.status !== "done") deleteArchived(evArchiveId(m));
     }
-    m.date = d.date; m.court = d.court; m.time = d.time; m.a = d.a; m.b = d.b; m.updatedAt = Date.now();
+    m.date = d.date; m.court = d.court; m.time = d.time; m.a = d.a; m.b = d.b; m.round = roundSel; m.updatedAt = Date.now();
     evDay = m.date;
     evModal = null;
     evAfterChange(m);
@@ -6416,7 +7181,7 @@
     if ((el = document.getElementById("evBack"))) el.onclick = function () { eventState = null; evModal = null; render(); };
     if ((el = document.getElementById("evRulesBtn"))) el.onclick = function () {
       var r = eventState.rules || DEFAULT_RULES;
-      evRulesForm = { mode: "edit", d: { name: eventState.name, preset: r.preset, noAd: r.noAd, sets: r.sets, finalSTB: r.finalSTB } };
+      evRulesForm = { mode: "edit", d: { name: eventState.name, preset: r.preset, noAd: r.noAd, sets: r.sets, finalSTB: r.finalSTB, draw: r.draw || 32 } };
       render();
     };
     list = app.querySelectorAll("[data-evday]");
@@ -6436,6 +7201,7 @@
     if ((el = document.getElementById("evGoLive"))) el.onclick = function () { startEventLive(); };
     if ((el = document.getElementById("evLivePill"))) el.onclick = function () { evModal = { kind: "stop" }; render(); };
     if ((el = document.getElementById("evFinishBtn"))) el.onclick = function () { evModal = { kind: "finish" }; render(); };
+    if ((el = document.getElementById("evReportBtn"))) el.onclick = function () { openReport(tournamentReportData(eventState)); };
     list = app.querySelectorAll("[data-evstart]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
       var m = evFind(this.getAttribute("data-evstart")); if (!m) return;
@@ -6452,6 +7218,24 @@
     list = app.querySelectorAll("[data-evedit]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () { evModal = { kind: "edit", id: this.getAttribute("data-evedit") }; render(); };
     if ((el = document.getElementById("evfCancel"))) el.onclick = function () { evModal = null; render(); };
+    list = app.querySelectorAll("[data-evround]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      evModal.round = this.getAttribute("data-evround");
+      var bs = app.querySelectorAll("[data-evround]");
+      for (var j = 0; j < bs.length; j++) bs[j].setAttribute("aria-pressed", String(bs[j].getAttribute("data-evround") === evModal.round));
+    };
+    list = app.querySelectorAll("[data-evsp]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      evModal.draft = evReadForm(); evModal.sp = this.getAttribute("data-evsp"); evModal.err = null; render();
+    };
+    list = app.querySelectorAll("[data-evspw]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      evModal.spw = this.getAttribute("data-evspw");
+      var bs = app.querySelectorAll("[data-evspw]");
+      for (var j = 0; j < bs.length; j++) bs[j].setAttribute("aria-pressed", String(bs[j].getAttribute("data-evspw") === evModal.spw));
+    };
+    attachPlayerPicker("evfA", "evfAList", "evfB", "evfB");
+    attachPlayerPicker("evfB", "evfBList", "evfA", null);
     if ((el = document.getElementById("evfTime"))) {
       // Yazarken iki nokta kendiliğinden gelsin: 1730 → 17:30
       el.oninput = function () {
@@ -6509,13 +7293,13 @@
       render();
     };
     if ((el = document.getElementById("evNewT"))) el.onclick = function () {
-      evRulesForm = { mode: "create", d: { name: "", preset: "standard", noAd: false, sets: 3, finalSTB: false } }; render();
+      evRulesForm = { mode: "create", d: { name: "", preset: "standard", noAd: false, sets: 3, finalSTB: false, draw: 32 } }; render();
     };
     if ((el = document.getElementById("evExit"))) el.onclick = function () { eventOpen = false; render(); };
   }
   function openEventScreen() {
     eventOpen = true; eventState = null; evModal = null;
-    evRulesForm = tournaments.length ? null : { mode: "create", d: { name: "", preset: "standard", noAd: false, sets: 3, finalSTB: false } };
+    evRulesForm = tournaments.length ? null : { mode: "create", d: { name: "", preset: "standard", noAd: false, sets: 3, finalSTB: false, draw: 32 } };
     render();
     window.scrollTo(0, 0);
   }
@@ -6530,7 +7314,7 @@
     return {
       name: String(o.n || ""), rules: o.r && typeof o.r === "object" ? o.r : null,
       matches: o.m.slice(0, 400).map(function (x) {
-        return { id: x.i, date: validDay(x.dt) ? x.dt : fallbackDay, court: String(x.c || ""), time: String(x.tm || ""), a: String(x.a || "A"), b: String(x.b || "B"),
+        return { id: x.i, date: validDay(x.dt) ? x.dt : fallbackDay, court: String(x.c || ""), time: String(x.tm || ""), a: String(x.a || "A"), b: String(x.b || "B"), round: validRound(x.rd), special: spOf({ special: x.sp }), retG: x.rg && typeof x.rg === "object" ? { a: +x.rg.a || 0, b: +x.rg.b || 0 } : null,
           status: x.st === "live" || x.st === "done" ? x.st : "sched",
           sets: Array.isArray(x.s) ? x.s : [], g: x.g || { a: 0, b: 0 }, p: x.p || { a: 0, b: 0 }, stbNow: !!x.stb, tbNow: !!x.tb,
           winner: x.w === "a" || x.w === "b" ? x.w : null, updatedAt: x.u || 0 };
@@ -6539,7 +7323,8 @@
   }
   function evViewerCard(m, favs) {
     var fav = favs.indexOf(String(m.id)) !== -1;
-    var tag = m.status === "live" && m.stbNow ? '<span class="ev-tag">' + t("evSTB") + '</span>'
+    var tag = spOf(m) ? '<span class="ev-tag">' + escapeHtml(spTag(m.special)) + '</span>'
+      : m.status === "live" && m.stbNow ? '<span class="ev-tag">' + t("evSTB") + '</span>'
       : (m.status === "live" && m.tbNow ? '<span class="ev-tag">' + t("evTB") + '</span>' : '');
     var foot = m.status === "live" && m.updatedAt ? '<div class="ev-upd">' + escapeHtml(t("evUpdated", { ago: agoText(m.updatedAt) })) + '</div>' : '';
     return '<div class="ev-card st-' + m.status + (fav ? ' fav' : '') + '">' +
