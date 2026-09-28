@@ -1523,7 +1523,14 @@
   .cal-day.has::after { content: ""; position: absolute; left: 50%; bottom: 5px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: var(--brass); }
   .cal-day.sel.has::after { background: var(--ink); }
   .ev-dayonly { margin: 0 0 6px; }
-  .ev-tcard { display: flex; align-items: center; gap: 10px; }
+  .ev-tcard { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font-family: inherit; color: var(--text); cursor: pointer; }
+  .ev-tcard .ev-tmain { display: flex; flex-direction: column; gap: 2px; }
+  .ev-tcard.fin { opacity: .85; }
+  .ev-empty-sm { padding: 10px 0 4px; }
+  .ev-more-fin { display: block; margin: 2px auto 0; }
+  .ev-finbanner { display: inline-block; font-size: 12.5px; font-weight: 600; color: var(--text-dim); background: var(--panel-2); border: 1px solid var(--hairline); border-radius: 999px; padding: 5px 11px; margin-bottom: 8px; }
+  .ev-finrow { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .ev-finrow .ev-del-t { color: var(--clay); }
   .ev-tmain { flex: 1; min-width: 0; }
   .ev-tname { font-weight: 600; font-size: 15.5px; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .ev-tlive { font-size: 9.5px; padding: 2px 7px; }
@@ -2099,8 +2106,12 @@
     evGoLive: "📡 Velilere yayınla", evLiveTitle: "Turnuva yayında 📡",
     evLiveSub: "Bu tek linkle veliler turnuvanın bütün günlerini, saatleri, kortları ve canlı skorları görür. Uygulama indirmeleri gerekmez.",
     evShareText: "🎾 {name} · program ve canlı skorlar:",
+    evActiveSec: "Aktif turnuvalar", evFinishedSec: "Biten turnuvalar", evNoActive: "Şu an aktif turnuva yok.",
+    evFinishedOn: "{date} tarihinde bitti", evShowMore: "Daha fazla gör ({n})", evShowLess: "Daha az göster",
+    evReopen: "↺ Turnuvayı yeniden aç", evDeleteT: "Turnuvayı sil", evDeleteTQ: "Turnuva silinsin mi?",
+    evDeleteTSub: "Turnuva listeden kalkar. Maç sonuçları oyuncu profillerinde ve geçmiş maçlarda kalır.",
     evFinish: "Turnuvayı bitir", evFinishQ: "Turnuva bitsin mi?",
-    evFinishSub: "Skoru girilen maçlar arşive kaydedilir, yayın \"sona erdi\" olarak kapanır ve turnuva listeden kalkar.",
+    evFinishSub: "Skoru girilen maçlar arşive kaydedilir, yayın \"sona erdi\" olarak kapanır ve turnuva \"Biten turnuvalar\" bölümüne geçer.",
     evFinishYes: "Turnuvayı bitir",
     evViewerBy: "Turnuva · canlı skorlar", evViewerEnded: "Turnuva sona erdi · son skorlar",
     evFollow: "Takip et", evUnfollow: "Takibi bırak",
@@ -2131,8 +2142,12 @@
     evGoLive: "📡 Share live with parents", evLiveTitle: "Tournament is live 📡",
     evLiveSub: "With this one link, parents see every day of the tournament — times, courts and live scores. No app needed.",
     evShareText: "🎾 {name} · schedule and live scores:",
+    evActiveSec: "Active tournaments", evFinishedSec: "Finished tournaments", evNoActive: "No active tournaments right now.",
+    evFinishedOn: "Finished on {date}", evShowMore: "Show more ({n})", evShowLess: "Show less",
+    evReopen: "↺ Reopen tournament", evDeleteT: "Delete tournament", evDeleteTQ: "Delete this tournament?",
+    evDeleteTSub: "The tournament is removed from the list. Match results stay in player profiles and past matches.",
     evFinish: "End tournament", evFinishQ: "End the tournament?",
-    evFinishSub: "Matches with a score are saved to the archive, the broadcast closes as \"ended\" and the tournament is removed from the list.",
+    evFinishSub: "Matches with a score are saved to the archive, the broadcast closes as \"ended\" and the tournament moves to \"Finished tournaments\".",
     evFinishYes: "End tournament",
     evViewerBy: "Tournament · live scores", evViewerEnded: "Tournament over · final scores",
     evFollow: "Follow", evUnfollow: "Unfollow",
@@ -4469,7 +4484,7 @@
       '<div class="hub-tiles">' +
         hubTile("hubMatch", "match", t("hubMatchT"), t("hubMatchS"), "", "primary", off) +
         hubTile("openEventBtn", "tour", t("hubTourT"), t("hubTourS"),
-          tournaments.length ? (anyLiveT ? '<span class="dot"></span>' : '') + escapeHtml(t("hubActive", { n: tournaments.length })) : "", anyLiveT ? "live" : "", off + 1) +
+          activeTournaments().length ? (anyLiveT ? '<span class="dot"></span>' : '') + escapeHtml(t("hubActive", { n: activeTournaments().length })) : "", anyLiveT ? "live" : "", off + 1) +
         hubTile("hubPlayers", "coach", t("hubPlayersT"), t("hubPlayersS"), loadPlayers().length ? escapeHtml(String(loadPlayers().length)) : "", "", off + 2) +
         hubTile("openArchiveSetup", "arc", t("hubArcT"), arcN ? t("hubArcS", { n: arcN }) : t("hubArcS0"), "", "", off + 3) +
       '</div>' +
@@ -6725,10 +6740,16 @@
     ev.matches.forEach(function (m) { if (m.status !== "sched") evArchive(m); });
     if (ev.live) putEventLive(ev, ev.live.code, true).catch(function () {});
     var sl = evPush[ev.id]; if (sl) { clearTimeout(sl.timer); clearTimeout(sl.retry); }
-    tournaments = tournaments.filter(function (x) { return x !== ev; });
+    // Biten turnuva silinmez: "Biten turnuvalar" bölümüne geçer, maçları ve raporu açılabilir.
+    ev.live = null; ev.finishedAt = Date.now();
     eventState = null; evModal = null;
     saveTournaments(); render();
   }
+  function activeTournaments() { return tournaments.filter(function (x) { return !x.finishedAt; }); }
+  function finishedTournaments() {
+    return tournaments.filter(function (x) { return x.finishedAt; }).sort(function (a, b) { return b.finishedAt - a.finishedAt; });
+  }
+  var showAllFinished = false;
 
   // --- Ortak görünüm parçaları ---
   function evSortSched(x, y) {
@@ -6784,7 +6805,7 @@
   }
   function evDayChips(days, cur, attr, withPicker) {
     return '<div class="ev-days">' + days.map(function (d) {
-      var n = attr === "data-evday" ? eventState.matches.filter(function (m) { return m.date === d; }).length : 0;
+      var n = attr === "data-evday" ? eventState.matches.filter(function (m) { return m.date === d && !(eventState.finishedAt && m.status === "sched"); }).length : 0;
       return '<button type="button" class="ev-daychip" ' + attr + '="' + d + '" aria-pressed="' + (d === cur) + '">' + escapeHtml(dayLabel(d)) +
         (n ? ' <span class="ev-daycount">' + n + '</span>' : '') + '</button>';
     }).join("") +
@@ -6793,16 +6814,30 @@
   }
 
   // --- Yönetici: turnuva listesi ---
+  function tournamentCard(ev) {
+    var fin = !!ev.finishedAt;
+    var played = ev.matches.filter(function (m) { return m.status === "done"; }).length;
+    var meta = fin
+      ? t("evFinishedOn", { date: fmtDateTR(ev.finishedAt) }) + " · " + t("evNMatches", { n: played })
+      : rulesLabel(ev.rules) + " · " + t("evNMatches", { n: ev.matches.length });
+    return '<button class="ev-card ev-tcard' + (fin ? ' fin' : '') + '" data-evopen="' + ev.id + '" type="button">' +
+      '<span class="ev-tmain"><span class="ev-tname">' + (fin ? '🏁 ' : '') + escapeHtml(evName(ev)) + (ev.live ? ' <span class="live-pill ev-tlive"><span class="dot"></span>' + t("liveOn") + '</span>' : '') + '</span>' +
+      '<span class="ev-meta">' + escapeHtml(meta) + '</span></span>' +
+      '<span class="ht-chev" aria-hidden="true">›</span></button>';
+  }
   function renderTournamentList() {
+    var act = activeTournaments(), fin = finishedTournaments();
     var html = navBarHtml("evExit", t("evListTitle")) + '<main class="ev-main">';
-    html += tournaments.map(function (ev) {
-      return '<div class="ev-card ev-tcard">' +
-        '<div class="ev-tmain"><div class="ev-tname">' + escapeHtml(evName(ev)) + (ev.live ? ' <span class="live-pill ev-tlive"><span class="dot"></span>' + t("liveOn") + '</span>' : '') + '</div>' +
-        '<div class="ev-meta">' + escapeHtml(rulesLabel(ev.rules)) + ' · ' + t("evNMatches", { n: ev.matches.length }) + '</div></div>' +
-        '<button class="ev-more" data-evopen="' + ev.id + '" type="button">' + t("evOpenT") + '</button></div>';
-    }).join("");
-    html += '<button class="btn-primary ev-add" id="evNewT" type="button">' + t("evNewT") + '</button></main>';
-    return html;
+    html += '<p class="section-label ev-sec" style="margin-top:4px">' + t("evActiveSec") + (act.length ? ' · ' + act.length : '') + '</p>';
+    html += act.length ? act.map(tournamentCard).join("") : '<p class="empty-state ev-empty-sm">' + escapeHtml(t("evNoActive")) + '</p>';
+    html += '<button class="btn-primary ev-add" id="evNewT" type="button">' + t("evNewT") + '</button>';
+    if (fin.length) {
+      var shown = showAllFinished ? fin : fin.slice(0, 1);
+      html += '<p class="section-label ev-sec">' + t("evFinishedSec") + ' · ' + fin.length + '</p>' + shown.map(tournamentCard).join("");
+      if (fin.length > 1) html += '<button class="hub-link ev-more-fin" id="evMoreFin" type="button">' +
+        (showAllFinished ? t("evShowLess") : t("evShowMore", { n: fin.length - 1 })) + '</button>';
+    }
+    return html + '</main>';
   }
 
   // --- Yönetici: turnuva oluştur / kuralları düzenle (ana ekrandaki gibi seçenek seçenek) ---
@@ -6873,6 +6908,7 @@
   // --- Yönetici: turnuva ekranı ---
   function renderEventScreen() {
     var ev = eventState, st = evStatus[ev.id];
+    if (ev.finishedAt) return renderFinishedTournament(ev);
     var liveBtn = ev.live
       ? '<button class="live-pill mb-live' + (st === "offline" ? " off" : "") + '" id="evLivePill" type="button"><span class="dot"></span>' + t("liveOn") + '</button>'
       : '<button class="live-go ev-golive" id="evGoLive" type="button"' + (st === "starting" ? " disabled" : "") + '>' + (st === "starting" ? t("liveStarting") : t("evGoLive")) + '</button>';
@@ -6887,16 +6923,46 @@
     var dayList = ev.matches.filter(function (m) { return m.date === evDay; });
     var g = evGroups(dayList);
     if (!dayList.length) html += '<p class="empty-state">' + escapeHtml(t("evEmptyDay")) + '</p>';
-    if (g.live.length) html += '<p class="section-label ev-sec">' + t("evLive") + ' · ' + g.live.length + '</p>' + g.live.map(evAdminCard).join("");
-    if (g.next.length) html += '<p class="section-label ev-sec">' + t("evNext") + ' · ' + g.next.length + '</p>' + g.next.map(evAdminCard).join("");
-    if (g.done.length) html += '<p class="section-label ev-sec">' + t("evDone") + ' · ' + g.done.length + '</p>' + g.done.map(evAdminCard).join("");
+    if (g.live.length) html += '<p class="section-label ev-sec">' + t("evLive") + ' · ' + g.live.length + '</p>' + g.live.map(function (m) { return evAdminCard(m); }).join("");
+    if (g.next.length) html += '<p class="section-label ev-sec">' + t("evNext") + ' · ' + g.next.length + '</p>' + g.next.map(function (m) { return evAdminCard(m); }).join("");
+    if (g.done.length) html += '<p class="section-label ev-sec">' + t("evDone") + ' · ' + g.done.length + '</p>' + g.done.map(function (m) { return evAdminCard(m); }).join("");
     if (ev.matches.some(function (m) { return m.status !== "sched"; })) html += '<button class="btn-primary ev-report" id="evReportBtn" type="button">' + t("repBtnT") + '</button>';
     html += '<div class="reset-row"><button id="evFinishBtn" type="button">' + t("evFinish") + '</button></div>';
     html += '</main>';
     html += renderEventModal();
     return html;
   }
-  function evAdminCard(m) {
+  // Biten turnuva: sadece bakış ve rapor; yeniden açılabilir ya da silinebilir.
+  function renderFinishedTournament(ev) {
+    var html = navBarHtml("evBack", "", "", t("evListTitle")) + '<main class="ev-main">';
+    html += '<div class="ev-finbanner">🏁 ' + escapeHtml(t("evFinishedOn", { date: fmtDateTR(ev.finishedAt) })) + '</div>';
+    html += '<h1 class="ev-h1">' + escapeHtml(evName(ev)) + '</h1><div class="ev-ruleline"><span>' + escapeHtml(rulesLabel(ev.rules)) + '</span></div>';
+    var played = ev.matches.filter(function (m) { return m.status !== "sched"; });
+    var days = evDaysOf(played);
+    if (days.length && days.indexOf(evDay) === -1) evDay = days[days.length - 1];
+    if (days.length > 1) html += evDayChips(days, evDay, "data-evday", false);
+    var dayList = ev.matches.filter(function (m) { return m.date === evDay && m.status !== "sched"; });
+    var g = evGroups(dayList);
+    if (!dayList.length) html += '<p class="empty-state">' + escapeHtml(t("evNoMatchesDay")) + '</p>';
+    html += g.done.concat(g.live).map(function (m) { return evAdminCard(m, true); }).join("");
+    if (ev.matches.some(function (m) { return m.status !== "sched"; })) html += '<button class="btn-primary ev-report" id="evReportBtn" type="button">' + t("repBtnT") + '</button>';
+    html += '<div class="reset-row ev-finrow"><button id="evReopen" type="button">' + t("evReopen") + '</button>' +
+      '<button id="evDeleteT" class="ev-del-t" type="button">' + t("evDeleteT") + '</button></div>';
+    html += '</main>';
+    if (evModal && evModal.kind === "deleteT") {
+      html += '<div class="zone-modal" id="evDelModal"><div class="zone-card">' +
+        '<div class="zone-title">' + t("evDeleteTQ") + '</div>' +
+        '<div class="zone-sub">' + escapeHtml(t("evDeleteTSub")) + '</div>' +
+        '<div class="zone-actions"><button id="evDelNo" type="button">' + t("cancel") + '</button>' +
+        '<button id="evDelYes" class="primary live-stop-yes" type="button">' + t("evDeleteT") + '</button></div></div></div>';
+    }
+    return html;
+  }
+  function evAdminCard(m, readOnly) {
+    if (readOnly) {
+      var rtag = spOf(m) ? '<span class="ev-tag">' + escapeHtml(spTag(m.special)) + '</span>' : '';
+      return '<div class="ev-card st-' + m.status + '"><div class="ev-head"><span class="ev-meta">' + evMeta(m) + '</span>' + rtag + '</div>' + evBoard(m) + '</div>';
+    }
     var tag = spOf(m) ? '<span class="ev-tag">' + escapeHtml(spTag(m.special)) + '</span>' : (m.status === "live" && m.stbNow ? '<span class="ev-tag">' + t("evSTB") + '</span>' : (evInTB(m) ? '<span class="ev-tag">' + t("evTB") + '</span>' : ""));
     var head = '<div class="ev-head"><span class="ev-meta">' + evMeta(m) + '</span>' + tag +
       '<button class="ev-more" data-evedit="' + m.id + '" type="button">' + t("evEdit") + '</button></div>';
@@ -7202,6 +7268,14 @@
     if ((el = document.getElementById("evLivePill"))) el.onclick = function () { evModal = { kind: "stop" }; render(); };
     if ((el = document.getElementById("evFinishBtn"))) el.onclick = function () { evModal = { kind: "finish" }; render(); };
     if ((el = document.getElementById("evReportBtn"))) el.onclick = function () { openReport(tournamentReportData(eventState)); };
+    if ((el = document.getElementById("evReopen"))) el.onclick = function () { delete eventState.finishedAt; evDay = todayStr(); saveEvent(); render(); };
+    if ((el = document.getElementById("evDeleteT"))) el.onclick = function () { evModal = { kind: "deleteT" }; render(); };
+    if ((el = document.getElementById("evDelNo"))) el.onclick = function () { evModal = null; render(); };
+    if ((el = document.getElementById("evDelModal"))) el.onclick = function (e) { if (e.target === this) { evModal = null; render(); } };
+    if ((el = document.getElementById("evDelYes"))) el.onclick = function () {
+      var ev = eventState; tournaments = tournaments.filter(function (x) { return x !== ev; });
+      eventState = null; evModal = null; saveTournaments(); render();
+    };
     list = app.querySelectorAll("[data-evstart]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
       var m = evFind(this.getAttribute("data-evstart")); if (!m) return;
@@ -7289,13 +7363,15 @@
       var id = this.getAttribute("data-evopen");
       eventState = tournaments.filter(function (x) { return String(x.id) === id; })[0] || null;
       var days = eventState ? evDaysOf(eventState.matches) : [];
-      evDay = days.indexOf(todayStr()) !== -1 || !days.length ? todayStr() : (days.filter(function (d) { return d >= todayStr(); })[0] || days[days.length - 1]);
+      evDay = eventState && eventState.finishedAt && days.length ? days[days.length - 1]
+        : (days.indexOf(todayStr()) !== -1 || !days.length ? todayStr() : (days.filter(function (d) { return d >= todayStr(); })[0] || days[days.length - 1]));
       render();
     };
     if ((el = document.getElementById("evNewT"))) el.onclick = function () {
       evRulesForm = { mode: "create", d: { name: "", preset: "standard", noAd: false, sets: 3, finalSTB: false, draw: 32 } }; render();
     };
-    if ((el = document.getElementById("evExit"))) el.onclick = function () { eventOpen = false; render(); };
+    if ((el = document.getElementById("evExit"))) el.onclick = function () { eventOpen = false; showAllFinished = false; render(); };
+    if ((el = document.getElementById("evMoreFin"))) el.onclick = function () { showAllFinished = !showAllFinished; render(); };
   }
   function openEventScreen() {
     eventOpen = true; eventState = null; evModal = null;
