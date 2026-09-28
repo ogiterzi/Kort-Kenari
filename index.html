@@ -1713,8 +1713,8 @@
   .yk-bar .yk-d { flex: 1; text-align: center; font-weight: 600; font-size: 15px; font-variant-numeric: tabular-nums; }
   .yk-sum { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
   .yk-sum b { font-family: 'Fraunces', Georgia, serif; font-size: 22px; color: var(--text); margin-right: 3px; }
-  .yk-names { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .yk-name { position: relative; min-height: 64px; border-radius: 14px; border: 2px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 17px; font-weight: 600; padding: 10px 12px; text-align: left; cursor: pointer; overflow-wrap: anywhere; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background .12s, border-color .12s; }
+  .yk-names { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 148px), 1fr)); gap: 10px; }
+  .yk-name { position: relative; display: flex; align-items: center; min-width: 0; height: 64px; border-radius: 14px; border: 2px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 16px; font-weight: 600; line-height: 1.2; padding: 8px 12px; text-align: left; cursor: pointer; overflow-wrap: break-word; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background .12s, border-color .12s; }
   .yk-name.c1 { background: var(--yk-on); border-color: var(--yk-on); color: var(--yk-on-ink); }
   .yk-name.c2 { background: var(--yk-two); border-color: var(--yk-two); color: var(--yk-on-ink); }
   .yk-x2 { position: absolute; top: -8px; right: -6px; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; display: grid; place-items: center; background: var(--yk-ball); color: var(--yk-ball-ink); font-size: 13px; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
@@ -1744,14 +1744,20 @@
   .yk-dates span:last-child { color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .yk-kid { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--hairline); }
   .yk-kid:last-child { border-bottom: none; }
-  .yk-kid .pl-name { flex: 1; }
+  .yk-kid .pl-name { flex: 1; min-width: 0; white-space: normal; overflow-wrap: anywhere; line-height: 1.3; }
+  .yk-kid button.yk-pen { padding: 6px 10px; font-size: 15px; line-height: 1; }
   .yk-kid button { flex: none; background: none; border: 1px solid var(--hairline); color: var(--text-dim); border-radius: 8px; padding: 6px 12px; font-family: inherit; font-size: 12.5px; cursor: pointer; }
+  .yk-edit { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .yk-edit .share-close { align-self: flex-start; padding: 4px 0; }
   .yk-kid button.armed { border-color: var(--clay); color: var(--clay); font-weight: 600; }
   .yk-form { display: flex; flex-direction: column; gap: 12px; background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 14px; }
   .yk-form .field input { width: 100%; }
-  .yk-toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60; display: flex; align-items: center; gap: 14px; max-width: calc(100% - 32px); padding: 10px 10px 10px 16px; border-radius: 12px; background: var(--text); color: var(--bg); font-size: 14.5px; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
-  .yk-toast button { background: none; border: none; color: var(--yk-ball); font-family: inherit; font-weight: 700; font-size: 14.5px; padding: 6px 8px; cursor: pointer; }
-  @media (max-width: 340px) { .yk-names { grid-template-columns: 1fr; } }
+  .yk-toast { position: fixed; left: 16px; right: 16px; margin: 0 auto; width: fit-content; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60; display: flex; align-items: center; gap: 14px; max-width: calc(100% - 32px); padding: 10px 10px 10px 16px; border-radius: 12px; background: var(--text); color: var(--bg); font-size: 14.5px; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+  .yk-toast span { min-width: 0; }
+  .yk-toast button { flex: none; white-space: nowrap; background: none; border: none; color: var(--yk-ball); font-family: inherit; font-weight: 700; font-size: 14.5px; padding: 6px 8px; cursor: pointer; }
+  .yk-name .yk-nm { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-width: 0; }
+  .yk-main > * { min-width: 0; }
+  #app { overflow-x: clip; }
   @media (prefers-reduced-motion: reduce) { .yk-name { transition: none; } }
 
 </style>
@@ -2271,7 +2277,10 @@
     ykRemoveNote: "Çıkarılan öğrencinin eski yoklamaları silinmez.",
     ykGroupInfo: "Grup bilgileri", ykSave: "Kaydet", ykSaved: "Kaydedildi ✓",
     ykDelGroup: "Grubu sil", ykDelGroupSure: "Emin misin? Grup ve yoklamaları silinir",
-    ykDeviceNote: "Yoklamalar bu cihazda saklanır.", ykGroups: "Gruplar"
+    ykDeviceNote: "Yoklamalar bu cihazda saklanır.", ykGroups: "Gruplar",
+    ykEdit: "Düzenle", ykRename: "✎ Adı düzenle", ykEditNames: "✎ İsimleri düzenle", ykKidName: "Öğrencinin adı",
+    ykNameTaken: "Bu grupta bu isimde bir öğrenci zaten var.", ykNeedKidName: "İsim boş olamaz.",
+    ykRenamed: "Ad değiştirildi. Eski yoklamaları da yeni ada taşındı."
   });
   Object.assign(I18N.en, {
     hubYkT: "Attendance", hubYkS: "Groups, daily register and monthly attendance.",
@@ -2295,7 +2304,10 @@
     ykRemoveNote: "Past attendance of a removed student is kept.",
     ykGroupInfo: "Group details", ykSave: "Save", ykSaved: "Saved ✓",
     ykDelGroup: "Delete group", ykDelGroupSure: "Sure? The group and its attendance will be deleted",
-    ykDeviceNote: "Attendance is stored on this device.", ykGroups: "Groups"
+    ykDeviceNote: "Attendance is stored on this device.", ykGroups: "Groups",
+    ykEdit: "Edit", ykRename: "✎ Edit name", ykEditNames: "✎ Edit names", ykKidName: "Student's name",
+    ykNameTaken: "There's already a student with this name in the group.", ykNeedKidName: "The name can't be empty.",
+    ykRenamed: "Name changed. Past attendance moved to the new name."
   });
   // ---------- Hesap ve bulut metinleri ----------
   Object.assign(I18N.tr, {
@@ -7705,6 +7717,37 @@
   var ykToast = null, ykToastTimer = null;
   var ykArm = null;         // silme onayı bekleyen: "g" (grup) ya da öğrenci adı
   var ykStatus = "";
+  var ykEditing = null;     // adı düzenlenen öğrenci
+  var ykEditErr = "";
+
+  // Öğrencinin adını değiştirir; bütün günlerdeki yoklaması yeni ada taşınır.
+  function ykRenameKid(g, oldName, newName) {
+    newName = String(newName || "").replace(/\s+/g, " ").trim().slice(0, 32);
+    if (!newName) return t("ykNeedKidName");
+    if (newName === oldName) return "";
+    var clash = g.kids.some(function (n) { return n !== oldName && nameKey(n) === nameKey(newName); });
+    if (clash) return t("ykNameTaken");
+    g.kids = g.kids.map(function (n) { return n === oldName ? newName : n; });
+    var a = yk.att[g.id] || {};
+    Object.keys(a).forEach(function (day) {
+      var m = a[day];
+      if (m && m.hasOwnProperty(oldName)) {
+        m[newName] = Math.max(m[newName] || 0, m[oldName] || 0);
+        delete m[oldName];
+      }
+    });
+    saveYk();
+    if (ykKid === oldName) ykKid = newName;
+    return "";
+  }
+  function ykEditForm(name) {
+    return '<div class="yk-edit">' +
+      '<label class="yk-note" for="ykEditInput">' + t("ykKidName") + '</label>' +
+      '<div class="pl-addrow" style="margin:0"><input id="ykEditInput" type="text" maxlength="32" autocomplete="off" autocorrect="off" spellcheck="false" value="' + escapeAttr(name) + '">' +
+      '<button class="btn-primary" id="ykEditSave" type="button">' + t("ykSave") + '</button></div>' +
+      (ykEditErr ? '<div class="share-status err">' + escapeHtml(ykEditErr) + '</div>' : '') +
+      '<button class="share-close" id="ykEditCancel" type="button">' + t("cancel") + '</button></div>';
+  }
 
   function ykGroup() {
     for (var i = 0; i < yk.groups.length; i++) if (String(yk.groups[i].id) === String(ykGroupId)) return yk.groups[i];
@@ -7822,10 +7865,11 @@
       var v = ykVal(g.id, ykDay, n);
       return '<button type="button" class="yk-name' + (v ? " c" + v : "") + '" data-ykname="' + escapeAttr(n) + '" aria-label="' +
         escapeAttr(n + ": " + (v === 2 ? t("ykTwo") : v === 1 ? t("ykOne") : t("ykAbsent"))) + '">' +
-        escapeHtml(n) + (v === 2 ? '<span class="yk-x2">×2</span>' : '') + '</button>';
+        '<span class="yk-nm">' + escapeHtml(n) + '</span>' + (v === 2 ? '<span class="yk-x2">×2</span>' : '') + '</button>';
     }).join("") + '</div>';
     html += '<div class="yk-legend"><span><i class="yk-sw"></i>' + escapeHtml(t("ykL0")) + '</span><span><i class="yk-sw c1"></i>' + escapeHtml(t("ykL1")) + '</span><span><i class="yk-sw c2"></i>' + escapeHtml(t("ykL2")) + '</span></div>' +
-      '<p class="yk-note">' + escapeHtml(t("ykHint")) + '</p>';
+      '<p class="yk-note">' + escapeHtml(t("ykHint")) + '</p>' +
+      '<button class="hub-link" id="ykGoNames" type="button" style="align-self:center;margin-top:0">' + t("ykEditNames") + '</button>';
     if (ykToast) html += '<div class="yk-toast" id="ykToast" role="status"><span>' + escapeHtml(ykToast) + '</span>' +
       (ykLast ? '<button type="button" id="ykUndo">' + t("ykUndo") + '</button>' : '') + '</div>';
     return html;
@@ -7857,9 +7901,12 @@
     if (kids.length) {
       html += '<div class="pl-group" style="margin-top:0;padding:2px 14px">' + kids.map(function (n) {
         var armed = ykArm === "k:" + n;
+        if (ykEditing === n) return '<div class="yk-kid">' + ykEditForm(n) + '</div>';
         return '<div class="yk-kid"><span class="pl-av">' + escapeHtml(initials(n)) + '</span><span class="pl-name">' + escapeHtml(n) + '</span>' +
+          '<button type="button" class="yk-pen" data-ykedit="' + escapeAttr(n) + '" aria-label="' + escapeAttr(t("ykEdit") + ": " + n) + '" title="' + escapeAttr(t("ykEdit")) + '">✎</button>' +
           '<button type="button" class="' + (armed ? 'armed' : '') + '" data-ykrm="' + escapeAttr(n) + '">' + t(armed ? "ykRemoveSure" : "ykRemove") + '</button></div>';
-      }).join("") + '</div><p class="yk-note">' + escapeHtml(t("ykRemoveNote")) + '</p>';
+      }).join("") + '</div>' + (ykStatus === t("ykRenamed") ? '<div class="share-status">' + escapeHtml(ykStatus) + '</div>' : '') +
+        '<p class="yk-note">' + escapeHtml(t("ykRemoveNote")) + '</p>';
     } else {
       html += '<p class="empty-state ev-empty-sm">' + escapeHtml(t("ykNoKids")) + '</p>';
     }
@@ -7868,7 +7915,7 @@
         '<div class="field"><label for="ykgName">' + t("ykGroupName") + '</label><input id="ykgName" type="text" maxlength="40" autocomplete="off" value="' + escapeAttr(g.name) + '"></div>' +
         '<div class="field"><label for="ykgTime">' + t("ykGroupTime") + '</label><input id="ykgTime" type="text" maxlength="48" autocomplete="off" placeholder="' + escapeAttr(t("ykGroupTimePh")) + '" value="' + escapeAttr(g.time || "") + '"></div>' +
         '<button class="btn-primary" id="ykgSave" type="button" style="margin-top:0">' + t("ykSave") + '</button>' +
-        '<div class="share-status" id="ykgStatus">' + escapeHtml(ykStatus) + '</div>' +
+        '<div class="share-status" id="ykgStatus">' + escapeHtml(ykStatus === t("ykRenamed") ? "" : ykStatus) + '</div>' +
       '</div>' +
       '<div class="reset-row"><button id="ykDelGroup" type="button"' + (ykArm === "g" ? ' style="border-color:var(--clay);color:var(--clay);font-weight:600"' : '') + '>' + t(ykArm === "g" ? "ykDelGroupSure" : "ykDelGroup") + '</button></div>';
     return html;
@@ -7881,7 +7928,9 @@
     d.forEach(function (x) { map[x[0]] = x[1]; });
     var html = navBarHtml("ykBack", "", "", g.name) + '<main class="ev-main yk-main">' +
       '<div class="pl-head" style="margin:0"><span class="pl-av big">' + escapeHtml(initials(name)) + '</span><div>' +
-        '<h1 class="ev-h1" style="margin:0">' + escapeHtml(name) + '</h1><div class="pl-sub">' + escapeHtml(g.name) + '</div></div></div>' +
+        '<h1 class="ev-h1" style="margin:0">' + escapeHtml(name) + '</h1><div class="pl-sub">' + escapeHtml(g.name) + '</div>' +
+        (ykEditing === name ? '' : '<button class="ev-more" data-ykedit="' + escapeAttr(name) + '" type="button" style="margin-top:6px">' + t("ykRename") + '</button>') + '</div></div>' +
+      (ykEditing === name ? ykEditForm(name) : '') +
       '<div class="yk-bar"><button type="button" data-ykmonth="-1" aria-label="‹">‹</button>' +
         '<span class="yk-d" style="text-transform:capitalize">' + escapeHtml(ykMonthName(ykMonth)) + '</span>' +
         '<button type="button" data-ykmonth="1" aria-label="›">›</button></div>' +
@@ -7904,6 +7953,7 @@
       '<div class="yk-dates">' + (d.length ? d.map(function (x) {
         return '<div><span>' + escapeHtml(ykShortDay(x[0])) + '</span><span>' + escapeHtml(x[1] === 2 ? t("ykTwo") : t("ykOne")) + '</span></div>';
       }).join("") : '<div><span style="color:var(--text-dim)">' + escapeHtml(t("ykNone")) + '</span></div>') + '</div>' +
+      (ykStatus ? '<div class="share-status">' + escapeHtml(ykStatus) + '</div>' : '') +
       '<button class="btn-primary" id="ykShare" type="button">' + t("ykShareSum") + '</button>' +
       '<div class="share-status" id="ykShareStatus"></div>';
     return html + '</main>';
@@ -7932,7 +7982,7 @@
   function bindYkScreens() {
     var el, i, list, g = ykGroup();
     if ((el = document.getElementById("ykBack"))) el.onclick = function () {
-      ykArm = null; ykStatus = ""; ykToast = null; ykLast = null;
+      ykArm = null; ykStatus = ""; ykToast = null; ykLast = null; ykEditing = null; ykEditErr = "";
       if (ykKid) ykKid = null;
       else if (ykGroupId) ykGroupId = null;
       else { ykOpen = false; ykForm = null; }
@@ -7970,7 +8020,7 @@
     // Sekmeler
     list = app.querySelectorAll("[data-yktab]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
-      ykTab = this.getAttribute("data-yktab"); ykArm = null; ykStatus = ""; ykToast = null; ykLast = null; render();
+      ykTab = this.getAttribute("data-yktab"); ykArm = null; ykStatus = ""; ykToast = null; ykLast = null; ykEditing = null; ykEditErr = ""; render();
     };
     // Yoklama
     list = app.querySelectorAll("[data-ykday]");
@@ -7997,7 +8047,7 @@
     list = app.querySelectorAll("[data-ykmonth]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () { ykShiftMonth(+this.getAttribute("data-ykmonth")); render(); };
     list = app.querySelectorAll("[data-ykkid]");
-    for (i = 0; i < list.length; i++) list[i].onclick = function () { ykKid = this.getAttribute("data-ykkid"); render(); };
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { ykKid = this.getAttribute("data-ykkid"); ykEditing = null; ykEditErr = ""; ykStatus = ""; render(); };
     if ((el = document.getElementById("ykShare"))) el.onclick = function () {
       var text = ykSummaryText(g, ykKid), title = ykKid + " · " + g.name;
       var st = document.getElementById("ykShareStatus");
@@ -8024,6 +8074,23 @@
       };
       attachPlayerPicker("ykKidName", "ykKidList", null, null);
     }
+    list = app.querySelectorAll("[data-ykedit]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      ykEditing = this.getAttribute("data-ykedit"); ykEditErr = ""; ykArm = null; render();
+      var inp = document.getElementById("ykEditInput");
+      if (inp) { inp.focus(); try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (e) {} }
+    };
+    var saveEdit = function () {
+      var inp = document.getElementById("ykEditInput"); if (!inp || !ykEditing) return;
+      var err = ykRenameKid(g, ykEditing, inp.value);
+      if (err) { ykEditErr = err; render(); var again = document.getElementById("ykEditInput"); if (again) again.focus(); return; }
+      ykEditing = null; ykEditErr = ""; ykStatus = t("ykRenamed");
+      render();
+    };
+    if ((el = document.getElementById("ykEditSave"))) el.onclick = saveEdit;
+    if ((el = document.getElementById("ykEditInput"))) el.onkeydown = function (e) { if (e.key === "Enter") saveEdit(); else if (e.key === "Escape") { ykEditing = null; render(); } };
+    if ((el = document.getElementById("ykEditCancel"))) el.onclick = function () { ykEditing = null; ykEditErr = ""; render(); };
+    if ((el = document.getElementById("ykGoNames"))) el.onclick = function () { ykTab = "kids"; ykToast = null; ykLast = null; render(); };
     list = app.querySelectorAll("[data-ykrm]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
       var n = this.getAttribute("data-ykrm");
@@ -8224,11 +8291,13 @@
     var a = loadAuth();
     var viaNew = function () { return authCall("signUp", { email: email, password: pass, returnSecureToken: true }); };
     // Telefonun anonim hesabı varsa ona e-posta eklenir: uid ve açık canlı yayınlar aynı kalır.
+    // (Firebase SDK'daki linkWithCredential gibi: signUp + idToken. "update" yöntemi, e-posta
+    // numaralandırma koruması açık projelerde reddediliyor.) Bağlama olmazsa yeni hesap açılır.
     var p = (a && a.refreshToken && !a.email)
       ? getIdToken().then(function (cur) {
-          return authCall("update", { idToken: cur.idToken, email: email, password: pass, returnSecureToken: true });
+          return authCall("signUp", { idToken: cur.idToken, email: email, password: pass, returnSecureToken: true });
         }).catch(function (err) {
-          if (/EMAIL_EXISTS|INVALID_EMAIL|WEAK_PASSWORD|OPERATION_NOT_ALLOWED|TOO_MANY/.test(String(err && err.message))) throw err;
+          if (/EMAIL_EXISTS|INVALID_EMAIL|MISSING_EMAIL|WEAK_PASSWORD|TOO_MANY/.test(String(err && err.message))) throw err;
           return viaNew();
         })
       : viaNew();
