@@ -1683,6 +1683,64 @@
     .intro .intro-word { opacity: 1; top: calc(50% + 17vh); }
   }
 
+  /* ---- Yoklama ---- */
+  :root { --yk-on: #4F8F63; --yk-two: #2C6743; --yk-on-ink: #FFFFFF; --yk-ball: #CFE21B; --yk-ball-ink: #1E2A0A; }
+  .yk-main { display: flex; flex-direction: column; gap: 14px; }
+  .yk-card { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 15px 14px 15px 16px; border-radius: 16px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; cursor: pointer; }
+  .yk-card:active { transform: scale(.98); }
+  .yk-card .yk-cmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .yk-card .yk-cname { font-family: 'Fraunces', Georgia, serif; font-size: 18px; font-weight: 600; }
+  .yk-card .yk-csub { font-size: 12.5px; color: var(--text-dim); }
+  .yk-today { flex: none; font-size: 12px; font-weight: 700; color: var(--grass); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .yk-seg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--hairline); }
+  .yk-seg button { border: none; background: none; border-radius: 9px; padding: 9px 4px; font-family: inherit; font-size: 13.5px; font-weight: 600; color: var(--text-dim); cursor: pointer; }
+  .yk-seg button[aria-selected="true"] { background: var(--panel); color: var(--brass); box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+  .yk-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .yk-bar button { width: 44px; height: 42px; flex: none; border-radius: 10px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-size: 22px; line-height: 1; cursor: pointer; }
+  .yk-bar .yk-d { flex: 1; text-align: center; font-weight: 600; font-size: 15px; font-variant-numeric: tabular-nums; }
+  .yk-sum { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .yk-sum b { font-family: 'Fraunces', Georgia, serif; font-size: 22px; color: var(--text); margin-right: 3px; }
+  .yk-names { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .yk-name { position: relative; min-height: 64px; border-radius: 14px; border: 2px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 17px; font-weight: 600; padding: 10px 12px; text-align: left; cursor: pointer; overflow-wrap: anywhere; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background .12s, border-color .12s; }
+  .yk-name.c1 { background: var(--yk-on); border-color: var(--yk-on); color: var(--yk-on-ink); }
+  .yk-name.c2 { background: var(--yk-two); border-color: var(--yk-two); color: var(--yk-on-ink); }
+  .yk-x2 { position: absolute; top: -8px; right: -6px; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; display: grid; place-items: center; background: var(--yk-ball); color: var(--yk-ball-ink); font-size: 13px; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+  .yk-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12.5px; color: var(--text-dim); }
+  .yk-sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px; margin-right: 6px; vertical-align: -2px; border: 2px solid var(--hairline); background: var(--panel); }
+  .yk-sw.c1 { background: var(--yk-on); border-color: var(--yk-on); }
+  .yk-sw.c2 { background: var(--yk-two); border-color: var(--yk-two); }
+  .yk-note { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; margin: 0; }
+  .yk-rows { border: 1px solid var(--hairline); border-radius: 14px; background: var(--panel); overflow: hidden; }
+  .yk-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 14px; width: 100%; padding: 13px 14px; border: none; border-top: 1px solid var(--hairline); background: none; color: var(--text); font-family: inherit; text-align: left; cursor: pointer; }
+  .yk-row:first-child { border-top: none; }
+  .yk-row .yk-rn { font-weight: 600; font-size: 15.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .yk-row .yk-rm { font-size: 12px; color: var(--text-dim); text-align: right; line-height: 1.35; font-variant-numeric: tabular-nums; }
+  .yk-row .yk-rt { font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums; }
+  .yk-row.zero .yk-rt { color: var(--text-dim); }
+  .yk-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+  .yk-cal .yk-wd { text-align: center; font-size: 11px; color: var(--text-dim); text-transform: uppercase; padding: 2px 0; }
+  .yk-cell { position: relative; aspect-ratio: 1; max-width: 100%; border-radius: 9px; display: grid; place-items: center; background: var(--panel-2); color: var(--text-dim); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .yk-cell.c1 { background: var(--yk-on); color: var(--yk-on-ink); }
+  .yk-cell.c2 { background: var(--yk-two); color: var(--yk-on-ink); }
+  .yk-cell.empty { background: none; }
+  .yk-cell.today { box-shadow: inset 0 0 0 2px var(--brass); }
+  .yk-cell .yk-cx2 { position: absolute; top: -5px; right: -4px; font-size: 9.5px; font-weight: 700; padding: 1px 4px; border-radius: 7px; background: var(--yk-ball); color: var(--yk-ball-ink); }
+  .yk-dates { border: 1px solid var(--hairline); border-radius: 14px; background: var(--panel); }
+  .yk-dates div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--hairline); font-size: 14px; }
+  .yk-dates div:first-child { border-top: none; }
+  .yk-dates span:last-child { color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .yk-kid { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--hairline); }
+  .yk-kid:last-child { border-bottom: none; }
+  .yk-kid .pl-name { flex: 1; }
+  .yk-kid button { flex: none; background: none; border: 1px solid var(--hairline); color: var(--text-dim); border-radius: 8px; padding: 6px 12px; font-family: inherit; font-size: 12.5px; cursor: pointer; }
+  .yk-kid button.armed { border-color: var(--clay); color: var(--clay); font-weight: 600; }
+  .yk-form { display: flex; flex-direction: column; gap: 12px; background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 14px; }
+  .yk-form .field input { width: 100%; }
+  .yk-toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 60; display: flex; align-items: center; gap: 14px; max-width: calc(100% - 32px); padding: 10px 10px 10px 16px; border-radius: 12px; background: var(--text); color: var(--bg); font-size: 14.5px; box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+  .yk-toast button { background: none; border: none; color: var(--yk-ball); font-family: inherit; font-weight: 700; font-size: 14.5px; padding: 6px 8px; cursor: pointer; }
+  @media (max-width: 340px) { .yk-names { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .yk-name { transition: none; } }
+
 </style>
 </head>
 <body>
@@ -2154,6 +2212,55 @@
     evArchTag: "Score only", evScoreOnlyNote: "This match was entered game by game in Tournament mode; there are no point stats.",
     evNoMatches: "No matches added yet.", evNoMatchesDay: "No matches on this day.",
     rStandard: "Standard", rSets: "{n} sets", rFinalSTB: "final set super TB", rNoAd: "deciding point", rAd: "advantage"
+  });
+  // ---------- Yoklama metinleri ----------
+  Object.assign(I18N.tr, {
+    hubYkT: "Yoklama", hubYkS: "Gruplar, günlük yoklama ve aylık devam.",
+    ykTitle: "Yoklama", ykNewGroup: "+ Yeni grup", ykGroupName: "Grup adı", ykGroupNamePh: "ör. Minikler",
+    ykGroupTime: "Gün ve saat (isteğe bağlı)", ykGroupTimePh: "ör. Salı · Perşembe 17:00",
+    ykCreate: "Grubu oluştur", ykNeedName: "Gruba bir ad ver.",
+    ykEmpty: "Henüz grup yok. İlk grubunu oluştur, öğrencilerini ekle; yoklamayı isimlere dokunarak al.",
+    ykNKids: "{n} öğrenci", ykTodayN: "Bugün {n}/{t}",
+    ykTabDay: "Yoklama", ykTabMonth: "Ay özeti", ykTabKids: "Öğrenciler",
+    ykCame: "öğrenci geldi", ykSess: "antrenman yapıldı", ykSessMonth: "antrenman yapıldı bu ay",
+    ykNoKids: "Bu grupta henüz öğrenci yok. \"Öğrenciler\" sekmesinden ekle.",
+    ykL0: "Yok", ykL1: "1 dokunuş: geldi", ykL2: "2 dokunuş: 2 antrenman",
+    ykHint: "Üçüncü dokunuş sıfırlar. Yanlış dokunursan alttaki \"Geri al\"a bas.",
+    ykT1: "{name}: geldi", ykT2: "{name}: 2. antrenman", ykT0: "{name} sıfırlandı", ykUndo: "Geri al",
+    ykTapKid: "Bir öğrenciye dokun: hangi günler geldiğini takvimde gör.",
+    ykNDays: "{n} gün", ykSessions: "antrenman", ykDaysCame: "gün geldi", ykRate: "devam oranı",
+    ykAbsent: "Gelmedi", ykOne: "1 antrenman", ykTwo: "2 antrenman", ykCameDays: "Geldiği günler", ykNone: "Bu ay kayıt yok",
+    ykShareSum: "📤 Özeti paylaş (veliye göndermek için)", ykCopied: "Özet kopyalandı ✓",
+    ykSumLine: "Toplam {n} antrenman, {d} gün", ykTwoShort: "2 antrenman",
+    ykAddKidPh: "Öğrenci adı soyadı", ykAdd: "+ Ekle", ykRemove: "Çıkar", ykRemoveSure: "Emin misin?",
+    ykRemoveNote: "Çıkarılan öğrencinin eski yoklamaları silinmez.",
+    ykGroupInfo: "Grup bilgileri", ykSave: "Kaydet", ykSaved: "Kaydedildi ✓",
+    ykDelGroup: "Grubu sil", ykDelGroupSure: "Emin misin? Grup ve yoklamaları silinir",
+    ykDeviceNote: "Yoklamalar bu cihazda saklanır.", ykGroups: "Gruplar"
+  });
+  Object.assign(I18N.en, {
+    hubYkT: "Attendance", hubYkS: "Groups, daily register and monthly attendance.",
+    ykTitle: "Attendance", ykNewGroup: "+ New group", ykGroupName: "Group name", ykGroupNamePh: "e.g. Juniors",
+    ykGroupTime: "Days and time (optional)", ykGroupTimePh: "e.g. Tue · Thu 5 pm",
+    ykCreate: "Create group", ykNeedName: "Give the group a name.",
+    ykEmpty: "No groups yet. Create your first group, add your students, and take attendance by tapping their names.",
+    ykNKids: "{n} students", ykTodayN: "Today {n}/{t}",
+    ykTabDay: "Register", ykTabMonth: "Month", ykTabKids: "Students",
+    ykCame: "students came", ykSess: "sessions held", ykSessMonth: "sessions held this month",
+    ykNoKids: "No students in this group yet. Add them in the \"Students\" tab.",
+    ykL0: "Absent", ykL1: "1 tap: present", ykL2: "2 taps: 2 sessions",
+    ykHint: "A third tap clears it. If you tap by mistake, press \"Undo\" at the bottom.",
+    ykT1: "{name}: present", ykT2: "{name}: 2nd session", ykT0: "{name} cleared", ykUndo: "Undo",
+    ykTapKid: "Tap a student to see which days they came on a calendar.",
+    ykNDays: "{n} days", ykSessions: "sessions", ykDaysCame: "days came", ykRate: "attendance",
+    ykAbsent: "Absent", ykOne: "1 session", ykTwo: "2 sessions", ykCameDays: "Days attended", ykNone: "No records this month",
+    ykShareSum: "📤 Share summary (to send to parents)", ykCopied: "Summary copied ✓",
+    ykSumLine: "{n} sessions in total, {d} days", ykTwoShort: "2 sessions",
+    ykAddKidPh: "Student's full name", ykAdd: "+ Add", ykRemove: "Remove", ykRemoveSure: "Sure?",
+    ykRemoveNote: "Past attendance of a removed student is kept.",
+    ykGroupInfo: "Group details", ykSave: "Save", ykSaved: "Saved ✓",
+    ykDelGroup: "Delete group", ykDelGroupSure: "Sure? The group and its attendance will be deleted",
+    ykDeviceNote: "Attendance is stored on this device.", ykGroups: "Groups"
   });
   var LANG = detectLang();
   function t(key, params) {
@@ -4217,10 +4324,11 @@
   var app = document.getElementById("app");
 
   // Ekranlar arası geçiş: derinliğe göre ileri (sağdan) ya da geri (soldan) kayar.
-  var SCREEN_DEPTH = { hub: 0, viewer: 0, setup: 1, tlist: 1, archive: 1, players: 1, match: 2, tform: 2, tscreen: 2, player: 2, archmatch: 3 };
+  var SCREEN_DEPTH = { hub: 0, viewer: 0, setup: 1, tlist: 1, archive: 1, players: 1, match: 2, tform: 2, tscreen: 2, player: 2, archmatch: 3, yklist: 1, ykgroup: 2, ykkid: 3 };
   var lastScreen = null, screenEntering = false;
   function currentScreen() {
     if (liveView) return "viewer";
+    if (ykOpen) return ykKid ? "ykkid" : (ykGroupId ? "ykgroup" : "yklist");
     if (eventOpen) return evRulesForm ? "tform" : (eventState ? "tscreen" : "tlist");
     if (archiveOpen) return "archive";
     if (playersOpen && !viewingArchived) return playerView ? "player" : "players";
@@ -4244,6 +4352,7 @@
   app.addEventListener("animationend", function (e) { if (e.target === app) app.classList.remove("scr-fwd", "scr-back"); });
   function renderScreen() {
     if (liveView && liveView.event) { app.innerHTML = renderEventViewer(); bindEventViewer(); return; }
+    if (ykOpen && !liveView) { app.innerHTML = renderYkScreens(); bindYkScreens(); return; }
     if (eventOpen && !liveView) { app.innerHTML = renderTournamentScreens(); bindTournamentScreens(); return; }
     if (playersOpen && !viewingArchived && !archiveOpen && !liveView) { app.innerHTML = renderPlayersScreens(); bindPlayersScreens(); return; }
     if (liveView && !liveView.hasData) { app.innerHTML = renderLiveWaiting(); bindLiveEvents(); return; }
@@ -4456,6 +4565,17 @@
     arc: '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballC"><circle cx="27" cy="33" r="17"/></clipPath></defs> <circle cx="27" cy="33" r="17" fill="#D4E32A"/> <g clip-path="url(#tpballC)" fill="none" stroke="#F8FBE0" stroke-width="2.3"> <path d="M15.5 17 Q22 33 15.5 49"/><path d="M38.5 17 Q32 33 38.5 49"/> </g> <circle cx="27" cy="33" r="17" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/> <path d="M18.5 28.5 Q22 27 25 28.5" fill="none" stroke="#1C2A33" stroke-width="1.5" stroke-linecap="round"/> <path d="M29 28.5 Q32 27 35.5 28.5" fill="none" stroke="#1C2A33" stroke-width="1.5" stroke-linecap="round"/> <circle cx="22.5" cy="36" r="1.6" fill="#1C2A33"/><circle cx="32.5" cy="36" r="1.6" fill="#1C2A33"/> <rect x="18" y="32.5" width="8" height="5" rx="2.4" fill="#fff" fill-opacity=".5" stroke="#1C2A33" stroke-width="1.6"/> <rect x="28" y="32.5" width="8" height="5" rx="2.4" fill="#fff" fill-opacity=".5" stroke="#1C2A33" stroke-width="1.6"/> <path d="M26 34.5h2" stroke="#1C2A33" stroke-width="1.6"/> <path d="M25 41 Q27 42.3 29 41" fill="none" stroke="#1C2A33" stroke-width="1.6" stroke-linecap="round"/> <path d="M20 46 Q33 42 43 46 L43 60 Q33 56 20 60 Z" fill="#fff" stroke="#8A7350" stroke-width="1.5" stroke-linejoin="round"/> <path d="M43 46 Q53 42 60 46 L60 60 Q53 56 43 60 Z" fill="#F6F2E8" stroke="#8A7350" stroke-width="1.5" stroke-linejoin="round"/> <text x="31.5" y="54.5" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="7" font-weight="700" fill="#A87724">6-4</text> <path d="M47 50.5h9M47 54h6" stroke="#C79A54" stroke-width="1.4" stroke-linecap="round"/> <circle cx="51" cy="18" r="8" fill="#fff" stroke="#8A7350" stroke-width="1.6"/> <path d="M51 13.5V18l3 2" fill="none" stroke="#1C2A33" stroke-width="1.6" stroke-linecap="round"/> </svg>',
     imp: '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballD"><circle cx="32" cy="28" r="14"/></clipPath></defs> <circle cx="32" cy="28" r="14" fill="#D4E32A"/> <g clip-path="url(#tpballD)" fill="none" stroke="#F8FBE0" stroke-width="2.1"> <path d="M22.5 15 Q28 28 22.5 41"/><path d="M41.5 15 Q36 28 41.5 41"/> </g> <circle cx="28" cy="27" r="1.9" fill="#1C2A33"/><circle cx="36" cy="27" r="1.9" fill="#1C2A33"/> <path d="M29.5 31.5 Q32 33.5 34.5 31.5" fill="none" stroke="#1C2A33" stroke-width="1.6" stroke-linecap="round"/> <path d="M10 36 H54 V56 H10 Z" fill="#F4F1E8" stroke="#8A7350" stroke-width="1.6" stroke-linejoin="round"/> <path d="M10 36 L32 49 L54 36" fill="none" stroke="#8A7350" stroke-width="1.6" stroke-linejoin="round"/> </svg>'
   };
+  // Topçuk yoklama panosuyla.
+  TOPCUK.yk = '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballY"><circle cx="23" cy="36" r="16"/></clipPath></defs>' +
+    '<g transform="rotate(7 46 36)"><rect x="33" y="16" width="25" height="34" rx="3" fill="#fff" stroke="#8A7350" stroke-width="1.6"/><rect x="40.5" y="13" width="10" height="5.5" rx="1.6" fill="#8A7350"/>' +
+    '<path d="M37.5 26.5l2.2 2.2 3.8-4.4M37.5 34.5l2.2 2.2 3.8-4.4" fill="none" stroke="#4F8F63" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<rect x="37.8" y="40.3" width="5" height="5" rx="1.2" fill="none" stroke="#AEBAC2" stroke-width="1.5"/>' +
+    '<path d="M47 27h7M47 35h7M47 43h7" stroke="#C79A54" stroke-width="1.7" stroke-linecap="round"/></g>' +
+    '<circle cx="23" cy="36" r="16" fill="#D4E32A"/><g clip-path="url(#tpballY)" fill="none" stroke="#F8FBE0" stroke-width="2.2"><path d="M12 21 Q18 36 12 51"/><path d="M34 21 Q28 36 34 51"/></g>' +
+    '<circle cx="23" cy="36" r="16" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/>' +
+    '<circle cx="18" cy="34" r="1.9" fill="#1C2A33"/><circle cx="28" cy="34" r="1.9" fill="#1C2A33"/><circle cx="18.6" cy="33.4" r=".6" fill="#fff"/><circle cx="28.6" cy="33.4" r=".6" fill="#fff"/>' +
+    '<circle cx="14.5" cy="39" r="2.1" fill="#E57A6B" fill-opacity=".4"/><circle cx="31.5" cy="39" r="2.1" fill="#E57A6B" fill-opacity=".4"/>' +
+    '<path d="M19.5 39.5 Q23 42.8 26.5 39.5" fill="none" stroke="#1C2A33" stroke-width="1.7" stroke-linecap="round"/></svg>';
   function hubIcon(k) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + HUB_ICONS[k] + '</svg>'; }
   function hubTile(id, icon, title, sub, badge, cls, i) {
     return '<button class="hub-tile' + (cls ? ' ' + cls : '') + '" id="' + id + '" type="button" style="--i:' + i + '">' +
@@ -4486,9 +4606,10 @@
         hubTile("openEventBtn", "tour", t("hubTourT"), t("hubTourS"),
           activeTournaments().length ? (anyLiveT ? '<span class="dot"></span>' : '') + escapeHtml(t("hubActive", { n: activeTournaments().length })) : "", anyLiveT ? "live" : "", off + 1) +
         hubTile("hubPlayers", "coach", t("hubPlayersT"), t("hubPlayersS"), loadPlayers().length ? escapeHtml(String(loadPlayers().length)) : "", "", off + 2) +
-        hubTile("openArchiveSetup", "arc", t("hubArcT"), arcN ? t("hubArcS", { n: arcN }) : t("hubArcS0"), "", "", off + 3) +
+        hubTile("hubYk", "yk", t("hubYkT"), t("hubYkS"), ykHubBadge(), "", off + 3) +
+        hubTile("openArchiveSetup", "arc", t("hubArcT"), arcN ? t("hubArcS", { n: arcN }) : t("hubArcS0"), "", "", off + 4) +
       '</div>' +
-      '<button class="hub-link hub-in" data-import="1" type="button" style="--i:' + (off + 4) + '"><span class="hl-ico">' + TOPCUK.imp + '</span>' + escapeHtml(t("hubImport")) + '</button>' +
+      '<button class="hub-link hub-in" data-import="1" type="button" style="--i:' + (off + 5) + '"><span class="hl-ico">' + TOPCUK.imp + '</span>' + escapeHtml(t("hubImport")) + '</button>' +
     '</div>';
   }
   function bindHub() {
@@ -4497,6 +4618,7 @@
     if ((el = document.getElementById("openEventBtn"))) el.onclick = function () { openEventScreen(); };
     if ((el = document.getElementById("openArchiveSetup"))) el.onclick = function () { openArchive(); };
     if ((el = document.getElementById("hubPlayers"))) el.onclick = function () { openPlayersScreen(); };
+    if ((el = document.getElementById("hubYk"))) el.onclick = function () { openYkScreen(); };
     if ((el = document.getElementById("resumeBtn"))) el.onclick = function () { homeOpen = false; homeView = "hub"; activeTab = state.matchOver ? "stats" : "live"; render(); };
   }
 
@@ -7479,6 +7601,376 @@
     html += '</main>';
     return html;
   }
+
+  // ================= Yoklama: antrenörün grupları ve günlük yoklama =================
+  // Antrenör grup açar, öğrencileri ekler; yoklamada isme bir dokunuş "geldi", ikinci
+  // dokunuş "aynı gün 2. antrenman", üçüncü dokunuş sıfırlar. O günün antrenman sayısı,
+  // öğrencilerin toplamı değil, o gün en çok kaç kez gelindiğidir (biri 2 ise gün 2 antrenman).
+  // Kayıt biçimi: { groups: [{id, name, time, kids:[ad], createdAt}], att: {grupId: {"YYYY-AA-GG": {ad: 1|2}}} }
+  var YK_KEY = "courtside-attendance-v1";
+  function loadYk() {
+    var d = null;
+    try { d = JSON.parse(localStorage.getItem(YK_KEY) || "null"); } catch (e) { d = null; }
+    if (!d || typeof d !== "object") d = {};
+    if (!Array.isArray(d.groups)) d.groups = [];
+    if (!d.att || typeof d.att !== "object") d.att = {};
+    d.groups = d.groups.filter(function (g) { return g && g.id && typeof g.name === "string"; });
+    d.groups.forEach(function (g) { if (!Array.isArray(g.kids)) g.kids = []; });
+    return d;
+  }
+  var yk = loadYk();
+  function saveYk() { try { localStorage.setItem(YK_KEY, JSON.stringify(yk)); } catch (e) {} }
+
+  var ykOpen = false;       // Yoklama ekranları açık mı
+  var ykGroupId = null;     // açık grup
+  var ykTab = "day";        // "day" | "month" | "kids"
+  var ykKid = null;         // açık öğrenci (takvim)
+  var ykDay = todayStr();   // yoklamadaki gün
+  var ykMonth = todayStr().slice(0, 7); // ay özetindeki ay
+  var ykForm = null;        // yeni grup formu: {name, time, err}
+  var ykLast = null;        // geri al için son dokunuş: {gid, day, name, before}
+  var ykToast = null, ykToastTimer = null;
+  var ykArm = null;         // silme onayı bekleyen: "g" (grup) ya da öğrenci adı
+  var ykStatus = "";
+
+  function ykGroup() {
+    for (var i = 0; i < yk.groups.length; i++) if (String(yk.groups[i].id) === String(ykGroupId)) return yk.groups[i];
+    return null;
+  }
+  function ykKids(g) { return g.kids.slice().sort(function (x, y) { return x.localeCompare(y, "tr"); }); }
+  function ykDayMap(gid, day) { var a = yk.att[gid]; return (a && a[day]) || {}; }
+  function ykVal(gid, day, name) { var v = ykDayMap(gid, day)[name]; return v === 2 ? 2 : (v === 1 ? 1 : 0); }
+  function ykSetVal(gid, day, name, v) {
+    var a = yk.att[gid] || (yk.att[gid] = {});
+    var m = a[day] || (a[day] = {});
+    if (v) m[name] = v; else delete m[name];
+    if (!Object.keys(m).length) delete a[day];
+    saveYk();
+  }
+  // O günün özeti: kaç öğrenci geldi ve kaç antrenman yapıldı (en çok gelinen sayı).
+  function ykDayCounts(g, day) {
+    var m = ykDayMap(g.id, day), kids = 0, s = 0;
+    g.kids.forEach(function (n) { var v = m[n] === 2 ? 2 : (m[n] === 1 ? 1 : 0); if (v) { kids++; if (v > s) s = v; } });
+    return { kids: kids, sessions: s };
+  }
+  function ykMonthDays(ym) {
+    var p = ym.split("-"), y = +p[0], mo = +p[1] - 1, n = new Date(y, mo + 1, 0).getDate(), out = [];
+    for (var d = 1; d <= n; d++) out.push(ymd(new Date(y, mo, d)));
+    return out;
+  }
+  function ykMonthSessions(g, ym) {
+    var a = yk.att[g.id] || {}, tot = 0;
+    Object.keys(a).forEach(function (day) {
+      if (day.slice(0, 7) !== ym) return;
+      var s = 0, m = a[day];
+      Object.keys(m).forEach(function (n) { if (m[n] > s) s = m[n]; });
+      tot += Math.min(2, s);
+    });
+    return tot;
+  }
+  // Öğrencinin o ayki kayıtları: [[gün, 1|2], ...]
+  function ykKidMonth(g, name, ym) {
+    var a = yk.att[g.id] || {};
+    return Object.keys(a).filter(function (d) { return d.slice(0, 7) === ym && a[d][name]; }).sort()
+      .map(function (d) { return [d, a[d][name] === 2 ? 2 : 1]; });
+  }
+  function ykHubBadge() {
+    if (!yk.groups.length) return "";
+    var today = todayStr(), came = 0;
+    yk.groups.forEach(function (g) { came += ykDayCounts(g, today).kids; });
+    return came ? escapeHtml(t("ykTodayN", { n: came, t: yk.groups.reduce(function (s, g) { return s + g.kids.length; }, 0) })) : escapeHtml(String(yk.groups.length));
+  }
+  function ykLongDay(day) {
+    var s;
+    try { s = dayFromStr(day).toLocaleDateString(locale(), { weekday: "long", day: "numeric", month: "long" }); } catch (e) { s = day; }
+    var off = dayOffset(day);
+    return (off === 0 ? t("evToday") + " · " : off === -1 ? t("evYesterday") + " · " : "") + s;
+  }
+  function ykMonthName(ym) {
+    try { return dayFromStr(ym + "-01").toLocaleDateString(locale(), { month: "long", year: "numeric" }); } catch (e) { return ym; }
+  }
+  function ykShortDay(day) {
+    try { return dayFromStr(day).toLocaleDateString(locale(), { day: "numeric", month: "long", weekday: "long" }); } catch (e) { return day; }
+  }
+  function ykShiftMonth(n) {
+    var d = dayFromStr(ykMonth + "-01"); d.setMonth(d.getMonth() + n); ykMonth = ymd(d).slice(0, 7);
+  }
+
+  // --- Gruplar listesi ---
+  function renderYkList() {
+    var html = navBarHtml("ykBack", t("ykTitle")) + '<main class="ev-main yk-main">';
+    var today = todayStr();
+    if (!yk.groups.length && !ykForm) html += '<p class="empty-state ev-empty-sm">' + escapeHtml(t("ykEmpty")) + '</p>';
+    html += yk.groups.map(function (g) {
+      var c = ykDayCounts(g, today);
+      return '<button class="yk-card" data-ykopen="' + escapeAttr(String(g.id)) + '" type="button">' +
+        '<span class="yk-cmain"><span class="yk-cname">' + escapeHtml(g.name) + '</span>' +
+        '<span class="yk-csub">' + escapeHtml([g.time, t("ykNKids", { n: g.kids.length })].filter(Boolean).join(" · ")) + '</span></span>' +
+        (c.kids ? '<span class="yk-today">' + escapeHtml(t("ykTodayN", { n: c.kids, t: g.kids.length })) + '</span>' : '') +
+        '<span class="ht-chev" aria-hidden="true">›</span></button>';
+    }).join("");
+    if (ykForm) {
+      html += '<div class="yk-form">' +
+        '<div class="field"><label for="ykfName">' + t("ykGroupName") + '</label><input id="ykfName" type="text" maxlength="40" autocomplete="off" placeholder="' + escapeAttr(t("ykGroupNamePh")) + '" value="' + escapeAttr(ykForm.name || "") + '"></div>' +
+        '<div class="field"><label for="ykfTime">' + t("ykGroupTime") + '</label><input id="ykfTime" type="text" maxlength="48" autocomplete="off" placeholder="' + escapeAttr(t("ykGroupTimePh")) + '" value="' + escapeAttr(ykForm.time || "") + '"></div>' +
+        (ykForm.err ? '<div class="share-status err">' + escapeHtml(ykForm.err) + '</div>' : '') +
+        '<div class="zone-actions"><button id="ykfCancel" type="button">' + t("cancel") + '</button><button id="ykfSave" class="primary" type="button">' + t("ykCreate") + '</button></div>' +
+      '</div>';
+    } else {
+      html += '<button class="btn-primary ev-add" id="ykNew" type="button">' + t("ykNewGroup") + '</button>';
+    }
+    html += '<p class="yk-note" style="text-align:center">' + escapeHtml(t("ykDeviceNote")) + '</p>';
+    return html + '</main>';
+  }
+
+  // --- Grup: yoklama / ay özeti / öğrenciler ---
+  function renderYkGroup(g) {
+    var tabs = [["day", "ykTabDay"], ["month", "ykTabMonth"], ["kids", "ykTabKids"]];
+    var html = navBarHtml("ykBack", "", "", t("ykGroups")) + '<main class="ev-main yk-main">' +
+      '<div><h1 class="ev-h1" style="margin:0">' + escapeHtml(g.name) + '</h1>' +
+      (g.time ? '<div class="pl-sub">' + escapeHtml(g.time) + '</div>' : '') + '</div>' +
+      '<div class="yk-seg" role="tablist">' + tabs.map(function (x) {
+        return '<button type="button" role="tab" data-yktab="' + x[0] + '" aria-selected="' + (ykTab === x[0]) + '">' + t(x[1]) + '</button>';
+      }).join("") + '</div>';
+    if (ykTab === "day") html += renderYkDay(g);
+    else if (ykTab === "month") html += renderYkMonth(g);
+    else html += renderYkKids(g);
+    return html + '</main>';
+  }
+  function renderYkDay(g) {
+    var c = ykDayCounts(g, ykDay), kids = ykKids(g);
+    var html = '<div class="yk-bar"><button type="button" data-ykday="-1" aria-label="‹">‹</button>' +
+      '<span class="yk-d">' + escapeHtml(ykLongDay(ykDay)) + '</span>' +
+      '<button type="button" data-ykday="1" aria-label="›">›</button></div>';
+    if (!kids.length) return html + '<p class="empty-state ev-empty-sm">' + escapeHtml(t("ykNoKids")) + '</p>';
+    html += '<div class="yk-sum"><span><b>' + c.kids + '</b>' + escapeHtml(t("ykCame")) + '</span><span><b>' + c.sessions + '</b>' + escapeHtml(t("ykSess")) + '</span></div>';
+    html += '<div class="yk-names">' + kids.map(function (n) {
+      var v = ykVal(g.id, ykDay, n);
+      return '<button type="button" class="yk-name' + (v ? " c" + v : "") + '" data-ykname="' + escapeAttr(n) + '" aria-label="' +
+        escapeAttr(n + ": " + (v === 2 ? t("ykTwo") : v === 1 ? t("ykOne") : t("ykAbsent"))) + '">' +
+        escapeHtml(n) + (v === 2 ? '<span class="yk-x2">×2</span>' : '') + '</button>';
+    }).join("") + '</div>';
+    html += '<div class="yk-legend"><span><i class="yk-sw"></i>' + escapeHtml(t("ykL0")) + '</span><span><i class="yk-sw c1"></i>' + escapeHtml(t("ykL1")) + '</span><span><i class="yk-sw c2"></i>' + escapeHtml(t("ykL2")) + '</span></div>' +
+      '<p class="yk-note">' + escapeHtml(t("ykHint")) + '</p>';
+    if (ykToast) html += '<div class="yk-toast" id="ykToast" role="status"><span>' + escapeHtml(ykToast) + '</span>' +
+      (ykLast ? '<button type="button" id="ykUndo">' + t("ykUndo") + '</button>' : '') + '</div>';
+    return html;
+  }
+  function renderYkMonth(g) {
+    var total = ykMonthSessions(g, ykMonth);
+    var html = '<div class="yk-bar"><button type="button" data-ykmonth="-1" aria-label="‹">‹</button>' +
+      '<span class="yk-d" style="text-transform:capitalize">' + escapeHtml(ykMonthName(ykMonth)) + '</span>' +
+      '<button type="button" data-ykmonth="1" aria-label="›">›</button></div>';
+    var kids = ykKids(g);
+    if (!kids.length) return html + '<p class="empty-state ev-empty-sm">' + escapeHtml(t("ykNoKids")) + '</p>';
+    html += '<div class="yk-sum"><span><b>' + total + '</b>' + escapeHtml(t("ykSessMonth")) + '</span></div>';
+    var rows = kids.map(function (n) {
+      var d = ykKidMonth(g, n, ykMonth);
+      return { n: n, days: d.length, tot: d.reduce(function (s, x) { return s + x[1]; }, 0) };
+    }).sort(function (x, y) { return y.tot - x.tot || x.n.localeCompare(y.n, "tr"); });
+    html += '<div class="yk-rows">' + rows.map(function (r) {
+      return '<button type="button" class="yk-row' + (r.tot ? '' : ' zero') + '" data-ykkid="' + escapeAttr(r.n) + '">' +
+        '<span class="yk-rn">' + escapeHtml(r.n) + '</span>' +
+        '<span class="yk-rm">' + escapeHtml(t("ykNDays", { n: r.days })) + '<br>' + (total ? "%" + Math.round(r.tot / total * 100) : "—") + '</span>' +
+        '<span class="yk-rt">' + r.tot + '</span></button>';
+    }).join("") + '</div>';
+    return html + '<p class="yk-note">' + escapeHtml(t("ykTapKid")) + '</p>';
+  }
+  function renderYkKids(g) {
+    var kids = ykKids(g);
+    var html = '<div class="pl-addrow" style="margin:0"><div class="ac-wrap" style="flex:1;min-width:0"><input id="ykKidName" type="text" maxlength="32" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="' + escapeAttr(t("ykAddKidPh")) + '" style="width:100%;box-sizing:border-box"><div class="ac-list" id="ykKidList" hidden></div></div>' +
+      '<button class="btn-primary" id="ykKidAdd" type="button">' + t("ykAdd") + '</button></div>';
+    if (kids.length) {
+      html += '<div class="pl-group" style="margin-top:0;padding:2px 14px">' + kids.map(function (n) {
+        var armed = ykArm === "k:" + n;
+        return '<div class="yk-kid"><span class="pl-av">' + escapeHtml(initials(n)) + '</span><span class="pl-name">' + escapeHtml(n) + '</span>' +
+          '<button type="button" class="' + (armed ? 'armed' : '') + '" data-ykrm="' + escapeAttr(n) + '">' + t(armed ? "ykRemoveSure" : "ykRemove") + '</button></div>';
+      }).join("") + '</div><p class="yk-note">' + escapeHtml(t("ykRemoveNote")) + '</p>';
+    } else {
+      html += '<p class="empty-state ev-empty-sm">' + escapeHtml(t("ykNoKids")) + '</p>';
+    }
+    html += '<p class="section-label ev-sec">' + t("ykGroupInfo") + '</p>' +
+      '<div class="yk-form">' +
+        '<div class="field"><label for="ykgName">' + t("ykGroupName") + '</label><input id="ykgName" type="text" maxlength="40" autocomplete="off" value="' + escapeAttr(g.name) + '"></div>' +
+        '<div class="field"><label for="ykgTime">' + t("ykGroupTime") + '</label><input id="ykgTime" type="text" maxlength="48" autocomplete="off" placeholder="' + escapeAttr(t("ykGroupTimePh")) + '" value="' + escapeAttr(g.time || "") + '"></div>' +
+        '<button class="btn-primary" id="ykgSave" type="button" style="margin-top:0">' + t("ykSave") + '</button>' +
+        '<div class="share-status" id="ykgStatus">' + escapeHtml(ykStatus) + '</div>' +
+      '</div>' +
+      '<div class="reset-row"><button id="ykDelGroup" type="button"' + (ykArm === "g" ? ' style="border-color:var(--clay);color:var(--clay);font-weight:600"' : '') + '>' + t(ykArm === "g" ? "ykDelGroupSure" : "ykDelGroup") + '</button></div>';
+    return html;
+  }
+
+  // --- Öğrenci takvimi ---
+  function renderYkKid(g, name) {
+    var d = ykKidMonth(g, name, ykMonth), total = ykMonthSessions(g, ykMonth);
+    var tot = d.reduce(function (s, x) { return s + x[1]; }, 0), map = {};
+    d.forEach(function (x) { map[x[0]] = x[1]; });
+    var html = navBarHtml("ykBack", "", "", g.name) + '<main class="ev-main yk-main">' +
+      '<div class="pl-head" style="margin:0"><span class="pl-av big">' + escapeHtml(initials(name)) + '</span><div>' +
+        '<h1 class="ev-h1" style="margin:0">' + escapeHtml(name) + '</h1><div class="pl-sub">' + escapeHtml(g.name) + '</div></div></div>' +
+      '<div class="yk-bar"><button type="button" data-ykmonth="-1" aria-label="‹">‹</button>' +
+        '<span class="yk-d" style="text-transform:capitalize">' + escapeHtml(ykMonthName(ykMonth)) + '</span>' +
+        '<button type="button" data-ykmonth="1" aria-label="›">›</button></div>' +
+      '<div class="stats-summary" style="grid-template-columns:repeat(3,1fr);margin:0">' +
+        '<div class="card"><div class="n">' + tot + '</div><div class="lbl">' + t("ykSessions") + '</div></div>' +
+        '<div class="card"><div class="n">' + d.length + '</div><div class="lbl">' + t("ykDaysCame") + '</div></div>' +
+        '<div class="card"><div class="n">' + (total ? "%" + Math.round(tot / total * 100) : "—") + '</div><div class="lbl">' + t("ykRate") + '</div></div>' +
+      '</div>';
+    var wd = "";
+    for (var w = 0; w < 7; w++) wd += '<div class="yk-wd">' + escapeHtml(new Date(2024, 0, 1 + w).toLocaleDateString(locale(), { weekday: "short" }).replace(".", "")) + '</div>';
+    var days = ykMonthDays(ykMonth), lead = (dayFromStr(days[0]).getDay() + 6) % 7, today = todayStr(), cells = "";
+    for (var e = 0; e < lead; e++) cells += '<div class="yk-cell empty"></div>';
+    days.forEach(function (ds, i) {
+      var v = map[ds] || 0;
+      cells += '<div class="yk-cell' + (v ? " c" + v : "") + (ds === today ? " today" : "") + '">' + (i + 1) + (v === 2 ? '<span class="yk-cx2">×2</span>' : '') + '</div>';
+    });
+    html += '<div class="yk-cal">' + wd + cells + '</div>' +
+      '<div class="yk-legend"><span><i class="yk-sw"></i>' + escapeHtml(t("ykAbsent")) + '</span><span><i class="yk-sw c1"></i>' + escapeHtml(t("ykOne")) + '</span><span><i class="yk-sw c2"></i>' + escapeHtml(t("ykTwo")) + '</span></div>' +
+      '<p class="section-label ev-sec" style="margin:0">' + t("ykCameDays") + '</p>' +
+      '<div class="yk-dates">' + (d.length ? d.map(function (x) {
+        return '<div><span>' + escapeHtml(ykShortDay(x[0])) + '</span><span>' + escapeHtml(x[1] === 2 ? t("ykTwo") : t("ykOne")) + '</span></div>';
+      }).join("") : '<div><span style="color:var(--text-dim)">' + escapeHtml(t("ykNone")) + '</span></div>') + '</div>' +
+      '<button class="btn-primary" id="ykShare" type="button">' + t("ykShareSum") + '</button>' +
+      '<div class="share-status" id="ykShareStatus"></div>';
+    return html + '</main>';
+  }
+  function ykSummaryText(g, name) {
+    var d = ykKidMonth(g, name, ykMonth), tot = d.reduce(function (s, x) { return s + x[1]; }, 0);
+    return name + " · " + g.name + " · " + ykMonthName(ykMonth) + "\n" + t("ykSumLine", { n: tot, d: d.length }) + "\n\n" +
+      d.map(function (x) { return ykShortDay(x[0]) + (x[1] === 2 ? " (" + t("ykTwoShort") + ")" : ""); }).join("\n") + "\n\nCourtside";
+  }
+
+  function renderYkScreens() {
+    var g = ykGroup();
+    if (ykGroupId && !g) { ykGroupId = null; ykKid = null; }
+    if (g && ykKid) return renderYkKid(g, ykKid);
+    if (g) return renderYkGroup(g);
+    return renderYkList();
+  }
+  function ykShowToast(msg) {
+    ykToast = msg;
+    clearTimeout(ykToastTimer);
+    ykToastTimer = setTimeout(function () {
+      ykToast = null;
+      var el = document.getElementById("ykToast"); if (el) el.parentNode.removeChild(el);
+    }, 3500);
+  }
+  function bindYkScreens() {
+    var el, i, list, g = ykGroup();
+    if ((el = document.getElementById("ykBack"))) el.onclick = function () {
+      ykArm = null; ykStatus = ""; ykToast = null; ykLast = null;
+      if (ykKid) ykKid = null;
+      else if (ykGroupId) ykGroupId = null;
+      else { ykOpen = false; ykForm = null; }
+      render();
+    };
+    // Liste
+    if ((el = document.getElementById("ykNew"))) el.onclick = function () {
+      ykForm = { name: "", time: "" }; render();
+      var n = document.getElementById("ykfName"); if (n) n.focus();
+    };
+    if ((el = document.getElementById("ykfCancel"))) el.onclick = function () { ykForm = null; render(); };
+    var createGroup = function () {
+      var name = (document.getElementById("ykfName").value || "").trim().slice(0, 40);
+      var time = (document.getElementById("ykfTime").value || "").trim().slice(0, 48);
+      if (!name) { ykForm = { name: name, time: time, err: t("ykNeedName") }; render(); return; }
+      var id = "g" + Date.now();
+      yk.groups.push({ id: id, name: name, time: time, kids: [], createdAt: Date.now() });
+      saveYk(); ykForm = null;
+      ykGroupId = id; ykTab = "kids"; ykDay = todayStr();
+      render();
+      var k = document.getElementById("ykKidName"); if (k) k.focus();
+    };
+    if ((el = document.getElementById("ykfSave"))) el.onclick = createGroup;
+    if ((el = document.getElementById("ykfName"))) el.onkeydown = function (e) { if (e.key === "Enter") { var tm = document.getElementById("ykfTime"); if (tm) tm.focus(); } };
+    if ((el = document.getElementById("ykfTime"))) el.onkeydown = function (e) { if (e.key === "Enter") createGroup(); };
+    list = app.querySelectorAll("[data-ykopen]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      ykGroupId = this.getAttribute("data-ykopen"); ykKid = null; ykArm = null; ykStatus = "";
+      ykDay = todayStr(); ykMonth = todayStr().slice(0, 7);
+      var gg = ykGroup(); ykTab = gg && gg.kids.length ? "day" : "kids";
+      render();
+    };
+    if (!g) return;
+    // Sekmeler
+    list = app.querySelectorAll("[data-yktab]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      ykTab = this.getAttribute("data-yktab"); ykArm = null; ykStatus = ""; ykToast = null; ykLast = null; render();
+    };
+    // Yoklama
+    list = app.querySelectorAll("[data-ykday]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var d = dayFromStr(ykDay); d.setDate(d.getDate() + (+this.getAttribute("data-ykday")));
+      ykDay = ymd(d); ykToast = null; ykLast = null; render();
+    };
+    list = app.querySelectorAll("[data-ykname]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var n = this.getAttribute("data-ykname");
+      var before = ykVal(g.id, ykDay, n), after = (before + 1) % 3;
+      ykSetVal(g.id, ykDay, n, after);
+      ykLast = { gid: g.id, day: ykDay, name: n, before: before };
+      vibrate(after ? 12 : [10, 40, 10]);
+      ykShowToast(t(after === 1 ? "ykT1" : after === 2 ? "ykT2" : "ykT0", { name: n }));
+      render();
+    };
+    if ((el = document.getElementById("ykUndo"))) el.onclick = function () {
+      if (!ykLast) return;
+      ykSetVal(ykLast.gid, ykLast.day, ykLast.name, ykLast.before);
+      ykLast = null; ykToast = null; clearTimeout(ykToastTimer); render();
+    };
+    // Ay özeti ve takvim
+    list = app.querySelectorAll("[data-ykmonth]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { ykShiftMonth(+this.getAttribute("data-ykmonth")); render(); };
+    list = app.querySelectorAll("[data-ykkid]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { ykKid = this.getAttribute("data-ykkid"); render(); };
+    if ((el = document.getElementById("ykShare"))) el.onclick = function () {
+      var text = ykSummaryText(g, ykKid), title = ykKid + " · " + g.name;
+      var st = document.getElementById("ykShareStatus");
+      var sh = nativePlugin("Share");
+      var p = sh ? sh.share({ title: title, text: text, dialogTitle: title })
+        : (navigator.share && !inPreviewFrame() ? navigator.share({ title: title, text: text }) : null);
+      if (p) { p.catch(function (err) { if (!isShareCancel(err)) copyText(text).then(function () { if (st) st.textContent = t("ykCopied"); }, function () {}); }); return; }
+      copyText(text).then(function () { if (st) st.textContent = t("ykCopied"); }, function () { if (st) st.textContent = t("copyFail"); });
+    };
+    // Öğrenciler
+    var addKid = function () {
+      var inp = document.getElementById("ykKidName"), v = inp ? inp.value.replace(/\s+/g, " ").trim().slice(0, 32) : "";
+      if (!v) { if (inp) inp.focus(); return; }
+      var exists = g.kids.some(function (n) { return nameKey(n) === nameKey(v); });
+      if (!exists) { g.kids.push(v); saveYk(); }
+      ykArm = null; render();
+      var n2 = document.getElementById("ykKidName"); if (n2) n2.focus();
+    };
+    if ((el = document.getElementById("ykKidAdd"))) el.onclick = addKid;
+    if ((el = document.getElementById("ykKidName"))) {
+      el.onkeydown = function (e) {
+        var box = document.getElementById("ykKidList");
+        if (e.key === "Enter" && (!box || box.hidden)) addKid();
+      };
+      attachPlayerPicker("ykKidName", "ykKidList", null, null);
+    }
+    list = app.querySelectorAll("[data-ykrm]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var n = this.getAttribute("data-ykrm");
+      if (ykArm !== "k:" + n) { ykArm = "k:" + n; render(); return; }
+      g.kids = g.kids.filter(function (x) { return x !== n; });
+      ykArm = null; saveYk(); render();
+    };
+    if ((el = document.getElementById("ykgSave"))) el.onclick = function () {
+      var name = (document.getElementById("ykgName").value || "").trim().slice(0, 40);
+      if (!name) { ykStatus = t("ykNeedName"); render(); return; }
+      g.name = name; g.time = (document.getElementById("ykgTime").value || "").trim().slice(0, 48);
+      saveYk(); ykStatus = t("ykSaved"); render();
+    };
+    if ((el = document.getElementById("ykDelGroup"))) el.onclick = function () {
+      if (ykArm !== "g") { ykArm = "g"; render(); return; }
+      var id = g.id;
+      yk.groups = yk.groups.filter(function (x) { return x.id !== id; });
+      delete yk.att[id];
+      saveYk(); ykArm = null; ykGroupId = null; render();
+    };
+  }
+  function openYkScreen() { ykOpen = true; ykGroupId = null; ykKid = null; ykForm = null; ykArm = null; render(); }
 
   // Açılışta: yayındaki turnuvalar kaldığı yerden devam etsin.
   if (!extractLiveCode(location.hash)) tournaments.forEach(function (ev) { if (ev.live) scheduleEventPush(ev); });
