@@ -26,7 +26,11 @@ from bs4 import BeautifulSoup
 BASE = "https://www.ikort.com.tr"
 LIST_URL = BASE + "/turnuvalar"
 OUT = os.path.join(os.path.dirname(__file__), "..", "data", "takvim.json")
-HEADERS = {"User-Agent": "CourtsideTakvim/1.0 (+https://ogiterzi.github.io/Kort-Kenari/)"}
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
+}
 DELAY = 1.5  # siteyi yormamak için istekler arası bekleme (sn)
 
 AYLAR = {"ocak": 1, "şubat": 2, "subat": 2, "mart": 3, "nisan": 4, "mayıs": 5, "mayis": 5,
@@ -97,25 +101,37 @@ def get(session, url):
 
 def parse_list(html):
     soup = BeautifulSoup(html, "html.parser")
-    scope = soup.find(id="guncelturnuvalar") or soup  # "Güncel" sekmesi, yoksa tüm sayfa
+    scope = soup.find(id="guncelturnuvalar")  # "Güncel" sekmesi
+    if not scope or not scope.select('a[href*="turnuva-detay/"]'):
+        scope = soup  # sekme bulunamazsa ya da boşsa tüm sayfa
     seen, rows = set(), []
-    for a in scope.select('a[href*="/turnuva-detay/"]'):
-        m = re.search(r"/turnuva-detay/(\d+)", a.get("href", ""))
+    for a in scope.select('a[href*="turnuva-detay/"]'):
+        m = re.search(r"turnuva-detay/(\d+)", a.get("href", ""))
+        if not m or m.group(1) in seen:
+            continue
         tr = a.find_parent("tr")
-        if not m or not tr or m.group(1) in seen:
-            continue
-        tds = [clean(td.get_text(" ")) for td in tr.find_all("td")]
-        if len(tds) < 5:
-            continue
+        tds = [clean(td.get_text(" ")) for td in tr.find_all(["td", "th"])] if tr else []
+        if len(tds) >= 5:
+            date_txt, club, city, cat = tds[1], tds[2], tds[3], tds[4]
+        else:  # tablo değilse: bağlantının içinde olduğu kutudaki metinden tarihi bul
+            box, date_txt = a.parent, ""
+            for _ in range(4):
+                if box is None:
+                    break
+                if parse_dates(box.get_text(" ")):
+                    date_txt = box.get_text(" ")
+                    break
+                box = box.parent
+            club = city = cat = ""
         seen.add(m.group(1))
-        dates = parse_dates(tds[1])
+        dates = parse_dates(date_txt)
         rows.append({
             "id": m.group(1),
-            "name": clean(a.get_text(" ")) or tds[0],
+            "name": clean(a.get_text(" ")) or (tds[0] if tds else ""),
             "start": dates[0] if dates else None,
-            "club": "" if tds[2] == "-" else tds[2],
-            "city": "" if tds[3] == "-" else tds[3],
-            "category": tds[4],
+            "club": "" if club == "-" else club,
+            "city": "" if city == "-" else city,
+            "category": cat,
         })
     return rows
 
@@ -150,6 +166,30 @@ def parse_detail(html):
     return info
 
 
+def diagnose(html):
+    """Liste okunamadığında sayfada ne geldiğini kayda yazar (sorun gidermek için)."""
+    soup = BeautifulSoup(html, "html.parser")
+    print("---- TEŞHİS ----", file=sys.stderr)
+    print("boyut:", len(html), "| başlık:", clean(soup.title.get_text()) if soup.title else "-", file=sys.stderr)
+    print("'turnuva-detay' geçen yer:", html.count("turnuva-detay"),
+          "| tablo:", len(soup.find_all("table")), "| satır:", len(soup.find_all("tr")),
+          "| id=guncelturnuvalar:", bool(soup.find(id="guncelturnuvalar")), file=sys.stderr)
+    for f in soup.find_all("form"):
+        print("form:", f.get("method"), f.get("action"), file=sys.stderr)
+    for sc in soup.find_all("script"):
+        src, body = sc.get("src"), sc.string or ""
+        if src and "ikort" in src:
+            print("script:", src, file=sys.stderr)
+        for u in re.findall(r"""["'](/[A-Za-z0-9_\-/]*(?:turnuva|ajax|api|list)[A-Za-z0-9_\-/]*)["']""", body, re.I)[:15]:
+            print("js adresi:", u, file=sys.stderr)
+    i = html.find("turnuva-detay")
+    if i >= 0:
+        print("örnek:", clean(html[max(0, i - 400):i + 400]), file=sys.stderr)
+    body = clean(soup.body.get_text(" ")) if soup.body else clean(html)
+    print("metin başı:", body[:600], file=sys.stderr)
+    print("---- /TEŞHİS ----", file=sys.stderr)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", help="liste sayfası için kayıtlı HTML (deneme)")
@@ -171,6 +211,7 @@ def main():
 
     rows = parse_list(list_html)
     if not rows:
+        diagnose(list_html)
         sys.exit("Listede turnuva bulunamadı (site yapısı değişmiş olabilir); mevcut takvim korunuyor.")
 
     # Başlangıcı 45 günden eski olanlar kesin bitmiştir; detayına bakmaya gerek yok.
