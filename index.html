@@ -1639,6 +1639,8 @@
   .cal-chips::-webkit-scrollbar { display: none; }
   .cal-chips button { flex: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 14px; cursor: pointer; }
   .cal-chips button[aria-pressed="true"] { border-color: var(--brass); background: var(--panel-2); color: var(--brass); font-weight: 600; }
+  .cal-city { display: block; width: 100%; margin: 0 0 12px; padding: 11px 36px 11px 14px; border-radius: 12px; border: 1px solid var(--hairline); background: var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23C79A54' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center / 12px 8px; color: var(--text); font-family: inherit; font-size: 15px; -webkit-appearance: none; appearance: none; }
+  .cal-city.on { border-color: var(--brass); color: var(--brass); font-weight: 600; }
   .cal-count { font-size: 12.5px; color: var(--text-dim); margin: 0 0 4px; }
   .cal-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px 12px 12px 12px; margin-bottom: 8px; border-radius: 16px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); text-decoration: none; }
   .cal-card.off { opacity: .55; }
@@ -2370,7 +2372,7 @@
     hubCalT: "Turnuva takvimi", hubCalS: "TTF turnuvaları, yaş grubuna göre. Her gün güncellenir.",
     calTitle: "Turnuva takvimi", calAll: "Tümü", calU10: "10 yaş ve altı", calAge: "{n} yaş", calB: "Büyükler",
     calM: "Masters", calYB: "Yeni başlayan", calCount: "{n} turnuva", calNow: "Devam eden",
-    calNone: "Bu yaş grubunda yaklaşan turnuva yok.", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
+    calNone: "Bu filtrelerde yaklaşan turnuva yok.", calAllCities: "Tüm şehirler", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
     calLoading: "Takvim yükleniyor…", calErr: "Takvim alınamadı. İnternet bağlantını kontrol et.",
     calOld: "İnternet yok; son kaydedilen takvim gösteriliyor.", calCancelled: "İPTAL",
     calSource: "Kaynak: TTF i-Kort · Son güncelleme {d}", calRefresh: "Yenile", calTap: "Ayrıntılar, fikstür ve maç programı için turnuvaya dokun."
@@ -2379,7 +2381,7 @@
     hubCalT: "Tournament calendar", hubCalS: "Turkish Tennis Federation events by age group. Updated daily.",
     calTitle: "Tournament calendar", calAll: "All", calU10: "10 & under", calAge: "{n}s", calB: "Seniors",
     calM: "Masters", calYB: "Beginners", calCount: "{n} tournaments", calNow: "In progress",
-    calNone: "No upcoming tournaments in this age group.", calEmpty: "The calendar isn't ready yet. Try again a little later.",
+    calNone: "No upcoming tournaments for these filters.", calAllCities: "All cities", calEmpty: "The calendar isn't ready yet. Try again a little later.",
     calLoading: "Loading calendar…", calErr: "Couldn't load the calendar. Check your internet connection.",
     calOld: "Offline; showing the last saved calendar.", calCancelled: "CANCELLED",
     calSource: "Source: TTF i-Kort · Last updated {d}", calRefresh: "Refresh", calTap: "Tap a tournament for details, draws and order of play."
@@ -6714,13 +6716,15 @@
   // Uygulama o dosyayı okur, son hâlini cihaza da kaydeder; internet yoksa kaydı gösterir.
   // Yaş etiketleri: "8".."18" gençler, "B" büyükler, "YB" yeni başlayan, "M30"… masters.
   var CAL_URL = "https://raw.githubusercontent.com/ogiterzi/Kort-Kenari/main/data/takvim.json";
-  var CAL_CACHE_KEY = "courtside-cal-cache-v1", CAL_FILTER_KEY = "courtside-cal-age-v1";
+  var CAL_CACHE_KEY = "courtside-cal-cache-v1", CAL_FILTER_KEY = "courtside-cal-age-v1", CAL_CITY_KEY = "courtside-cal-city-v1";
   var CAL_FILTERS = ["all", "u10", "12", "14", "16", "18", "B", "M"];
   var calOpen = false, calData = null, calLoading = false, calErr = false, calStale = false;
   var calFilter = (function () {
     try { var v = localStorage.getItem(CAL_FILTER_KEY); if (CAL_FILTERS.indexOf(v) !== -1) return v; } catch (e) {}
     return "all";
   })();
+  var calCity = "";
+  try { calCity = localStorage.getItem(CAL_CITY_KEY) || ""; } catch (e) {}
   try { calData = JSON.parse(localStorage.getItem(CAL_CACHE_KEY) || "null"); } catch (e) { calData = null; }
 
   function calLoad() {
@@ -6806,7 +6810,18 @@
       return html + '</main>';
     }
     var today = calIsoToday();
-    var list = calData.tournaments.filter(function (tr) { return (tr.end || tr.start) >= today && calMatches(tr, calFilter); });
+    var upcoming = calData.tournaments.filter(function (tr) { return (tr.end || tr.start) >= today; });
+    var cities = [];
+    upcoming.forEach(function (tr) { if (tr.city && cities.indexOf(tr.city) === -1) cities.push(tr.city); });
+    cities.sort(function (a, b) { return a.localeCompare(b, "tr"); });
+    if (calCity && cities.indexOf(calCity) === -1) cities.push(calCity); // seçili şehir listede kalsın
+    if (cities.length) {
+      html += '<select class="cal-city' + (calCity ? ' on' : '') + '" id="calCity" aria-label="' + escapeAttr(t("calAllCities")) + '">' +
+        '<option value="">' + escapeHtml(t("calAllCities")) + '</option>' +
+        cities.map(function (c) { return '<option value="' + escapeAttr(c) + '"' + (c === calCity ? ' selected' : '') + '>' + escapeHtml(c) + '</option>'; }).join("") +
+        '</select>';
+    }
+    var list = upcoming.filter(function (tr) { return calMatches(tr, calFilter) && (!calCity || tr.city === calCity); });
     if (calStale) html += '<p class="cal-count">' + escapeHtml(t("calOld")) + '</p>';
     if (!calData.tournaments.length) html += '<p class="empty-state">' + escapeHtml(t("calEmpty")) + '</p>';
     else if (!list.length) html += '<p class="empty-state">' + escapeHtml(t("calNone")) + '</p>';
@@ -6831,6 +6846,11 @@
     var el, i, list;
     if ((el = document.getElementById("calBack"))) el.onclick = function () { calOpen = false; render(); };
     if ((el = document.getElementById("calRefresh"))) el.onclick = function () { calLoad(); render(); };
+    if ((el = document.getElementById("calCity"))) el.onchange = function () {
+      calCity = this.value;
+      try { localStorage.setItem(CAL_CITY_KEY, calCity); } catch (e) {}
+      render();
+    };
     list = app.querySelectorAll("[data-calf]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
       calFilter = this.getAttribute("data-calf");
