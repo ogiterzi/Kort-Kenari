@@ -1634,6 +1634,27 @@
   .pl-mmeta { font-size: 11.5px; color: var(--text-dim); }
   .pl-score { flex: none; font-size: 15px; color: var(--text); }
   .pl-report { width: 100%; margin-top: 18px; }
+  /* ---------- Turnuva takvimi ---------- */
+  .cal-chips { display: flex; gap: 7px; overflow-x: auto; margin: 0 -16px 12px; padding: 2px 16px 4px; scrollbar-width: none; }
+  .cal-chips::-webkit-scrollbar { display: none; }
+  .cal-chips button { flex: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 14px; cursor: pointer; }
+  .cal-chips button[aria-pressed="true"] { border-color: var(--brass); background: var(--panel-2); color: var(--brass); font-weight: 600; }
+  .cal-count { font-size: 12.5px; color: var(--text-dim); margin: 0 0 4px; }
+  .cal-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px 12px 12px 12px; margin-bottom: 8px; border-radius: 16px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); text-decoration: none; }
+  .cal-card.off { opacity: .55; }
+  .cal-date { flex: none; width: 50px; padding: 6px 0 5px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--hairline); text-align: center; line-height: 1.1; }
+  .cal-day { display: block; font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--brass); }
+  .cal-mon { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-dim); margin-top: 2px; }
+  .cal-body { flex: 1; min-width: 0; }
+  .cal-name { font-weight: 600; font-size: 14.5px; line-height: 1.3; overflow-wrap: anywhere; }
+  .cal-meta { font-size: 12.5px; color: var(--text-dim); margin-top: 3px; line-height: 1.4; }
+  .cal-ages { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+  .cal-age { font-size: 11.5px; padding: 2px 8px; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--hairline); color: var(--text); }
+  .cal-age.hit { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .cal-tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 6px; margin-right: 6px; vertical-align: 1px; background: var(--panel-2); color: var(--brass); border: 1px solid var(--hairline); }
+  .cal-foot { font-size: 12px; color: var(--text-dim); text-align: center; margin: 18px 0 8px; line-height: 1.6; }
+  .cal-refresh { margin-top: 10px; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel); color: var(--brass); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .cal-refresh:disabled { opacity: .6; }
 
   /* Giriş: ana ekran kartları sırayla yukarı süzülür */
   @keyframes hubUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -2343,6 +2364,25 @@
     errTooMany: "Too many attempts. Wait a little and try again.", errNotAllowed: "Email sign-in isn't turned on yet.",
     errNet: "Couldn't connect. Check your internet and try again.", errRelogin: "For security you need to sign in again. Sign out, sign back in, then try again.",
     ykCloudOn: "Attendance is saved to the cloud with your account.", ykCloudOff: "Attendance is only on this phone right now. Sign in so it isn't lost."
+  });
+  // ---------- Turnuva takvimi metinleri ----------
+  Object.assign(I18N.tr, {
+    hubCalT: "Turnuva takvimi", hubCalS: "TTF turnuvaları, yaş grubuna göre. Her gün güncellenir.",
+    calTitle: "Turnuva takvimi", calAll: "Tümü", calU10: "10 yaş ve altı", calAge: "{n} yaş", calB: "Büyükler",
+    calM: "Masters", calYB: "Yeni başlayan", calCount: "{n} turnuva", calNow: "Devam eden",
+    calNone: "Bu yaş grubunda yaklaşan turnuva yok.", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
+    calLoading: "Takvim yükleniyor…", calErr: "Takvim alınamadı. İnternet bağlantını kontrol et.",
+    calOld: "İnternet yok; son kaydedilen takvim gösteriliyor.", calCancelled: "İPTAL",
+    calSource: "Kaynak: TTF i-Kort · Son güncelleme {d}", calRefresh: "Yenile", calTap: "Ayrıntılar, fikstür ve maç programı için turnuvaya dokun."
+  });
+  Object.assign(I18N.en, {
+    hubCalT: "Tournament calendar", hubCalS: "Turkish Tennis Federation events by age group. Updated daily.",
+    calTitle: "Tournament calendar", calAll: "All", calU10: "10 & under", calAge: "{n}s", calB: "Seniors",
+    calM: "Masters", calYB: "Beginners", calCount: "{n} tournaments", calNow: "In progress",
+    calNone: "No upcoming tournaments in this age group.", calEmpty: "The calendar isn't ready yet. Try again a little later.",
+    calLoading: "Loading calendar…", calErr: "Couldn't load the calendar. Check your internet connection.",
+    calOld: "Offline; showing the last saved calendar.", calCancelled: "CANCELLED",
+    calSource: "Source: TTF i-Kort · Last updated {d}", calRefresh: "Refresh", calTap: "Tap a tournament for details, draws and order of play."
   });
   var LANG = detectLang();
   function t(key, params) {
@@ -4406,11 +4446,12 @@
   var app = document.getElementById("app");
 
   // Ekranlar arası geçiş: derinliğe göre ileri (sağdan) ya da geri (soldan) kayar.
-  var SCREEN_DEPTH = { hub: 0, viewer: 0, setup: 1, tlist: 1, archive: 1, players: 1, match: 2, tform: 2, tscreen: 2, player: 2, archmatch: 3, yklist: 1, ykgroup: 2, ykkid: 3, account: 1 };
+  var SCREEN_DEPTH = { hub: 0, viewer: 0, cal: 1, setup: 1, tlist: 1, archive: 1, players: 1, match: 2, tform: 2, tscreen: 2, player: 2, archmatch: 3, yklist: 1, ykgroup: 2, ykkid: 3, account: 1 };
   var lastScreen = null, screenEntering = false;
   function currentScreen() {
     if (liveView) return "viewer";
     if (acctOpen) return "account";
+    if (calOpen) return "cal";
     if (ykOpen) return ykKid ? "ykkid" : (ykGroupId ? "ykgroup" : "yklist");
     if (eventOpen) return evRulesForm ? "tform" : (eventState ? "tscreen" : "tlist");
     if (archiveOpen) return "archive";
@@ -4436,6 +4477,7 @@
   function renderScreen() {
     if (liveView && liveView.event) { app.innerHTML = renderEventViewer(); bindEventViewer(); return; }
     if (acctOpen && !liveView) { app.innerHTML = renderAccount(); bindAccount(); return; }
+    if (calOpen && !liveView) { app.innerHTML = renderCalendar(); bindCalendar(); return; }
     if (ykOpen && !liveView) { app.innerHTML = renderYkScreens(); bindYkScreens(); return; }
     if (eventOpen && !liveView) { app.innerHTML = renderTournamentScreens(); bindTournamentScreens(); return; }
     if (playersOpen && !viewingArchived && !archiveOpen && !liveView) { app.innerHTML = renderPlayersScreens(); bindPlayersScreens(); return; }
@@ -4649,6 +4691,16 @@
     arc: '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballC"><circle cx="27" cy="33" r="17"/></clipPath></defs> <circle cx="27" cy="33" r="17" fill="#D4E32A"/> <g clip-path="url(#tpballC)" fill="none" stroke="#F8FBE0" stroke-width="2.3"> <path d="M15.5 17 Q22 33 15.5 49"/><path d="M38.5 17 Q32 33 38.5 49"/> </g> <circle cx="27" cy="33" r="17" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/> <path d="M18.5 28.5 Q22 27 25 28.5" fill="none" stroke="#1C2A33" stroke-width="1.5" stroke-linecap="round"/> <path d="M29 28.5 Q32 27 35.5 28.5" fill="none" stroke="#1C2A33" stroke-width="1.5" stroke-linecap="round"/> <circle cx="22.5" cy="36" r="1.6" fill="#1C2A33"/><circle cx="32.5" cy="36" r="1.6" fill="#1C2A33"/> <rect x="18" y="32.5" width="8" height="5" rx="2.4" fill="#fff" fill-opacity=".5" stroke="#1C2A33" stroke-width="1.6"/> <rect x="28" y="32.5" width="8" height="5" rx="2.4" fill="#fff" fill-opacity=".5" stroke="#1C2A33" stroke-width="1.6"/> <path d="M26 34.5h2" stroke="#1C2A33" stroke-width="1.6"/> <path d="M25 41 Q27 42.3 29 41" fill="none" stroke="#1C2A33" stroke-width="1.6" stroke-linecap="round"/> <path d="M20 46 Q33 42 43 46 L43 60 Q33 56 20 60 Z" fill="#fff" stroke="#8A7350" stroke-width="1.5" stroke-linejoin="round"/> <path d="M43 46 Q53 42 60 46 L60 60 Q53 56 43 60 Z" fill="#F6F2E8" stroke="#8A7350" stroke-width="1.5" stroke-linejoin="round"/> <text x="31.5" y="54.5" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-size="7" font-weight="700" fill="#A87724">6-4</text> <path d="M47 50.5h9M47 54h6" stroke="#C79A54" stroke-width="1.4" stroke-linecap="round"/> <circle cx="51" cy="18" r="8" fill="#fff" stroke="#8A7350" stroke-width="1.6"/> <path d="M51 13.5V18l3 2" fill="none" stroke="#1C2A33" stroke-width="1.6" stroke-linecap="round"/> </svg>',
     imp: '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballD"><circle cx="32" cy="28" r="14"/></clipPath></defs> <circle cx="32" cy="28" r="14" fill="#D4E32A"/> <g clip-path="url(#tpballD)" fill="none" stroke="#F8FBE0" stroke-width="2.1"> <path d="M22.5 15 Q28 28 22.5 41"/><path d="M41.5 15 Q36 28 41.5 41"/> </g> <circle cx="28" cy="27" r="1.9" fill="#1C2A33"/><circle cx="36" cy="27" r="1.9" fill="#1C2A33"/> <path d="M29.5 31.5 Q32 33.5 34.5 31.5" fill="none" stroke="#1C2A33" stroke-width="1.6" stroke-linecap="round"/> <path d="M10 36 H54 V56 H10 Z" fill="#F4F1E8" stroke="#8A7350" stroke-width="1.6" stroke-linejoin="round"/> <path d="M10 36 L32 49 L54 36" fill="none" stroke="#8A7350" stroke-width="1.6" stroke-linejoin="round"/> </svg>'
   };
+  // Topçuk takvimle.
+  TOPCUK.cal = '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballT"><circle cx="45" cy="44" r="13"/></clipPath></defs>' +
+    '<rect x="8" y="12" width="38" height="38" rx="5" fill="#fff" stroke="#8A7350" stroke-width="1.6"/>' +
+    '<path d="M8 17a5 5 0 0 1 5-5h28a5 5 0 0 1 5 5v6H8z" fill="#C06B57"/>' +
+    '<rect x="15" y="8" width="3.4" height="8" rx="1.7" fill="#8A7350"/><rect x="35.6" y="8" width="3.4" height="8" rx="1.7" fill="#8A7350"/>' +
+    '<g fill="#C79A54"><rect x="14" y="28" width="5" height="4" rx="1"/><rect x="22" y="28" width="5" height="4" rx="1"/><rect x="30" y="28" width="5" height="4" rx="1"/><rect x="14" y="36" width="5" height="4" rx="1"/><rect x="22" y="36" width="5" height="4" rx="1"/></g>' +
+    '<circle cx="45" cy="44" r="13" fill="#D4E32A"/><g clip-path="url(#tpballT)" fill="none" stroke="#F8FBE0" stroke-width="2"><path d="M36 32 Q41 44 36 56"/><path d="M54 32 Q49 44 54 56"/></g>' +
+    '<circle cx="45" cy="44" r="13" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/>' +
+    '<circle cx="41" cy="42" r="1.7" fill="#1C2A33"/><circle cx="49" cy="42" r="1.7" fill="#1C2A33"/><circle cx="41.5" cy="41.4" r=".55" fill="#fff"/><circle cx="49.5" cy="41.4" r=".55" fill="#fff"/>' +
+    '<path d="M42 47 Q45 49.5 48 47" fill="none" stroke="#1C2A33" stroke-width="1.5" stroke-linecap="round"/></svg>';
   // Topçuk yoklama panosuyla.
   TOPCUK.yk = '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballY"><circle cx="23" cy="36" r="16"/></clipPath></defs>' +
     '<g transform="rotate(7 46 36)"><rect x="33" y="16" width="25" height="34" rx="3" fill="#fff" stroke="#8A7350" stroke-width="1.6"/><rect x="40.5" y="13" width="10" height="5.5" rx="1.6" fill="#8A7350"/>' +
@@ -4689,11 +4741,12 @@
         hubTile("hubMatch", "match", t("hubMatchT"), t("hubMatchS"), "", "primary", off) +
         hubTile("openEventBtn", "tour", t("hubTourT"), t("hubTourS"),
           activeTournaments().length ? (anyLiveT ? '<span class="dot"></span>' : '') + escapeHtml(t("hubActive", { n: activeTournaments().length })) : "", anyLiveT ? "live" : "", off + 1) +
-        hubTile("hubPlayers", "coach", t("hubPlayersT"), t("hubPlayersS"), loadPlayers().length ? escapeHtml(String(loadPlayers().length)) : "", "", off + 2) +
-        hubTile("hubYk", "yk", t("hubYkT"), t("hubYkS"), ykHubBadge(), "", off + 3) +
-        hubTile("openArchiveSetup", "arc", t("hubArcT"), arcN ? t("hubArcS", { n: arcN }) : t("hubArcS0"), "", "", off + 4) +
+        hubTile("hubCal", "cal", t("hubCalT"), t("hubCalS"), "", "", off + 2) +
+        hubTile("hubPlayers", "coach", t("hubPlayersT"), t("hubPlayersS"), loadPlayers().length ? escapeHtml(String(loadPlayers().length)) : "", "", off + 3) +
+        hubTile("hubYk", "yk", t("hubYkT"), t("hubYkS"), ykHubBadge(), "", off + 4) +
+        hubTile("openArchiveSetup", "arc", t("hubArcT"), arcN ? t("hubArcS", { n: arcN }) : t("hubArcS0"), "", "", off + 5) +
       '</div>' +
-      '<button class="hub-link hub-in" data-import="1" type="button" style="--i:' + (off + 5) + '"><span class="hl-ico">' + TOPCUK.imp + '</span>' + escapeHtml(t("hubImport")) + '</button>' +
+      '<button class="hub-link hub-in" data-import="1" type="button" style="--i:' + (off + 6) + '"><span class="hl-ico">' + TOPCUK.imp + '</span>' + escapeHtml(t("hubImport")) + '</button>' +
     '</div>';
   }
   function bindHub() {
@@ -4703,6 +4756,7 @@
     if ((el = document.getElementById("openArchiveSetup"))) el.onclick = function () { openArchive(); };
     if ((el = document.getElementById("hubPlayers"))) el.onclick = function () { openPlayersScreen(); };
     if ((el = document.getElementById("hubYk"))) el.onclick = function () { openYkScreen(); };
+    if ((el = document.getElementById("hubCal"))) el.onclick = function () { openCalendar(); };
     if ((el = document.getElementById("acctChip"))) el.onclick = function () { openAccount(); };
     if ((el = document.getElementById("resumeBtn"))) el.onclick = function () { homeOpen = false; homeView = "hub"; activeTab = state.matchOver ? "stats" : "live"; render(); };
   }
@@ -6653,6 +6707,136 @@
     archReturn = null;
     activeTab = "live"; statsSetFilter = "all";
     render();
+  }
+
+  // ================= Turnuva takvimi (TTF i-Kort) =================
+  // Veriyi her gün GitHub Actions üretir (scripts/takvim_guncelle.py -> data/takvim.json).
+  // Uygulama o dosyayı okur, son hâlini cihaza da kaydeder; internet yoksa kaydı gösterir.
+  // Yaş etiketleri: "8".."18" gençler, "B" büyükler, "YB" yeni başlayan, "M30"… masters.
+  var CAL_URL = "https://raw.githubusercontent.com/ogiterzi/Kort-Kenari/main/data/takvim.json";
+  var CAL_CACHE_KEY = "courtside-cal-cache-v1", CAL_FILTER_KEY = "courtside-cal-age-v1";
+  var CAL_FILTERS = ["all", "u10", "12", "14", "16", "18", "B", "M"];
+  var calOpen = false, calData = null, calLoading = false, calErr = false, calStale = false;
+  var calFilter = (function () {
+    try { var v = localStorage.getItem(CAL_FILTER_KEY); if (CAL_FILTERS.indexOf(v) !== -1) return v; } catch (e) {}
+    return "all";
+  })();
+  try { calData = JSON.parse(localStorage.getItem(CAL_CACHE_KEY) || "null"); } catch (e) { calData = null; }
+
+  function calLoad() {
+    if (calLoading) return;
+    calLoading = true; calErr = false;
+    fetch(CAL_URL, { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); })
+      .then(function (d) {
+        if (!d || !Array.isArray(d.tournaments)) throw new Error("format");
+        calData = d; calStale = false;
+        try { localStorage.setItem(CAL_CACHE_KEY, JSON.stringify(d)); } catch (e) {}
+      })
+      .catch(function () { calErr = true; calStale = !!calData; })
+      .then(function () { calLoading = false; if (calOpen) render(); });
+  }
+  function openCalendar() { calOpen = true; render(); calLoad(); }
+
+  function calFilterLabel(f) {
+    if (f === "all") return t("calAll");
+    if (f === "u10") return t("calU10");
+    if (f === "B") return t("calB");
+    if (f === "M") return t("calM");
+    return t("calAge", { n: f });
+  }
+  function calAgeLabel(a) {
+    if (a === "B") return t("calB");
+    if (a === "YB") return t("calYB");
+    if (a === "M") return t("calM");
+    if (a.charAt(0) === "M") return a.slice(1) + "+";
+    return t("calAge", { n: a });
+  }
+  // Etiket bir filtreye düşüyor mu? 11/13/15/17 gibi tek yaşlar bir üst gruba sayılır.
+  function calAgeInFilter(a, f) {
+    if (f === "all") return false;
+    if (f === "B") return a === "B";
+    if (f === "M") return a.charAt(0) === "M";
+    if (!/^\d+$/.test(a)) return false;
+    var n = +a;
+    if (f === "u10") return n <= 10;
+    return n > +f - 2 && n <= +f;
+  }
+  function calMatches(tr, f) {
+    if (f === "all") return true;
+    return (tr.ages || []).some(function (a) { return calAgeInFilter(a, f); });
+  }
+  function calDate(iso) { var p = String(iso || "").split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function calIsoToday() {
+    var d = new Date();
+    return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2);
+  }
+  function calRange(tr) {
+    var a = calDate(tr.start), b = calDate(tr.end || tr.start), loc = locale();
+    var opt = { day: "numeric", month: "short" };
+    if (tr.start === tr.end || !tr.end) return a.toLocaleDateString(loc, opt);
+    return a.toLocaleDateString(loc, opt) + " – " + b.toLocaleDateString(loc, opt);
+  }
+  function calCard(tr) {
+    var d = calDate(tr.start);
+    var meta1 = [tr.city, tr.club !== tr.city ? tr.club : ""].filter(Boolean).join(" · ");
+    var meta2 = [calRange(tr), tr.category, tr.surface].filter(Boolean).join(" · ");
+    var ages = (tr.ages || []).map(function (a) {
+      return '<span class="cal-age' + (calAgeInFilter(a, calFilter) ? ' hit' : '') + '">' + escapeHtml(calAgeLabel(a)) + '</span>';
+    }).join("");
+    var url = /^https:\/\/www\.ikort\.com\.tr\//.test(tr.url || "") ? tr.url : "https://www.ikort.com.tr/turnuvalar";
+    return '<a class="cal-card' + (tr.cancelled ? ' off' : '') + '" href="' + escapeAttr(url) + '" target="_blank" rel="noopener">' +
+      '<span class="cal-date"><span class="cal-day">' + d.getDate() + '</span><span class="cal-mon">' +
+        escapeHtml(d.toLocaleDateString(locale(), { month: "short" }).replace(".", "")) + '</span></span>' +
+      '<span class="cal-body"><span class="cal-name" style="display:block">' +
+        (tr.cancelled ? '<span class="cal-tag">' + escapeHtml(t("calCancelled")) + '</span>' : '') + escapeHtml(tr.name) + '</span>' +
+        (meta1 ? '<span class="cal-meta" style="display:block">' + escapeHtml(meta1) + '</span>' : '') +
+        '<span class="cal-meta" style="display:block">' + escapeHtml(meta2) + '</span>' +
+        (ages ? '<span class="cal-ages">' + ages + '</span>' : '') +
+      '</span><span class="ht-chev" aria-hidden="true">›</span></a>';
+  }
+  function renderCalendar() {
+    var html = navBarHtml("calBack", t("calTitle")) + '<main class="ev-main">';
+    html += '<div class="cal-chips" role="group">' + CAL_FILTERS.map(function (f) {
+      return '<button type="button" data-calf="' + f + '" aria-pressed="' + (f === calFilter) + '">' + escapeHtml(calFilterLabel(f)) + '</button>';
+    }).join("") + '</div>';
+    if (!calData) {
+      html += '<p class="empty-state">' + escapeHtml(t(calLoading ? "calLoading" : (calErr ? "calErr" : "calEmpty"))) + '</p>';
+      if (calErr) html += '<div class="cal-foot"><button class="btn-primary" id="calRefresh" type="button">' + escapeHtml(t("calRefresh")) + '</button></div>';
+      return html + '</main>';
+    }
+    var today = calIsoToday();
+    var list = calData.tournaments.filter(function (tr) { return (tr.end || tr.start) >= today && calMatches(tr, calFilter); });
+    if (calStale) html += '<p class="cal-count">' + escapeHtml(t("calOld")) + '</p>';
+    if (!calData.tournaments.length) html += '<p class="empty-state">' + escapeHtml(t("calEmpty")) + '</p>';
+    else if (!list.length) html += '<p class="empty-state">' + escapeHtml(t("calNone")) + '</p>';
+    else {
+      html += '<p class="cal-count">' + escapeHtml(t("calCount", { n: list.length })) + '</p>';
+      var lastHead = null;
+      list.forEach(function (tr) {
+        var head = tr.start <= today ? t("calNow")
+          : calDate(tr.start).toLocaleDateString(locale(), { month: "long", year: "numeric" });
+        if (head !== lastHead) { html += '<div class="ev-sec">' + escapeHtml(head) + '</div>'; lastHead = head; }
+        html += calCard(tr);
+      });
+    }
+    var upd = calData.updated ? new Date(calData.updated) : null;
+    var updTxt = upd && !isNaN(upd) ? upd.toLocaleString(locale(), { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }) : "—";
+    html += '<div class="cal-foot">' + (list.length ? escapeHtml(t("calTap")) + '<br>' : '') + escapeHtml(t("calSource", { d: updTxt })) +
+      '<br><button class="cal-refresh" id="calRefresh" type="button"' + (calLoading ? ' disabled' : '') + '>' +
+      escapeHtml(t(calLoading ? "calLoading" : "calRefresh")) + '</button></div>';
+    return html + '</main>';
+  }
+  function bindCalendar() {
+    var el, i, list;
+    if ((el = document.getElementById("calBack"))) el.onclick = function () { calOpen = false; render(); };
+    if ((el = document.getElementById("calRefresh"))) el.onclick = function () { calLoad(); render(); };
+    list = app.querySelectorAll("[data-calf]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      calFilter = this.getAttribute("data-calf");
+      try { localStorage.setItem(CAL_FILTER_KEY, calFilter); } catch (e) {}
+      render();
+    };
   }
 
   // ================= Turnuva modu: birden çok maçı oyun oyun takip et =================
