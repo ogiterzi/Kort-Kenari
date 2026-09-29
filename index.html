@@ -1639,10 +1639,32 @@
   .cal-chips::-webkit-scrollbar { display: none; }
   .cal-chips button { flex: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 14px; cursor: pointer; }
   .cal-chips button[aria-pressed="true"] { border-color: var(--brass); background: var(--panel-2); color: var(--brass); font-weight: 600; }
-  .cal-city { display: block; width: 100%; margin: 0 0 12px; padding: 11px 36px 11px 14px; border-radius: 12px; border: 1px solid var(--hairline); background: var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23C79A54' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center / 12px 8px; color: var(--text); font-family: inherit; font-size: 15px; -webkit-appearance: none; appearance: none; }
-  .cal-city.on { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .cal-cbtn { display: flex; align-items: center; gap: 8px; width: 100%; margin: 0 0 12px; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 15px; text-align: left; cursor: pointer; }
+  .cal-cbtn.on { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .cal-cbtn .lbl { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cal-cbtn .chev { flex: none; color: var(--brass); transition: transform .18s ease; }
+  .cal-cbtn[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .cal-cpanel { margin: -4px 0 14px; padding: 12px; border-radius: 14px; border: 1px solid var(--hairline); background: var(--panel); }
+  .cal-cpanel .cal-cgrid { display: flex; flex-wrap: wrap; gap: 7px; }
+  .cal-cgrid button { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel-2); color: var(--text); font-family: inherit; font-size: 13.5px; cursor: pointer; }
+  .cal-cgrid button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .cal-cgrid button[aria-pressed="true"]::before { content: "✓ "; }
+  .cal-cgrid .n { font-size: 11.5px; color: var(--text-dim); font-weight: 500; margin-left: 2px; }
+  .cal-cgrid button.none { opacity: .55; }
+  .cal-cacts { display: flex; justify-content: space-between; margin-top: 12px; }
+  .cal-cacts button { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--hairline); background: none; color: var(--text-dim); font-family: inherit; font-size: 14px; cursor: pointer; }
+  .cal-cacts button.done { border-color: var(--brass); color: var(--brass); font-weight: 600; }
   .cal-count { font-size: 12.5px; color: var(--text-dim); margin: 0 0 4px; }
-  .cal-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px 12px 12px 12px; margin-bottom: 8px; border-radius: 16px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); text-decoration: none; }
+  .cal-card { display: flex; gap: 4px; align-items: flex-start; padding: 12px 6px 12px 12px; margin-bottom: 8px; border-radius: 16px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); }
+  .cal-card.fav { border-color: var(--brass); }
+  .cal-link { flex: 1; min-width: 0; display: flex; gap: 12px; align-items: flex-start; color: inherit; text-decoration: none; }
+  .cal-star { flex: none; width: 40px; height: 40px; margin-top: -4px; border: none; background: none; color: var(--text-dim); font-size: 22px; line-height: 1; cursor: pointer; border-radius: 50%; }
+  .cal-star[aria-pressed="true"] { color: var(--brass); }
+  .cal-star:active { transform: scale(.88); }
+  .cal-dl { display: inline-block; margin-top: 5px; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 7px; background: var(--panel-2); border: 1px solid var(--hairline); color: var(--text-dim); }
+  .cal-dl.hot { background: rgba(214, 120, 60, .16); border-color: rgba(214, 120, 60, .55); color: #E08A4E; }
+  .cal-dl.closed { color: var(--text-dim); opacity: .8; text-decoration: line-through; }
+  .cal-favsec { color: var(--brass); }
   .cal-card.off { opacity: .55; }
   .cal-date { flex: none; width: 50px; padding: 6px 0 5px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--hairline); text-align: center; line-height: 1.1; }
   .cal-day { display: block; font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--brass); }
@@ -1713,6 +1735,11 @@
   .acct-chip .cdot { width: 7px; height: 7px; border-radius: 50%; background: var(--grass); flex: none; }
   .acct-chip .cdot.sync { background: var(--brass); }
   .acct-chip .cdot.off { background: var(--clay); }
+  .acct-av { position: relative; flex: none; width: 38px; height: 38px; border-radius: 50%; border: none; background: var(--brass); color: var(--ink); font-family: inherit; font-size: 14px; font-weight: 700; letter-spacing: .02em; display: grid; place-items: center; cursor: pointer; }
+  .acct-av .cdot { position: absolute; right: -1px; bottom: -1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--bg); background: var(--brass); }
+  .acct-av .cdot.off { background: var(--clay); }
+  .ac-switch { display: flex; flex-direction: column; align-items: stretch; gap: 8px; text-align: center; font-size: 13.5px; color: var(--text-dim); }
+  .ac-switch .csv-btn { margin-top: 0; }
   .ac-card { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 14px; }
   .ac-email { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
   .ac-sync { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
@@ -1795,7 +1822,7 @@
   // ---------- Bulut eşitleme kancası ----------
   // Uygulama verisi (maç, arşiv, oyuncular, turnuvalar, yoklama) localStorage'a her yazıldığında
   // bulut modülü haberdar edilir. Asıl eşitleme aşağıdaki "Hesap ve bulut" bölümünde.
-  var CLOUD_KEYS = ["courtside-match-v1", "courtside-archive-v1", "courtside-players-v1", "courtside-tournaments-v1", "courtside-attendance-v1"];
+  var CLOUD_KEYS = ["courtside-match-v1", "courtside-archive-v1", "courtside-players-v1", "courtside-tournaments-v1", "courtside-attendance-v1", "courtside-cal-fav-v1"];
   var CLOUD_META_KEY = "courtside-sync-v1";
   var _lsSet = null, _lsRemove = null, cloudHook = null;
   function isLS(s) { try { return s === window.localStorage; } catch (e) { return false; } }
@@ -2348,6 +2375,10 @@
     errWeakPass: "Şifre en az 6 karakter olmalı.", errBadLogin: "E-posta ya da şifre hatalı.",
     errTooMany: "Çok fazla deneme yapıldı. Biraz bekleyip tekrar dene.", errNotAllowed: "E-posta ile giriş henüz açılmadı.",
     errNet: "Bağlantı kurulamadı. İnternetini kontrol edip tekrar dene.", errRelogin: "Güvenlik için yeniden giriş yapman gerekiyor. Çıkış yapıp tekrar gir, sonra yeniden dene.",
+    acHeadSignup: "Yeni hesap", acSignupWhy: "Adını, e-postanı ve bir şifre yaz. Kayıtların bu hesaba kaydedilir; başka telefonda aynı e-postayla girince hepsi gelir.",
+    acName: "Ad Soyad", acNamePh: "ör. Ahmet Yılmaz", acNeedName: "Adını ve soyadını yaz.", acNewPass: "Şifre belirle (en az 6 karakter)",
+    acPassLogin: "Şifre", acCreate: "Hesabı oluştur", acToLogin: "Zaten hesabın var mı? Giriş yap",
+    acNoAccount: "Hesabın yok mu?", acOpenNew: "Yeni hesap aç", acEditName: "✎ Adı düzenle", acAddName: "✎ Adını ekle",
     ykCloudOn: "Yoklamalar hesabınla buluta kaydediliyor.", ykCloudOff: "Yoklamalar şu an sadece bu telefonda. Kaybolmaması için hesapla giriş yap."
   });
   Object.assign(I18N.en, {
@@ -2365,6 +2396,10 @@
     errWeakPass: "The password must be at least 6 characters.", errBadLogin: "Wrong email or password.",
     errTooMany: "Too many attempts. Wait a little and try again.", errNotAllowed: "Email sign-in isn't turned on yet.",
     errNet: "Couldn't connect. Check your internet and try again.", errRelogin: "For security you need to sign in again. Sign out, sign back in, then try again.",
+    acHeadSignup: "New account", acSignupWhy: "Enter your name, email and a password. Your records are saved to this account; sign in with the same email on another phone to get them all.",
+    acName: "Full name", acNamePh: "e.g. Alex Morgan", acNeedName: "Enter your first and last name.", acNewPass: "Choose a password (at least 6 characters)",
+    acPassLogin: "Password", acCreate: "Create account", acToLogin: "Already have an account? Sign in",
+    acNoAccount: "Don't have an account?", acOpenNew: "Create new account", acEditName: "✎ Edit name", acAddName: "✎ Add your name",
     ykCloudOn: "Attendance is saved to the cloud with your account.", ykCloudOff: "Attendance is only on this phone right now. Sign in so it isn't lost."
   });
   // ---------- Turnuva takvimi metinleri ----------
@@ -2372,19 +2407,23 @@
     hubCalT: "Turnuva takvimi", hubCalS: "TTF turnuvaları, yaş grubuna göre. Her gün güncellenir.",
     calTitle: "Turnuva takvimi", calAll: "Tümü", calU10: "10 yaş ve altı", calAge: "{n} yaş", calB: "Büyükler",
     calM: "Masters", calYB: "Yeni başlayan", calCount: "{n} turnuva", calNow: "Devam eden",
-    calNone: "Bu filtrelerde yaklaşan turnuva yok.", calAllCities: "Tüm şehirler", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
+    calNone: "Bu filtrelerde yaklaşan turnuva yok.", calAllCities: "Tüm şehirler", calCitiesMore: "{a} +{n}", calClear: "Temizle", calDone: "Tamam", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
     calLoading: "Takvim yükleniyor…", calErr: "Takvim alınamadı. İnternet bağlantını kontrol et.",
-    calOld: "İnternet yok; son kaydedilen takvim gösteriliyor.", calCancelled: "İPTAL",
-    calSource: "Kaynak: TTF i-Kort · Son güncelleme {d}", calRefresh: "Yenile", calTap: "Ayrıntılar, fikstür ve maç programı için turnuvaya dokun."
+    calOld: "İnternet yok; son kaydedilen takvim gösteriliyor.", calCancelled: "İPTAL", calFavs: "★ Takip ettiklerim", calFollow: "Takip et", calUnfollow: "Takibi bırak",
+    calDlClosed: "Kayıt kapandı", calDlToday: "Kayıt bugün kapanıyor", calDlTomorrow: "Kayıt yarın kapanıyor",
+    calDlDays: "Kayıt {n} gün sonra kapanıyor", calDlOn: "Son kayıt {d}",
+    calSource: "Kaynak: TTF i-Kort · Son güncelleme {d}", calRefresh: "Yenile", calTap: "Ayrıntılar ve fikstür için turnuvaya, takibe almak için ☆ işaretine dokun."
   });
   Object.assign(I18N.en, {
     hubCalT: "Tournament calendar", hubCalS: "Turkish Tennis Federation events by age group. Updated daily.",
     calTitle: "Tournament calendar", calAll: "All", calU10: "10 & under", calAge: "{n}s", calB: "Seniors",
     calM: "Masters", calYB: "Beginners", calCount: "{n} tournaments", calNow: "In progress",
-    calNone: "No upcoming tournaments for these filters.", calAllCities: "All cities", calEmpty: "The calendar isn't ready yet. Try again a little later.",
+    calNone: "No upcoming tournaments for these filters.", calAllCities: "All cities", calCitiesMore: "{a} +{n}", calClear: "Clear", calDone: "Done", calEmpty: "The calendar isn't ready yet. Try again a little later.",
     calLoading: "Loading calendar…", calErr: "Couldn't load the calendar. Check your internet connection.",
-    calOld: "Offline; showing the last saved calendar.", calCancelled: "CANCELLED",
-    calSource: "Source: TTF i-Kort · Last updated {d}", calRefresh: "Refresh", calTap: "Tap a tournament for details, draws and order of play."
+    calOld: "Offline; showing the last saved calendar.", calCancelled: "CANCELLED", calFavs: "★ Following", calFollow: "Follow", calUnfollow: "Unfollow",
+    calDlClosed: "Entries closed", calDlToday: "Entries close today", calDlTomorrow: "Entries close tomorrow",
+    calDlDays: "Entries close in {n} days", calDlOn: "Entry deadline {d}",
+    calSource: "Source: TTF i-Kort · Last updated {d}", calRefresh: "Refresh", calTap: "Tap a tournament for details and draws, or ☆ to follow it."
   });
   var LANG = detectLang();
   function t(key, params) {
@@ -3790,7 +3829,7 @@
         body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(a.refreshToken)
       }).then(function (r) { if (!r.ok) throw new Error("refresh"); return r.json(); })
         .then(function (j) {
-          var na = { uid: j.user_id, idToken: j.id_token, refreshToken: j.refresh_token, exp: Date.now() + Number(j.expires_in || 3600) * 1000, email: a.email || null };
+          var na = { uid: j.user_id, idToken: j.id_token, refreshToken: j.refresh_token, exp: Date.now() + Number(j.expires_in || 3600) * 1000, email: a.email || null, name: a.name || null };
           saveAuth(na); return na;
         });
     }
@@ -6723,8 +6762,24 @@
     try { var v = localStorage.getItem(CAL_FILTER_KEY); if (CAL_FILTERS.indexOf(v) !== -1) return v; } catch (e) {}
     return "all";
   })();
-  var calCity = "";
-  try { calCity = localStorage.getItem(CAL_CITY_KEY) || ""; } catch (e) {}
+  // Seçili şehirler (birden çok). İstanbul Avrupa/Anadolu tek "İSTANBUL" olarak gösterilir.
+  var CAL_FAV_KEY = "courtside-cal-fav-v1", calFavs = [];
+  try { calFavs = JSON.parse(localStorage.getItem(CAL_FAV_KEY) || "[]").map(String); } catch (e) { calFavs = []; }
+  function calIsFav(id) { return calFavs.indexOf(String(id)) !== -1; }
+  function calToggleFav(id) {
+    id = String(id);
+    var k = calFavs.indexOf(id);
+    if (k === -1) calFavs.push(id); else calFavs.splice(k, 1);
+    try { localStorage.setItem(CAL_FAV_KEY, JSON.stringify(calFavs)); } catch (e) {}
+  }
+  var calCities = [], calCityOpen = false;
+  try {
+    var rawC = localStorage.getItem(CAL_CITY_KEY) || "";
+    calCities = rawC.charAt(0) === "[" ? JSON.parse(rawC) : (rawC ? [rawC] : []);
+    calCities = calCities.map(calCityName).filter(function (c, i, a) { return c && a.indexOf(c) === i; });
+  } catch (e) { calCities = []; }
+  function calCityName(c) { c = String(c || "").trim(); return /^İSTANBUL/.test(c) ? "İSTANBUL" : c; }
+  function calSaveCities() { try { localStorage.setItem(CAL_CITY_KEY, JSON.stringify(calCities)); } catch (e) {} }
   try { calData = JSON.parse(localStorage.getItem(CAL_CACHE_KEY) || "null"); } catch (e) { calData = null; }
 
   function calLoad() {
@@ -6781,23 +6836,39 @@
     if (tr.start === tr.end || !tr.end) return a.toLocaleDateString(loc, opt);
     return a.toLocaleDateString(loc, opt) + " – " + b.toLocaleDateString(loc, opt);
   }
+  // Son kayıt rozeti: yalnızca henüz başlamamış turnuvalarda.
+  function calDeadline(tr, today) {
+    if (!tr.deadline || tr.start <= today) return "";
+    var days = Math.round((calDate(tr.deadline) - calDate(today)) / 86400000);
+    var cls = "", txt;
+    if (days < 0) { cls = " closed"; txt = t("calDlClosed"); }
+    else if (days === 0) { cls = " hot"; txt = t("calDlToday"); }
+    else if (days === 1) { cls = " hot"; txt = t("calDlTomorrow"); }
+    else if (days <= 7) { cls = " hot"; txt = t("calDlDays", { n: days }); }
+    else txt = t("calDlOn", { d: calDate(tr.deadline).toLocaleDateString(locale(), { day: "numeric", month: "long" }) });
+    return '<span class="cal-dl' + cls + '">' + escapeHtml(txt) + '</span>';
+  }
   function calCard(tr) {
-    var d = calDate(tr.start);
+    var d = calDate(tr.start), fav = calIsFav(tr.id);
     var meta1 = [tr.city, tr.club !== tr.city ? tr.club : ""].filter(Boolean).join(" · ");
     var meta2 = [calRange(tr), tr.category, tr.surface].filter(Boolean).join(" · ");
     var ages = (tr.ages || []).map(function (a) {
       return '<span class="cal-age' + (calAgeInFilter(a, calFilter) ? ' hit' : '') + '">' + escapeHtml(calAgeLabel(a)) + '</span>';
     }).join("");
     var url = /^https:\/\/www\.ikort\.com\.tr\//.test(tr.url || "") ? tr.url : "https://www.ikort.com.tr/turnuvalar";
-    return '<a class="cal-card' + (tr.cancelled ? ' off' : '') + '" href="' + escapeAttr(url) + '" target="_blank" rel="noopener">' +
+    return '<div class="cal-card' + (tr.cancelled ? ' off' : '') + (fav ? ' fav' : '') + '">' +
+      '<a class="cal-link" href="' + escapeAttr(url) + '" target="_blank" rel="noopener">' +
       '<span class="cal-date"><span class="cal-day">' + d.getDate() + '</span><span class="cal-mon">' +
         escapeHtml(d.toLocaleDateString(locale(), { month: "short" }).replace(".", "")) + '</span></span>' +
       '<span class="cal-body"><span class="cal-name" style="display:block">' +
         (tr.cancelled ? '<span class="cal-tag">' + escapeHtml(t("calCancelled")) + '</span>' : '') + escapeHtml(tr.name) + '</span>' +
+        (tr.cancelled ? '' : calDeadline(tr, calIsoToday())) +
         (meta1 ? '<span class="cal-meta" style="display:block">' + escapeHtml(meta1) + '</span>' : '') +
         '<span class="cal-meta" style="display:block">' + escapeHtml(meta2) + '</span>' +
         (ages ? '<span class="cal-ages">' + ages + '</span>' : '') +
-      '</span><span class="ht-chev" aria-hidden="true">›</span></a>';
+      '</span></a>' +
+      '<button class="cal-star" type="button" data-calfav="' + escapeAttr(tr.id) + '" aria-pressed="' + fav + '" aria-label="' +
+        escapeAttr(t(fav ? "calUnfollow" : "calFollow")) + '">' + (fav ? '★' : '☆') + '</button></div>';
   }
   function renderCalendar() {
     var html = navBarHtml("calBack", t("calTitle")) + '<main class="ev-main">';
@@ -6811,24 +6882,45 @@
     }
     var today = calIsoToday();
     var upcoming = calData.tournaments.filter(function (tr) { return (tr.end || tr.start) >= today; });
-    var cities = [];
-    upcoming.forEach(function (tr) { if (tr.city && cities.indexOf(tr.city) === -1) cities.push(tr.city); });
+    // Şehir listesi seçili yaş grubuna göre: sadece o yaşta turnuvası olan şehirler (yanında sayısı).
+    var cities = [], cityN = {};
+    upcoming.forEach(function (tr) {
+      if (!calMatches(tr, calFilter)) return;
+      var c = calCityName(tr.city);
+      if (!c) return;
+      if (cities.indexOf(c) === -1) cities.push(c);
+      cityN[c] = (cityN[c] || 0) + 1;
+    });
+    calCities.forEach(function (c) { if (cities.indexOf(c) === -1) cities.push(c); }); // seçililer kaldırılabilsin diye listede kalır
     cities.sort(function (a, b) { return a.localeCompare(b, "tr"); });
-    if (calCity && cities.indexOf(calCity) === -1) cities.push(calCity); // seçili şehir listede kalsın
     if (cities.length) {
-      html += '<select class="cal-city' + (calCity ? ' on' : '') + '" id="calCity" aria-label="' + escapeAttr(t("calAllCities")) + '">' +
-        '<option value="">' + escapeHtml(t("calAllCities")) + '</option>' +
-        cities.map(function (c) { return '<option value="' + escapeAttr(c) + '"' + (c === calCity ? ' selected' : '') + '>' + escapeHtml(c) + '</option>'; }).join("") +
-        '</select>';
+      var lbl = !calCities.length ? t("calAllCities")
+        : (calCities.length <= 2 ? calCities.join(", ") : t("calCitiesMore", { a: calCities.slice(0, 2).join(", "), n: calCities.length - 2 }));
+      html += '<button class="cal-cbtn' + (calCities.length ? ' on' : '') + '" id="calCityBtn" type="button" aria-expanded="' + calCityOpen + '">' +
+        '<span aria-hidden="true">📍</span><span class="lbl">' + escapeHtml(lbl) + '</span><span class="chev" aria-hidden="true">▾</span></button>';
+      if (calCityOpen) {
+        html += '<div class="cal-cpanel"><div class="cal-cgrid" role="group">' + cities.map(function (c) {
+          return '<button type="button" data-calc="' + escapeAttr(c) + '" aria-pressed="' + (calCities.indexOf(c) !== -1) + '"' + (cityN[c] ? '' : ' class="none"') + '>' +
+            escapeHtml(c) + ' <span class="n">' + (cityN[c] || 0) + '</span></button>';
+        }).join("") + '</div><div class="cal-cacts">' +
+          '<button type="button" id="calCityClear">' + escapeHtml(t("calClear")) + '</button>' +
+          '<button type="button" class="done" id="calCityDone">' + escapeHtml(t("calDone")) + '</button></div></div>';
+      }
     }
-    var list = upcoming.filter(function (tr) { return calMatches(tr, calFilter) && (!calCity || tr.city === calCity); });
+    var list = upcoming.filter(function (tr) { return calMatches(tr, calFilter) && (!calCities.length || calCities.indexOf(calCityName(tr.city)) !== -1); });
     if (calStale) html += '<p class="cal-count">' + escapeHtml(t("calOld")) + '</p>';
     if (!calData.tournaments.length) html += '<p class="empty-state">' + escapeHtml(t("calEmpty")) + '</p>';
-    else if (!list.length) html += '<p class="empty-state">' + escapeHtml(t("calNone")) + '</p>';
-    else {
-      html += '<p class="cal-count">' + escapeHtml(t("calCount", { n: list.length })) + '</p>';
+    var favList = upcoming.filter(function (tr) { return calIsFav(tr.id); });
+    if (favList.length) {
+      html += '<div class="ev-sec cal-favsec">' + escapeHtml(t("calFavs")) + '</div>';
+      favList.forEach(function (tr) { html += calCard(tr); });
+    }
+    if (calData.tournaments.length && !list.length) html += '<p class="empty-state">' + escapeHtml(t("calNone")) + '</p>';
+    else if (list.length) {
+      html += '<p class="cal-count"' + (favList.length ? ' style="margin-top:18px"' : '') + '>' + escapeHtml(t("calCount", { n: list.length })) + '</p>';
       var lastHead = null;
       list.forEach(function (tr) {
+        if (calIsFav(tr.id)) return; // takip edilenler üstte gösteriliyor
         var head = tr.start <= today ? t("calNow")
           : calDate(tr.start).toLocaleDateString(locale(), { month: "long", year: "numeric" });
         if (head !== lastHead) { html += '<div class="ev-sec">' + escapeHtml(head) + '</div>'; lastHead = head; }
@@ -6844,12 +6936,23 @@
   }
   function bindCalendar() {
     var el, i, list;
-    if ((el = document.getElementById("calBack"))) el.onclick = function () { calOpen = false; render(); };
+    if ((el = document.getElementById("calBack"))) el.onclick = function () { calOpen = false; calCityOpen = false; render(); };
     if ((el = document.getElementById("calRefresh"))) el.onclick = function () { calLoad(); render(); };
-    if ((el = document.getElementById("calCity"))) el.onchange = function () {
-      calCity = this.value;
-      try { localStorage.setItem(CAL_CITY_KEY, calCity); } catch (e) {}
-      render();
+    if ((el = document.getElementById("calCityBtn"))) el.onclick = function () { calCityOpen = !calCityOpen; render(); };
+    if ((el = document.getElementById("calCityDone"))) el.onclick = function () { calCityOpen = false; render(); };
+    if ((el = document.getElementById("calCityClear"))) el.onclick = function () { calCities = []; calSaveCities(); render(); };
+    list = app.querySelectorAll("[data-calfav]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function (e) {
+      e.preventDefault(); e.stopPropagation();
+      calToggleFav(this.getAttribute("data-calfav"));
+      var y = window.scrollY; render(); try { window.scrollTo(0, y); } catch (er) {}
+    };
+    list = app.querySelectorAll("[data-calc]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var c = this.getAttribute("data-calc"), k = calCities.indexOf(c);
+      if (k === -1) calCities.push(c); else calCities.splice(k, 1);
+      calSaveCities();
+      var y = window.scrollY; render(); try { window.scrollTo(0, y); } catch (e) {}
     };
     list = app.querySelectorAll("[data-calf]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
@@ -8389,6 +8492,8 @@
     } else if (k === "courtside-players-v1" && Array.isArray(L) && Array.isArray(R)) {
       out = union(R.concat(L), function (p) { return nameKey(p.name); })
         .sort(function (x, y) { return String(x.name).localeCompare(String(y.name), "tr"); });
+    } else if (k === "courtside-cal-fav-v1" && Array.isArray(L) && Array.isArray(R)) {
+      out = union(R.concat(L), function (x) { return String(x); });
     } else if (k === "courtside-tournaments-v1" && Array.isArray(L) && Array.isArray(R)) {
       out = union(R.concat(L), function (x) { return String(x.id); });
     } else if (k === "courtside-attendance-v1" && L && R) {
@@ -8474,9 +8579,10 @@
       });
     });
   }
-  function storeAuthFrom(j, email) {
+  function storeAuthFrom(j, email, name) {
     var na = { uid: j.localId, idToken: j.idToken, refreshToken: j.refreshToken,
-      exp: Date.now() + Number(j.expiresIn || 3600) * 1000, email: email || j.email || null };
+      exp: Date.now() + Number(j.expiresIn || 3600) * 1000, email: email || j.email || null,
+      name: name || j.displayName || null };
     saveAuth(na);
     return na;
   }
@@ -8491,25 +8597,38 @@
     if (/CREDENTIAL_TOO_OLD|TOKEN_EXPIRED|INVALID_ID_TOKEN|USER_NOT_FOUND/.test(m)) return t("errRelogin");
     return t("errNet");
   }
-  function cloudSignUp(email, pass) {
+  function cleanPersonName(v) { return String(v || "").replace(/\s+/g, " ").trim().slice(0, 60); }
+  function cloudSignUp(email, pass, name) {
     var a = loadAuth();
-    var viaNew = function () { return authCall("signUp", { email: email, password: pass, returnSecureToken: true }); };
+    var viaNew = function () { return authCall("signUp", { email: email, password: pass, displayName: name, returnSecureToken: true }); };
     // Telefonun anonim hesabı varsa ona e-posta eklenir: uid ve açık canlı yayınlar aynı kalır.
     // (Firebase SDK'daki linkWithCredential gibi: signUp + idToken. "update" yöntemi, e-posta
     // numaralandırma koruması açık projelerde reddediliyor.) Bağlama olmazsa yeni hesap açılır.
     var p = (a && a.refreshToken && !a.email)
       ? getIdToken().then(function (cur) {
-          return authCall("signUp", { idToken: cur.idToken, email: email, password: pass, returnSecureToken: true });
+          return authCall("signUp", { idToken: cur.idToken, email: email, password: pass, displayName: name, returnSecureToken: true });
         }).catch(function (err) {
           if (/EMAIL_EXISTS|INVALID_EMAIL|MISSING_EMAIL|WEAK_PASSWORD|TOO_MANY/.test(String(err && err.message))) throw err;
           return viaNew();
         })
       : viaNew();
-    return p.then(function (j) { storeAuthFrom(j, email); });
+    return p.then(function (j) {
+      var na = storeAuthFrom(j, email, name);
+      // Ad, bağlama cevabında gelmeyebilir: ayrıca profile yazılır.
+      if (name && j.displayName !== name) return cloudSetName(name).catch(function () {}).then(function () { return na; });
+      return na;
+    });
   }
   function cloudSignIn(email, pass) {
     return authCall("signInWithPassword", { email: email, password: pass, returnSecureToken: true })
-      .then(function (j) { storeAuthFrom(j, email); });
+      .then(function (j) { storeAuthFrom(j, email, j.displayName || null); });
+  }
+  function cloudSetName(name) {
+    return getIdToken().then(function (a) {
+      return authCall("update", { idToken: a.idToken, displayName: name, returnSecureToken: false }).then(function () {
+        var cur = loadAuth(); if (cur) { cur.name = name; saveAuth(cur); }
+      });
+    });
   }
   function cloudSignOut() {
     clearTimeout(cloudPushTimer);
@@ -8529,14 +8648,20 @@
   }
 
   // --- Görünüm ---
+  function userInitials(u) {
+    if (u && u.name) return initials(u.name);
+    return String((u && u.email) || "?").charAt(0).toLocaleUpperCase("tr");
+  }
+  // Sol üst: girişte baş harfler; yalnızca eşitlenirken ya da bağlantı yokken küçük bir nokta.
   function acctChipHtml() {
-    if (!cloudUser()) return '<button class="acct-chip out" id="acctChip" type="button">' + t("acChipIn") + '</button>';
-    return '<button class="acct-chip" id="acctChip" type="button">' + acctChipInner() + '</button>';
+    var u = cloudUser();
+    if (!u) return '<button class="acct-chip out" id="acctChip" type="button">' + t("acChipIn") + '</button>';
+    return '<button class="acct-av" id="acctChip" type="button" aria-label="' + escapeAttr(t("acTitle")) + '">' + acctChipInner() + '</button>';
   }
   function acctChipInner() {
     var st = cloudStatus;
-    return '<span class="cdot' + (st === "syncing" ? " sync" : st === "offline" ? " off" : "") + '"></span>' +
-      escapeHtml(t(st === "syncing" ? "acChipSync" : st === "offline" ? "acChipOff" : "acChipOk"));
+    return escapeHtml(userInitials(cloudUser())) +
+      (st === "syncing" || st === "offline" ? '<span class="cdot' + (st === "offline" ? " off" : " sync") + '"></span>' : '');
   }
   function acSyncLine() {
     if (cloudStatus === "syncing") return t("acSyncing");
@@ -8555,33 +8680,53 @@
     if (line) line.textContent = acSyncLine();
   }
 
-  var acctOpen = false, acctMsg = "", acctErr = false, acctBusy = false, acctDelArm = false, acctEmail = "";
-  function openAccount() { acctOpen = true; acctMsg = ""; acctErr = false; acctDelArm = false; render(); }
+  var acctOpen = false, acctMsg = "", acctErr = false, acctBusy = false, acctDelArm = false;
+  var acctMode = "login";           // "login" | "signup"
+  var acctEmail = "", acctName = "", acctNameEdit = false;
+  function openAccount() { acctOpen = true; acctMode = "login"; acctMsg = ""; acctErr = false; acctDelArm = false; acctNameEdit = false; render(); }
   function renderAccount() {
     var u = cloudUser();
-    var html = navBarHtml("acBack", t("acTitle"), "", ykOpen ? t("ykTitle") : t("homeBack")) + '<main class="ev-main yk-main">';
+    var html = navBarHtml("acBack", u ? "" : t(acctMode === "signup" ? "acHeadSignup" : "acTitle"), "", ykOpen ? t("ykTitle") : t("homeBack")) + '<main class="ev-main yk-main">';
     var status = '<div class="share-status' + (acctErr ? ' err' : '') + '" id="acStatus">' + escapeHtml(acctMsg) + '</div>';
-    if (!u) {
+    var dis = acctBusy ? ' disabled' : '';
+    if (!u && acctMode === "signup") {
+      html += '<div><h1 class="ev-h1" style="margin:0 0 6px">' + t("acHeadSignup") + '</h1><p class="yk-note">' + escapeHtml(t("acSignupWhy")) + '</p></div>' +
+        '<div class="yk-form">' +
+          '<div class="field"><label for="acName">' + t("acName") + '</label><input id="acName" type="text" autocomplete="name" autocapitalize="words" maxlength="60" placeholder="' + escapeAttr(t("acNamePh")) + '" value="' + escapeAttr(acctName) + '"></div>' +
+          '<div class="field"><label for="acEmail">' + t("acEmail") + '</label><input id="acEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120" value="' + escapeAttr(acctEmail) + '"></div>' +
+          '<div class="field"><label for="acPass">' + t("acNewPass") + '</label><input id="acPass" type="password" autocomplete="new-password" maxlength="128"></div>' +
+          '<button class="btn-primary" id="acCreate" type="button" style="margin-top:0"' + dis + '>' + (acctBusy ? t("acWorking") : t("acCreate")) + '</button>' +
+          status +
+        '</div>' +
+        '<button class="hub-link" id="acToLogin" type="button" style="align-self:center;margin-top:0">' + t("acToLogin") + '</button>' +
+        '<p class="yk-note">' + escapeHtml(t("acNote")) + '</p>';
+    } else if (!u) {
       html += '<div><h1 class="ev-h1" style="margin:0 0 6px">' + t("acHeadOut") + '</h1><p class="yk-note">' + escapeHtml(t("acWhy")) + '</p></div>' +
         '<div class="yk-form">' +
           '<div class="field"><label for="acEmail">' + t("acEmail") + '</label><input id="acEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120" value="' + escapeAttr(acctEmail) + '"></div>' +
-          '<div class="field"><label for="acPass">' + t("acPass") + '</label><input id="acPass" type="password" autocomplete="current-password" maxlength="128"></div>' +
-          '<div class="ac-actions">' +
-            '<button class="btn-primary" id="acLogin" type="button"' + (acctBusy ? ' disabled' : '') + '>' + (acctBusy ? t("acWorking") : t("acLogin")) + '</button>' +
-            '<button class="csv-btn" id="acSignup" type="button"' + (acctBusy ? ' disabled' : '') + '>' + t("acSignup") + '</button>' +
-          '</div>' + status +
-          '<button class="share-close" id="acReset" type="button">' + t("acForgot") + '</button>' +
+          '<div class="field"><label for="acPass">' + t("acPassLogin") + '</label><input id="acPass" type="password" autocomplete="current-password" maxlength="128"></div>' +
+          '<button class="btn-primary" id="acLogin" type="button" style="margin-top:0"' + dis + '>' + (acctBusy ? t("acWorking") : t("acLogin")) + '</button>' +
+          status +
+          '<button class="share-close" id="acReset" type="button" style="align-self:center">' + t("acForgot") + '</button>' +
         '</div>' +
-        '<p class="yk-note">' + escapeHtml(t("acNote")) + '</p>';
+        '<div class="ac-switch"><span>' + t("acNoAccount") + '</span><button class="csv-btn" id="acToSignup" type="button">' + t("acOpenNew") + '</button></div>';
     } else {
-      html += '<div><h1 class="ev-h1" style="margin:0">' + t("acHeadIn") + '</h1></div>' +
-        '<div class="ac-card"><span class="pl-av">☁</span><div style="min-width:0">' +
-          '<div class="ac-email">' + escapeHtml(u.email) + '</div>' +
-          '<div class="ac-sync" id="acSyncLine">' + escapeHtml(acSyncLine()) + '</div></div></div>' +
-        '<div class="ac-actions">' +
-          '<button class="btn-primary" id="acSync" type="button"' + (acctBusy ? ' disabled' : '') + '>' + (acctBusy ? t("acWorking") : t("acSyncNow")) + '</button>' +
-          '<button class="csv-btn" id="acLogout" type="button">' + t("acLogout") + '</button>' +
-        '</div>' + status +
+      var title = u.name || u.email;
+      html += '<div class="pl-head" style="margin:0"><span class="pl-av big">' + escapeHtml(userInitials(u)) + '</span><div style="min-width:0">' +
+          '<h1 class="ev-h1" style="margin:0;overflow-wrap:anywhere">' + escapeHtml(title) + '</h1>' +
+          (u.name ? '<div class="pl-sub" style="overflow-wrap:anywhere">' + escapeHtml(u.email) + '</div>' : '') +
+          '<div class="pl-sub" id="acSyncLine">' + escapeHtml(acSyncLine()) + '</div>' +
+          (acctNameEdit ? '' : '<button class="ev-more" id="acEditName" type="button" style="margin-top:6px">' + t(u.name ? "acEditName" : "acAddName") + '</button>') +
+        '</div></div>';
+      if (acctNameEdit) {
+        html += '<div class="yk-edit"><label class="yk-note" for="acNameInput">' + t("acName") + '</label>' +
+          '<div class="pl-addrow" style="margin:0"><input id="acNameInput" type="text" autocomplete="name" autocapitalize="words" maxlength="60" placeholder="' + escapeAttr(t("acNamePh")) + '" value="' + escapeAttr(u.name || "") + '">' +
+          '<button class="btn-primary" id="acNameSave" type="button"' + dis + '>' + t("ykSave") + '</button></div>' +
+          '<button class="share-close" id="acNameCancel" type="button" style="align-self:flex-start;padding:4px 0">' + t("cancel") + '</button></div>';
+      }
+      html += status +
+        '<button class="csv-btn" id="acLogout" type="button" style="margin-top:0">' + t("acLogout") + '</button>' +
+        '<button class="share-close" id="acSync" type="button" style="align-self:center"' + dis + '>' + (acctBusy ? t("acWorking") : t("acSyncNow")) + '</button>' +
         '<p class="yk-note">' + escapeHtml(t("acInNote")) + '</p>' +
         '<div class="reset-row" style="margin-top:8px"><button id="acDelete" type="button"' + (acctDelArm ? ' style="border-color:var(--clay);color:var(--clay);font-weight:600"' : '') + '>' +
           t(acctDelArm ? "acDeleteSure" : "acDelete") + '</button></div>';
@@ -8590,31 +8735,64 @@
   }
   function bindAccount() {
     var el;
-    var readEmail = function () { var e = document.getElementById("acEmail"); acctEmail = e ? e.value.trim() : acctEmail; return acctEmail; };
-    var readPass = function () { var p = document.getElementById("acPass"); return p ? p.value : ""; };
+    var val = function (id) { var e = document.getElementById(id); return e ? e.value : ""; };
+    var keep = function () {
+      if (document.getElementById("acEmail")) acctEmail = val("acEmail").trim();
+      if (document.getElementById("acName")) acctName = val("acName");
+    };
     var fail = function (err) { acctBusy = false; acctErr = true; acctMsg = authErrorText(err); render(); };
     var done = function () {
-      acctBusy = false; acctErr = false; acctMsg = "";
+      acctBusy = false; acctErr = false; acctMsg = ""; acctName = "";
       return cloudPull().then(function (changed) { if (changed) cloudReload(); else render(); });
     };
-    if ((el = document.getElementById("acBack"))) el.onclick = function () { acctOpen = false; acctMsg = ""; acctDelArm = false; render(); };
-    var go = function (fn) {
-      var email = readEmail(), pass = readPass();
-      if (!email || !pass) { acctErr = true; acctMsg = t("acNeedBoth"); render(); return; }
-      acctBusy = true; acctMsg = ""; render();
-      fn(email, pass).then(done, fail);
+    var showErr = function (msg) { acctErr = true; acctMsg = msg; render(); };
+    if ((el = document.getElementById("acBack"))) el.onclick = function () {
+      if (!cloudUser() && acctMode === "signup") { keep(); acctMode = "login"; acctMsg = ""; render(); return; }
+      acctOpen = false; acctMsg = ""; acctDelArm = false; acctNameEdit = false; render();
     };
-    if ((el = document.getElementById("acLogin"))) el.onclick = function () { go(cloudSignIn); };
-    if ((el = document.getElementById("acSignup"))) el.onclick = function () { go(cloudSignUp); };
-    if ((el = document.getElementById("acPass"))) el.onkeydown = function (e) { if (e.key === "Enter") go(cloudSignIn); };
+    var login = function () {
+      keep(); var pass = val("acPass");
+      if (!acctEmail || !pass) { showErr(t("acNeedBoth")); return; }
+      acctBusy = true; acctMsg = ""; render();
+      cloudSignIn(acctEmail, pass).then(done, fail);
+    };
+    var create = function () {
+      keep(); var pass = val("acPass"), name = cleanPersonName(acctName);
+      if (!name) { showErr(t("acNeedName")); return; }
+      if (!acctEmail || !pass) { showErr(t("acNeedBoth")); return; }
+      acctBusy = true; acctMsg = ""; render();
+      cloudSignUp(acctEmail, pass, name).then(done, fail);
+    };
+    if ((el = document.getElementById("acLogin"))) el.onclick = login;
+    if ((el = document.getElementById("acCreate"))) el.onclick = create;
+    if ((el = document.getElementById("acToSignup"))) el.onclick = function () {
+      keep(); acctMode = "signup"; acctMsg = ""; acctErr = false; render();
+      var n = document.getElementById("acName"); if (n) n.focus();
+    };
+    if ((el = document.getElementById("acToLogin"))) el.onclick = function () { keep(); acctMode = "login"; acctMsg = ""; acctErr = false; render(); };
+    if ((el = document.getElementById("acName"))) el.onkeydown = function (e) { if (e.key === "Enter") { var m = document.getElementById("acEmail"); if (m) m.focus(); } };
     if ((el = document.getElementById("acEmail"))) el.onkeydown = function (e) { if (e.key === "Enter") { var p = document.getElementById("acPass"); if (p) p.focus(); } };
+    if ((el = document.getElementById("acPass"))) el.onkeydown = function (e) { if (e.key === "Enter") (acctMode === "signup" ? create : login)(); };
     if ((el = document.getElementById("acReset"))) el.onclick = function () {
-      var email = readEmail();
-      if (!email) { acctErr = true; acctMsg = t("acNeedEmail"); render(); return; }
-      authCall("sendOobCode", { requestType: "PASSWORD_RESET", email: email }).then(function () {
+      keep();
+      if (!acctEmail) { showErr(t("acNeedEmail")); return; }
+      authCall("sendOobCode", { requestType: "PASSWORD_RESET", email: acctEmail }).then(function () {
         acctErr = false; acctMsg = t("acResetSent"); render();
       }, fail);
     };
+    if ((el = document.getElementById("acEditName"))) el.onclick = function () {
+      acctNameEdit = true; acctMsg = ""; render();
+      var n = document.getElementById("acNameInput"); if (n) n.focus();
+    };
+    if ((el = document.getElementById("acNameCancel"))) el.onclick = function () { acctNameEdit = false; render(); };
+    var saveName = function () {
+      var name = cleanPersonName(val("acNameInput"));
+      if (!name) { showErr(t("acNeedName")); return; }
+      acctBusy = true; render();
+      cloudSetName(name).then(function () { acctBusy = false; acctNameEdit = false; acctErr = false; acctMsg = ""; render(); }, fail);
+    };
+    if ((el = document.getElementById("acNameSave"))) el.onclick = saveName;
+    if ((el = document.getElementById("acNameInput"))) el.onkeydown = function (e) { if (e.key === "Enter") saveName(); };
     if ((el = document.getElementById("acSync"))) el.onclick = function () {
       acctBusy = true; acctMsg = ""; render();
       cloudPull().then(function (changed) {
@@ -8625,12 +8803,12 @@
         render();
       });
     };
-    if ((el = document.getElementById("acLogout"))) el.onclick = function () { cloudSignOut(); acctDelArm = false; acctMsg = ""; render(); };
+    if ((el = document.getElementById("acLogout"))) el.onclick = function () { cloudSignOut(); acctMode = "login"; acctDelArm = false; acctMsg = ""; render(); };
     if ((el = document.getElementById("acDelete"))) el.onclick = function () {
       if (!acctDelArm) { acctDelArm = true; render(); return; }
       acctBusy = true; render();
       cloudDeleteAccount().then(function () {
-        acctBusy = false; acctDelArm = false; acctErr = false; acctMsg = t("acDeleted"); render();
+        acctBusy = false; acctDelArm = false; acctErr = false; acctMsg = t("acDeleted"); acctMode = "login"; render();
       }, function (err) { acctDelArm = false; fail(err); });
     };
   }
