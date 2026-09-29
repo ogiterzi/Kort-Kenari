@@ -1,0 +1,44 @@
+# Turnuva takvimini her gün bir kez ikort.com.tr'den günceller.
+# Elle çalıştırmak için: GitHub > Actions > "Turnuva takvimi" > Run workflow
+name: Turnuva takvimi
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # her gün 06:17 (Türkiye saati)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: takvim
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bağımlılıklar
+        run: pip install requests beautifulsoup4
+
+      - name: Takvimi oluştur
+        run: python scripts/takvim_guncelle.py
+
+      - name: Değişikliği kaydet
+        run: |
+          git config user.name "courtside-takvim"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/takvim.json
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "Turnuva takvimi: $(date -u +%Y-%m-%d)"
+            git push
+          fi
