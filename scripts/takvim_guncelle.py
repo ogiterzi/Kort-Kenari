@@ -140,11 +140,30 @@ def parse_detail(html):
     soup = BeautifulSoup(html, "html.parser")
     text = clean(soup.get_text(" "))
     info = {}
-    m = re.search(r"Turnuva tarihi\s*:?\s*(.{0,60})", text, re.I)
-    dates = parse_dates(m.group(1)) if m else []
+    # 1) "Turnuva tarihi: 24 Eylül 2026 - 04 Ekim 2026"
+    dates = []
+    for m in re.finditer(r"Turnuva tarihi\s*:?\s*(.{0,120})", text, re.I):
+        dates = parse_dates(m.group(1))[:2]
+        if dates:
+            break
     if dates:
         info["start"] = dates[0]
-        info["end"] = dates[-1]
+        info["end"] = max(dates)
+    # 2) "Tarihler" bölümü: "Tarihi 24-09-2026 (39)" / "Bitiş Tarihi 04-10-2026 (40)"
+    num = lambda d, mo, y: dt.date(int(y), int(mo), int(d)).isoformat()
+    m = re.search(r"Bitiş Tarihi\s*:?\s*(\d{1,2})[-./](\d{1,2})[-./](\d{4})", text, re.I)
+    if m:
+        info["end"] = max(info.get("end", ""), num(*m.groups()))
+    m = re.search(r"(?<!Bitiş )(?<!Eleme )(?<!Son Kayıt )\bTarihi\s*:?\s*(\d{1,2})[-./](\d{1,2})[-./](\d{4})", text)
+    if m and "start" not in info:
+        info["start"] = num(*m.groups())
+    m = re.search(r"Son Kayıt Tarihi\s*:?\s*(\d{1,2})[-./](\d{1,2})[-./](\d{4})", text, re.I)
+    if m:
+        try:
+            info["deadline"] = num(*m.groups())
+        except ValueError:
+            pass
+    info["debug"] = " | ".join(clean(x.group(0))[:140] for x in re.finditer(r"(Turnuva tarihi|Bitiş Tarihi).{0,100}", text, re.I))[:400]
     m = re.search(r"Oynanacak Zemin Türü\s+([A-Za-zÇĞİÖŞÜçğıöşü ]+?Zemin)", text)
     if m:
         info["surface"] = clean(m.group(1))
@@ -233,8 +252,13 @@ def main():
         d = parse_detail(detail_html) if detail_html else {"groups": []}
         start = d.get("start") or r["start"]
         end = d.get("end")
-        if not end and start:  # detay okunamadıysa: turnuvalar genelde ≤ 1 hafta sürer
-            end = (dt.date.fromisoformat(start) + dt.timedelta(days=7)).isoformat()
+        if (not end or end <= start) and start:
+            # Bitiş okunamadıysa türe göre tahmin: hafta sonu 3 gün, seri/kategori 5 gün, T-masters 10 gün.
+            cat = tr_lower(r["category"] + " " + r["name"])
+            days = 2 if "haftasonu" in cat or "hafta sonu" in cat else (9 if re.search(r"\bt\d00\b", cat) else 4)
+            end = (dt.date.fromisoformat(start) + dt.timedelta(days=days)).isoformat()
+            if i < 3:
+                print("  (bitiş tahmini) detay:", d.get("debug", "-"), file=sys.stderr)
         if not start or end < today.isoformat():
             continue  # bitmiş turnuva
         name = r["name"]
@@ -247,6 +271,7 @@ def main():
             "city": r["city"],
             "category": r["category"],
             "surface": d.get("surface", ""),
+            "deadline": d.get("deadline", ""),
             "ages": ages_from([name, r["category"]] + d["groups"]),
             "cancelled": "iptal" in tr_lower(name),
             "url": f"{BASE}/turnuva-detay/{r['id']}",
