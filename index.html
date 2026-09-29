@@ -1665,6 +1665,15 @@
   .cal-dl.hot { background: rgba(214, 120, 60, .16); border-color: rgba(214, 120, 60, .55); color: #E08A4E; }
   .cal-dl.closed { color: var(--text-dim); opacity: .8; text-decoration: line-through; }
   .cal-favsec { color: var(--brass); }
+  .cal-side { flex: none; display: flex; flex-direction: column; align-items: center; }
+  .cal-ann { width: 40px; height: 36px; border: none; background: none; font-size: 19px; line-height: 1; cursor: pointer; border-radius: 50%; }
+  .cal-ann:active { transform: scale(.88); }
+  .cal-msg { width: 100%; box-sizing: border-box; min-height: 260px; margin: 10px 0 12px; padding: 12px; border-radius: 12px; border: 1px solid var(--hairline); background: var(--panel-2); color: var(--text); font-family: inherit; font-size: 14.5px; line-height: 1.45; resize: vertical; }
+  .cal-msg-acts { display: flex; gap: 8px; }
+  .cal-msg-acts > * { flex: 1; text-align: center; text-decoration: none; }
+  .cal-wa { display: block; padding: 13px; border-radius: 12px; background: #25D366; color: #fff; font-weight: 700; font-size: 15px; }
+  .cal-copy { padding: 13px; border-radius: 12px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .cal-msg-close { display: block; width: 100%; margin-top: 10px; padding: 10px; border: none; background: none; color: var(--text-dim); font-family: inherit; font-size: 14px; cursor: pointer; }
   .cal-card.off { opacity: .55; }
   .cal-date { flex: none; width: 50px; padding: 6px 0 5px; border-radius: 12px; background: var(--panel-2); border: 1px solid var(--hairline); text-align: center; line-height: 1.1; }
   .cal-day { display: block; font-family: 'Fraunces', serif; font-size: 20px; font-weight: 700; color: var(--brass); }
@@ -2409,7 +2418,7 @@
     calM: "Masters", calYB: "Yeni başlayan", calCount: "{n} turnuva", calNow: "Devam eden",
     calNone: "Bu filtrelerde yaklaşan turnuva yok.", calAllCities: "Tüm şehirler", calCitiesMore: "{a} +{n}", calClear: "Temizle", calDone: "Tamam", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
     calLoading: "Takvim yükleniyor…", calErr: "Takvim alınamadı. İnternet bağlantını kontrol et.",
-    calOld: "İnternet yok; son kaydedilen takvim gösteriliyor.", calCancelled: "İPTAL", calFavs: "★ Takip ettiklerim", calFollow: "Takip et", calUnfollow: "Takibi bırak",
+    calOld: "İnternet yok; son kaydedilen takvim gösteriliyor.", calCancelled: "İPTAL", calAnn: "Duyuru mesajı", calAnnHint: "Göndermeden önce metni düzenleyebilirsin.", calAnnWa: "WhatsApp'ta gönder", calAnnCopy: "Kopyala", calAnnCopied: "Kopyalandı ✓", calAnnClose: "Kapat", calFavs: "★ Takip ettiklerim", calFollow: "Takip et", calUnfollow: "Takibi bırak",
     calDlClosed: "Kayıt kapandı", calDlToday: "Kayıt bugün kapanıyor", calDlTomorrow: "Kayıt yarın kapanıyor",
     calDlDays: "Kayıt {n} gün sonra kapanıyor", calDlOn: "Son kayıt {d}",
     calSource: "Kaynak: TTF i-Kort · Son güncelleme {d}", calRefresh: "Yenile", calTap: "Ayrıntılar ve fikstür için turnuvaya, takibe almak için ☆ işaretine dokun."
@@ -2420,7 +2429,7 @@
     calM: "Masters", calYB: "Beginners", calCount: "{n} tournaments", calNow: "In progress",
     calNone: "No upcoming tournaments for these filters.", calAllCities: "All cities", calCitiesMore: "{a} +{n}", calClear: "Clear", calDone: "Done", calEmpty: "The calendar isn't ready yet. Try again a little later.",
     calLoading: "Loading calendar…", calErr: "Couldn't load the calendar. Check your internet connection.",
-    calOld: "Offline; showing the last saved calendar.", calCancelled: "CANCELLED", calFavs: "★ Following", calFollow: "Follow", calUnfollow: "Unfollow",
+    calOld: "Offline; showing the last saved calendar.", calCancelled: "CANCELLED", calAnn: "Announcement", calAnnHint: "You can edit the text before sending.", calAnnWa: "Send on WhatsApp", calAnnCopy: "Copy", calAnnCopied: "Copied ✓", calAnnClose: "Close", calFavs: "★ Following", calFollow: "Follow", calUnfollow: "Unfollow",
     calDlClosed: "Entries closed", calDlToday: "Entries close today", calDlTomorrow: "Entries close tomorrow",
     calDlDays: "Entries close in {n} days", calDlOn: "Entry deadline {d}",
     calSource: "Source: TTF i-Kort · Last updated {d}", calRefresh: "Refresh", calTap: "Tap a tournament for details and draws, or ☆ to follow it."
@@ -6772,7 +6781,69 @@
     if (k === -1) calFavs.push(id); else calFavs.splice(k, 1);
     try { localStorage.setItem(CAL_FAV_KEY, JSON.stringify(calFavs)); } catch (e) {}
   }
-  var calCities = [], calCityOpen = false;
+  var calCities = [], calCityOpen = false, calAnnId = null;
+  // Duyuru (📣) yalnızca izinli hesaplarda görünür. E-posta açık yazılmaz: küçük harfli
+  // adresin özeti tutulur. Yeni bir hesap eklemek için: calHash("adres@ornek.com") sonucunu listeye ekle.
+  var CAL_ANN_ALLOWED = [7613280157632713, 8326836595582892];
+  function calHash(str) { // cyrb53
+    var h1 = 0xdeadbeef, h2 = 0x41c6ce57, ch;
+    for (var i = 0; i < str.length; i++) {
+      ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+  }
+  function calCanAnnounce() {
+    var u = cloudUser();
+    return !!(u && u.email && CAL_ANN_ALLOWED.indexOf(calHash(String(u.email).trim().toLowerCase())) !== -1);
+  }
+  // WhatsApp turnuva grubu duyurusu (antrenörün şablonu; her zaman Türkçe).
+  function calTitleCase(v) {
+    return String(v || "").toLocaleLowerCase("tr-TR").replace(/(^|[\s(\-\/.])(\S)/g, function (all, pre, ch) { return pre + ch.toLocaleUpperCase("tr-TR"); });
+  }
+  function calLongDate(iso, withDay) {
+    var o = { day: "numeric", month: "long", year: "numeric" };
+    if (withDay) o.weekday = "long";
+    return calDate(iso).toLocaleDateString("tr-TR", o);
+  }
+  function calAnnText(tr) {
+    var place = [tr.club ? calTitleCase(tr.club) : "", tr.city ? calTitleCase(tr.city) : ""].filter(Boolean).join(", ");
+    var surface = String(tr.surface || "").replace(/\s*Zemin\s*$/i, "");
+    var a = calDate(tr.start), b = calDate(tr.end || tr.start), range;
+    if (!tr.end || tr.end === tr.start) range = calLongDate(tr.start);
+    else if (a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()) range = a.getDate() + "–" + calLongDate(tr.end);
+    else if (a.getFullYear() === b.getFullYear()) range = a.toLocaleDateString("tr-TR", { day: "numeric", month: "long" }) + " – " + calLongDate(tr.end);
+    else range = calLongDate(tr.start) + " – " + calLongDate(tr.end);
+    return "🎾 Turnuva Duyuru\n\n" +
+      "🏆 Turnuva: " + tr.name + "\n\n" +
+      "📍 Konum: " + (place || "-") + "\n\n" +
+      "🏟️ Kort Zemin: " + (surface || "-") + "\n\n" +
+      "🗓️ Turnuva Tarihi: " + range + "\n\n" +
+      "⏳ Son Kayıt Tarihi: " + (tr.deadline ? calLongDate(tr.deadline, true) : "-") + "\n\n" +
+      "⚠️ Lütfen kayıtlarınızı son tarihten önce i-Kort üzerinden tamamlayın. Planlama için turnuvaya katılacak oyuncuların bana özelden bilgi vermesini rica ederim.";
+  }
+  function calFindTour(id) {
+    var list = (calData && calData.tournaments) || [];
+    for (var i = 0; i < list.length; i++) if (String(list[i].id) === String(id)) return list[i];
+    return null;
+  }
+  function renderCalAnn() {
+    var tr = calAnnId && calCanAnnounce() && calFindTour(calAnnId);
+    if (!tr) return "";
+    var txt = calAnnText(tr);
+    return '<div class="zone-modal" id="calAnnModal"><div class="zone-card" style="text-align:left">' +
+      '<p class="actor-q" style="margin:4px 0 2px">' + escapeHtml(t("calAnn")) + '</p>' +
+      '<p class="cal-meta" style="margin:0">' + escapeHtml(t("calAnnHint")) + '</p>' +
+      '<textarea class="cal-msg" id="calMsg">' + escapeHtml(txt) + '</textarea>' +
+      '<div class="cal-msg-acts">' +
+        '<a class="cal-wa" id="calWa" href="https://wa.me/?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">' + escapeHtml(t("calAnnWa")) + '</a>' +
+        '<button class="cal-copy" id="calCopy" type="button">' + escapeHtml(t("calAnnCopy")) + '</button>' +
+      '</div>' +
+      '<button class="cal-msg-close" id="calAnnClose" type="button">' + escapeHtml(t("calAnnClose")) + '</button>' +
+    '</div></div>';
+  }
   try {
     var rawC = localStorage.getItem(CAL_CITY_KEY) || "";
     calCities = rawC.charAt(0) === "[" ? JSON.parse(rawC) : (rawC ? [rawC] : []);
@@ -6867,8 +6938,10 @@
         '<span class="cal-meta" style="display:block">' + escapeHtml(meta2) + '</span>' +
         (ages ? '<span class="cal-ages">' + ages + '</span>' : '') +
       '</span></a>' +
-      '<button class="cal-star" type="button" data-calfav="' + escapeAttr(tr.id) + '" aria-pressed="' + fav + '" aria-label="' +
-        escapeAttr(t(fav ? "calUnfollow" : "calFollow")) + '">' + (fav ? '★' : '☆') + '</button></div>';
+      '<span class="cal-side"><button class="cal-star" type="button" data-calfav="' + escapeAttr(tr.id) + '" aria-pressed="' + fav + '" aria-label="' +
+        escapeAttr(t(fav ? "calUnfollow" : "calFollow")) + '">' + (fav ? '★' : '☆') + '</button>' +
+      (tr.cancelled || !calCanAnnounce() ? '' : '<button class="cal-ann" type="button" data-calann="' + escapeAttr(tr.id) + '" aria-label="' + escapeAttr(t("calAnn")) + '">📣</button>') +
+      '</span></div>';
   }
   function renderCalendar() {
     var html = navBarHtml("calBack", t("calTitle")) + '<main class="ev-main">';
@@ -6932,11 +7005,11 @@
     html += '<div class="cal-foot">' + (list.length ? escapeHtml(t("calTap")) + '<br>' : '') + escapeHtml(t("calSource", { d: updTxt })) +
       '<br><button class="cal-refresh" id="calRefresh" type="button"' + (calLoading ? ' disabled' : '') + '>' +
       escapeHtml(t(calLoading ? "calLoading" : "calRefresh")) + '</button></div>';
-    return html + '</main>';
+    return html + '</main>' + renderCalAnn();
   }
   function bindCalendar() {
     var el, i, list;
-    if ((el = document.getElementById("calBack"))) el.onclick = function () { calOpen = false; calCityOpen = false; render(); };
+    if ((el = document.getElementById("calBack"))) el.onclick = function () { calOpen = false; calCityOpen = false; calAnnId = null; render(); };
     if ((el = document.getElementById("calRefresh"))) el.onclick = function () { calLoad(); render(); };
     if ((el = document.getElementById("calCityBtn"))) el.onclick = function () { calCityOpen = !calCityOpen; render(); };
     if ((el = document.getElementById("calCityDone"))) el.onclick = function () { calCityOpen = false; render(); };
@@ -6946,6 +7019,23 @@
       e.preventDefault(); e.stopPropagation();
       calToggleFav(this.getAttribute("data-calfav"));
       var y = window.scrollY; render(); try { window.scrollTo(0, y); } catch (er) {}
+    };
+    list = app.querySelectorAll("[data-calann]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function (e) {
+      e.preventDefault(); e.stopPropagation();
+      calAnnId = this.getAttribute("data-calann");
+      var y = window.scrollY; render(); try { window.scrollTo(0, y); } catch (er) {}
+    };
+    var closeAnn = function () { calAnnId = null; var y = window.scrollY; render(); try { window.scrollTo(0, y); } catch (er) {} };
+    if ((el = document.getElementById("calAnnClose"))) el.onclick = closeAnn;
+    if ((el = document.getElementById("calAnnModal"))) el.onclick = function (e) { if (e.target === this) closeAnn(); };
+    if ((el = document.getElementById("calMsg"))) el.oninput = function () {
+      var wa = document.getElementById("calWa");
+      if (wa) wa.href = "https://wa.me/?text=" + encodeURIComponent(this.value);
+    };
+    if ((el = document.getElementById("calCopy"))) el.onclick = function () {
+      var btn = this, ta = document.getElementById("calMsg");
+      copyText(ta ? ta.value : "", ta).then(function () { btn.textContent = t("calAnnCopied"); }, function () {});
     };
     list = app.querySelectorAll("[data-calc]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
