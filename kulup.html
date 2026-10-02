@@ -94,12 +94,37 @@
   @media (max-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
   /* Antrenör ve grup */
-  .coach { margin-top: 26px; }
   .coachhead { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
   .av { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--brass); color: #1B140A; font-weight: 700; font-size: 14px; }
   .coachhead .t { flex: 1; min-width: 0; }
   .coachhead .t b { display: block; font-size: 16px; }
   .coachhead .t span { font-size: 12.5px; color: var(--dim); }
+  .coach { margin-top: 12px; }
+  .coachtog { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; color: var(--text); }
+  .coachtog:hover { border-color: var(--brass-dim); }
+  .coach.open .coachtog { border-color: var(--brass-dim); }
+  .coachtog .t { flex: 1; min-width: 0; }
+  .coachtog .t b { display: block; font-size: 16px; }
+  .coachtog .t span { font-size: 12.5px; color: var(--dim); }
+  .nums { display: flex; gap: 18px; flex: none; }
+  .nums div { text-align: right; line-height: 1.15; }
+  .nums b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-variant-numeric: tabular-nums; }
+  .nums span { font-size: 11px; color: var(--dim); }
+  .chev { flex: none; width: 9px; height: 9px; border-right: 2px solid var(--dim); border-bottom: 2px solid var(--dim); transform: rotate(45deg) translate(-2px, -2px); transition: transform .18s ease; margin: 0 4px; }
+  .open > .coachtog .chev, .open > .grouptog .chev { transform: rotate(-135deg) translate(-2px, -2px); border-color: var(--brass); }
+  .coachbody { padding: 10px 0 4px 16px; border-left: 2px solid var(--line); margin: 8px 0 6px 19px; }
+  .grouptog { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: none; border: none; padding: 13px 16px; color: var(--text); }
+  .grouptog:hover h3 { color: var(--brass); }
+  .grouptog .gt { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .group.open .grouptog { border-bottom: 1px solid var(--line); }
+  .group.open .grouptog h3 { color: var(--brass); }
+  .ratebar { display: inline-block; width: 46px; height: 6px; border-radius: 3px; background: var(--panel-2); vertical-align: middle; margin-right: 6px; overflow: hidden; }
+  .ratebar i { display: block; height: 100%; background: var(--on1); }
+  .hint { font-size: 12.5px; color: var(--dim); margin: 0 0 4px; }
+  @media (max-width: 640px) {
+    .nums { gap: 12px; } .nums .hide-s { display: none; }
+    .coachbody { margin-left: 4px; padding-left: 10px; }
+  }
   .group { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
   .grouphead { display: flex; align-items: baseline; gap: 12px; padding: 14px 16px 10px; flex-wrap: wrap; }
   .grouphead h3 { font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600; margin: 0; }
@@ -293,7 +318,9 @@
     month: ymd(new Date()).slice(0, 7),
     fCoach: "", fGroup: "",
     joinOpen: false,
-    kid: null              // açık öğrenci takvimi: {uid, gid, name}
+    kid: null,             // açık öğrenci takvimi: {uid, gid, name}
+    openCoaches: {},       // açık antrenörler
+    openGroups: {}         // açık gruplar: "uid|gid"
   };
 
   // ---------- Yükleme ----------
@@ -510,10 +537,19 @@
       '<div class="tile"><div class="n">' + nSess + '</div><div class="l">Bu ay yapılan antrenman</div></div>' +
     '</div>';
 
-    visibleCoaches().forEach(function (co) {
+    var vc = visibleCoaches();
+    html += '<p class="hint">Ayrıntı için antrenöre, sonra gruba, takvim için öğrencinin adına tıkla.</p>';
+    vc.forEach(function (co) {
       var groups = visibleGroups(co);
-      html += '<section class="coach"><div class="coachhead"><span class="av">' + esc(initials(coachName(co))) + '</span><div class="t">' +
-        '<b>' + esc(coachName(co)) + '</b><span>' + esc([co.name && co.email ? co.email : "", co.syncedAt ? "Son güncelleme: " + fmtDateTime(co.syncedAt) : ""].filter(Boolean).join(" · ")) + '</span></div></div>';
+      var open = !!S.openCoaches[co.uid] || vc.length === 1;
+      var cs = coachSummary(co);
+      html += '<section class="coach' + (open ? ' open' : '') + '"><button class="coachtog" type="button" data-coachtog="' + esc(co.uid) + '" aria-expanded="' + open + '">' +
+        '<span class="av">' + esc(initials(coachName(co))) + '</span><span class="t">' +
+        '<b>' + esc(coachName(co)) + '</b><span>' + esc([co.name && co.email ? co.email : "", co.syncedAt ? "Son güncelleme: " + fmtDateTime(co.syncedAt) : (co.data ? "" : "Henüz yoklama yok")].filter(Boolean).join(" · ")) + '</span></span>' +
+        (cs ? '<span class="nums"><div class="hide-s"><b>' + cs.groups + '</b><span>grup</span></div><div class="hide-s"><b>' + cs.kids + '</b><span>öğrenci</span></div><div><b>' + cs.sessions + '</b><span>antrenman</span></div></span>' : '') +
+        '<span class="chev" aria-hidden="true"></span></button>';
+      if (!open) { html += '</section>'; return; }
+      html += '<div class="coachbody">';
       if (co.error) {
         html += '<div class="empty warn">Bu antrenörün yoklamaları okunamadı. Kulüpten ayrılmış olabilir; sayfayı yenile.</div>';
       } else if (!co.data) {
@@ -523,16 +559,33 @@
       } else {
         groups.forEach(function (g) { html += renderGroup(co, g); });
       }
-      html += '</section>';
+      html += '</div></section>';
     });
     return html;
   }
 
+  function coachSummary(co) {
+    if (!co.data) return null;
+    var o = { groups: 0, kids: 0, sessions: 0 };
+    visibleGroups(co).forEach(function (g) { o.groups++; o.kids += groupKids(g).length; o.sessions += groupMonth(co, g, S.month).sessions; });
+    return o;
+  }
+  function groupRate(gm) {
+    if (!gm.sessions || !gm.rows.length) return null;
+    var got = gm.rows.reduce(function (s, r) { return s + r.sessions; }, 0);
+    return Math.round(got / (gm.sessions * gm.rows.length) * 100);
+  }
   function renderGroup(co, g) {
-    var gm = groupMonth(co, g, S.month);
-    var html = '<div class="group"><div class="grouphead"><h3>' + esc(g.name) + '</h3>' +
-      (g.time ? '<span class="time">' + esc(g.time) + '</span>' : '') +
-      '<span class="sess"><b>' + gm.sessions + '</b>antrenman · ' + gm.activeDays.length + ' gün</span></div>';
+    var gm = groupMonth(co, g, S.month), key = co.uid + "|" + g.id;
+    var open = !!S.openGroups[key] || (S.fGroup && String(g.id) === S.fGroup);
+    var rate = groupRate(gm);
+    var html = '<div class="group' + (open ? ' open' : '') + '"><button class="grouptog" type="button" data-grouptog="' + esc(key) + '" aria-expanded="' + !!open + '">' +
+      '<span class="gt"><h3>' + esc(g.name) + '</h3>' + (g.time ? '<span class="time">' + esc(g.time) + '</span>' : '') + '</span>' +
+      '<span class="nums"><div class="hide-s"><b>' + gm.rows.length + '</b><span>öğrenci</span></div><div><b>' + gm.sessions + '</b><span>antrenman</span></div>' +
+        '<div><b>' + (rate === null ? '—' : '%' + rate) + '</b><span>ort. devam</span></div></span>' +
+      '<span class="chev" aria-hidden="true"></span></button>';
+    if (!open) return html + '</div>';
+    html += '<div class="grouphead" style="padding-top:10px"><span class="sess" style="margin-left:0"><b>' + gm.sessions + '</b>antrenman · ' + gm.activeDays.length + ' gün</span></div>';
     if (!gm.rows.length) return html + '<p class="note" style="padding:0 16px 14px">Bu grupta öğrenci yok.</p></div>';
     var rows = gm.rows.slice().sort(function (x, y) { return y.sessions - x.sessions || x.name.localeCompare(y.name, "tr"); });
     html += '<table><thead><tr><th>Öğrenci</th><th>Geldiği gün</th><th>Antrenman</th><th>Devam</th></tr></thead><tbody>' +
@@ -552,7 +605,7 @@
           return '<td><div class="cell' + (v ? " c" + v : "") + '" title="' + esc(n + " · " + d + " · " + (v === 2 ? "2 antrenman" : v === 1 ? "geldi" : "gelmedi")) + '">' + (v === 2 ? "2" : "") + '</div></td>';
         }).join("") + '</tr>';
       }).join("");
-      html += '<details><summary>Gün gün yoklama</summary><div class="gridwrap"><table class="dgrid"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>' +
+      html += '<details open><summary>Gün gün yoklama</summary><div class="gridwrap"><table class="dgrid"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>' +
         '<div class="legend"><span><i class="sw"></i>Gelmedi</span><span><i class="sw c1"></i>Geldi</span><span><i class="sw c2"></i>Aynı gün 2 antrenman</span></div></details>';
     }
     return html + '</div>';
@@ -715,6 +768,21 @@
       S.clubId = this.getAttribute("data-club"); S.fCoach = ""; S.fGroup = "";
       S.loading = true; render();
       loadClub(S.clubId).then(function () { S.loading = false; render(); window.scrollTo(0, 0); }, function (e) { S.loading = false; S.msg = authErr(e); S.err = true; render(); });
+    };
+    var keepY = function (fn) { var y = window.scrollY; fn(); render(); try { window.scrollTo(0, y); } catch (e) {} };
+    list = app.querySelectorAll("[data-coachtog]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var id = this.getAttribute("data-coachtog");
+      if (visibleCoaches().length === 1) return;
+      keepY(function () { S.openCoaches[id] = !S.openCoaches[id]; });
+    };
+    list = app.querySelectorAll("[data-grouptog]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var k = this.getAttribute("data-grouptog"), gid = k.split("|").slice(1).join("|");
+      keepY(function () {
+        if (S.fGroup && S.fGroup === gid) { S.fGroup = ""; S.openGroups[k] = false; return; }
+        S.openGroups[k] = !S.openGroups[k];
+      });
     };
     list = app.querySelectorAll("[data-kname]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
