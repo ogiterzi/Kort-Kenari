@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-01T13:17+03:00",
+ "updated": "2026-10-02T12:55+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "tournaments": [
   {
@@ -519,6 +519,20 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5742"
   },
   {
+   "id": "5787",
+   "name": "MERCEDES-BENZ CUP - ONE POINT",
+   "start": "2026-10-17",
+   "end": "2026-10-18",
+   "club": "TTF İSTİNYE KAMP MERKEZİ",
+   "city": "İSTANBUL AVRUPA",
+   "category": "Kategori 1",
+   "surface": "Toprak Zemin",
+   "deadline": "2026-10-11",
+   "ages": [],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5787"
+  },
+  {
    "id": "5784",
    "name": "CUMHURBAŞKANLIĞI TENİS KUPASI",
    "start": "2026-10-19",
@@ -774,22 +788,6 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5686"
   },
   {
-   "id": "5751",
-   "name": "14 Yaş Haftasonu Turnuvası",
-   "start": "2026-10-29",
-   "end": "2026-11-01",
-   "club": "GLOBAL SPOR KULÜBÜ",
-   "city": "İSTANBUL AVRUPA",
-   "category": "Haftasonu-A",
-   "surface": "Sert Zemin",
-   "deadline": "2026-10-20",
-   "ages": [
-    "14"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5751"
-  },
-  {
    "id": "5752",
    "name": "14 Yaş Haftasonu Turnuvası",
    "start": "2026-10-29",
@@ -804,6 +802,22 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5752"
+  },
+  {
+   "id": "5786",
+   "name": "14 Yaş Haftasonu Turnuvası",
+   "start": "2026-10-29",
+   "end": "2026-11-01",
+   "club": "ŞAHİNBEY BELEDİYE SPOR KULÜBÜ",
+   "city": "GAZİANTEP",
+   "category": "Haftasonu-A",
+   "surface": "Sert Zemin",
+   "deadline": "2026-10-20",
+   "ages": [
+    "14"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5786"
   },
   {
    "id": "5748",
@@ -852,6 +866,22 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5750"
+  },
+  {
+   "id": "5751",
+   "name": "14 Yaş Haftasonu Turnuvası",
+   "start": "2026-10-29",
+   "end": "2026-11-01",
+   "club": "GLOBAL SPOR KULÜBÜ",
+   "city": "İSTANBUL AVRUPA",
+   "category": "Haftasonu-A",
+   "surface": "Sert Zemin",
+   "deadline": "2026-10-20",
+   "ages": [
+    "14"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5751"
   },
   {
    "id": "5687",
