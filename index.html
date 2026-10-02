@@ -2434,6 +2434,31 @@
     calDlDays: "Entries close in {n} days", calDlOn: "Entry deadline {d}",
     calSource: "Source: TTF i-Kort · Last updated {d}", calRefresh: "Refresh", calTap: "Tap a tournament for details and draws, or ☆ to follow it."
   });
+  // ---------- Kulüp metinleri ----------
+  Object.assign(I18N.tr, {
+    clubSec: "Kulüp",
+    clubWhy: "Kulübünün yöneticisi sana bir katılım kodu verdiyse buraya yaz. Katıldığında kulüp yöneticisi yoklamalarını görebilir ama değiştiremez.",
+    clubCode: "Kulüp kodu", clubCodePh: "ör. ABCD-2345", clubJoin: "Kulübe katıl", clubNeedCode: "Kulüp kodunu yaz.",
+    clubNotFound: "Bu kod bulunamadı. Kodu kulüp yöneticine tekrar sor.",
+    clubIn: "Bağlı olduğun kulüp: {name}",
+    clubInNote: "Kulüp yöneticisi yoklamalarını (gruplar, öğrenci adları, devam) görebilir. Maçların, oyuncuların ve turnuvaların paylaşılmaz. İstediğin zaman ayrılabilirsin.",
+    clubLeave: "Kulüpten ayrıl", clubLeaveSure: "Emin misin? Kulüp yoklamalarını artık göremez",
+    clubJoined: "Kulübe katıldın ✓", clubLeft: "Kulüpten ayrıldın.",
+    clubLoading: "Kulüp bilgisi yükleniyor…", clubLoadErr: "Kulüp bilgisi alınamadı.", clubRetry: "Tekrar dene",
+    ykClubOn: "Yoklamaların {name} ile paylaşılıyor."
+  });
+  Object.assign(I18N.en, {
+    clubSec: "Club",
+    clubWhy: "If your club's manager gave you a join code, enter it here. Once you join, the club manager can see your attendance but can't change it.",
+    clubCode: "Club code", clubCodePh: "e.g. ABCD-2345", clubJoin: "Join club", clubNeedCode: "Enter the club code.",
+    clubNotFound: "That code wasn't found. Ask your club manager for it again.",
+    clubIn: "Your club: {name}",
+    clubInNote: "The club manager can see your attendance (groups, student names, sessions). Your matches, players and tournaments are not shared. You can leave any time.",
+    clubLeave: "Leave club", clubLeaveSure: "Sure? The club will no longer see your attendance",
+    clubJoined: "You joined the club ✓", clubLeft: "You left the club.",
+    clubLoading: "Loading club…", clubLoadErr: "Couldn't load club details.", clubRetry: "Try again",
+    ykClubOn: "Your attendance is shared with {name}."
+  });
   var LANG = detectLang();
   function t(key, params) {
     var dict = I18N[LANG] || I18N.tr;
@@ -8233,6 +8258,7 @@
       html += '<button class="btn-primary ev-add" id="ykNew" type="button">' + t("ykNewGroup") + '</button>';
     }
     html += '<p class="yk-note" style="text-align:center">' + escapeHtml(t(cloudUser() ? "ykCloudOn" : "ykCloudOff")) + '</p>' +
+      (cloudUser() && clubInfo && clubInfo.id ? '<p class="yk-note" style="text-align:center">🏟 ' + escapeHtml(t("ykClubOn", { name: clubInfo.name || "—" })) + '</p>' : '') +
       (cloudUser() ? '' : '<button class="acct-chip out" id="ykAcct" type="button" style="align-self:center">' + t("acChipIn") + '</button>');
     return html + '</main>';
   }
@@ -8509,7 +8535,10 @@
       saveYk(); ykArm = null; ykGroupId = null; render();
     };
   }
-  function openYkScreen() { ykOpen = true; ykGroupId = null; ykKid = null; ykForm = null; ykArm = null; render(); }
+  function openYkScreen() {
+    ykOpen = true; ykGroupId = null; ykKid = null; ykForm = null; ykArm = null; render();
+    if (cloudUser() && clubInfo === undefined) loadClubInfo().then(function () { if (ykOpen && !ykGroupId) render(); });
+  }
 
   // ================= Hesap ve bulut eşitleme =================
   // Antrenör e-posta + şifreyle hesap açar (Firebase Auth, REST). Hesap, canlı yayın için zaten
@@ -8725,8 +8754,108 @@
     try { localStorage.removeItem("courtside-auth-v1"); } catch (e) {}
     cloudStatus = null;
   }
-  function cloudDeleteAccount() {
+  // ---------- Kulüp bağlantısı ----------
+  // Antrenör kulübün verdiği kodla katılır. Kayıtlar:
+  //   /clubCodes/{KOD} = {club, name}          (kodu bilen okur)
+  //   /clubs/{club}/members/{uid} = {code, name, email, t}  (antrenör kendisi yazar/siler)
+  //   /users/{uid}/club = {id, name, t}
+  // Firebase kuralı, kulüp yöneticisine yalnızca bağlı antrenörlerin yoklamasını okutur.
+  var clubInfo;            // undefined: bilinmiyor, "err": alınamadı, null: kulüp yok, {id, name}
+  var clubBusy = false, clubMsg = "", clubErr = false, clubLeaveArm = false, clubCodeDraft = "";
+  function dbReq(method, path, tok, body) {
+    return fetch(FB.db + "/" + path + ".json?auth=" + encodeURIComponent(tok), {
+      method: method, headers: { "Content-Type": "application/json" },
+      body: body === undefined ? undefined : JSON.stringify(body)
+    }).then(function (r) { if (!r.ok) throw new Error("db " + r.status); return r.json(); });
+  }
+  function normClubCode(v) {
+    var c = String(v || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    return c.length === 8 ? c.slice(0, 4) + "-" + c.slice(4) : c;
+  }
+  function loadClubInfo() {
+    if (!cloudUser()) { clubInfo = null; return Promise.resolve(); }
+    return getIdToken().then(function (a) { return dbReq("GET", "users/" + a.uid + "/club", a.idToken); })
+      .then(function (c) { clubInfo = c && c.id ? { id: String(c.id), name: String(c.name || "") } : null; },
+            function () { clubInfo = "err"; });
+  }
+  function clubLeave() {
+    if (!clubInfo || !clubInfo.id) return Promise.resolve();
+    var id = clubInfo.id;
     return getIdToken().then(function (a) {
+      return dbReq("DELETE", "clubs/" + id + "/members/" + a.uid, a.idToken).then(function () {
+        return dbReq("DELETE", "users/" + a.uid + "/club", a.idToken);
+      });
+    }).then(function () { clubInfo = null; });
+  }
+  function clubJoin(code) {
+    return getIdToken().then(function (a) {
+      return dbReq("GET", "clubCodes/" + code, a.idToken).then(function (c) {
+        if (!c || !c.club) throw new Error("NOT_FOUND");
+        var u = cloudUser() || {};
+        var before = (clubInfo && clubInfo.id && clubInfo.id !== c.club) ? clubLeave() : Promise.resolve();
+        return before.then(function () {
+          return dbReq("PUT", "clubs/" + c.club + "/members/" + a.uid, a.idToken,
+            { code: code, name: u.name || "", email: u.email || "", t: { ".sv": "timestamp" } });
+        }).then(function () {
+          return dbReq("PUT", "users/" + a.uid + "/club", a.idToken, { id: c.club, name: c.name || "", t: { ".sv": "timestamp" } });
+        }).then(function () {
+          clubInfo = { id: String(c.club), name: String(c.name || "") };
+          // Yoklama bulutta yoksa hemen gönderilsin ki kulüp görebilsin.
+          try { if (localStorage.getItem(YK_KEY)) { cloudMeta.dirty[YK_KEY] = 1; cloudMeta.t[YK_KEY] = cloudMeta.t[YK_KEY] || Date.now(); saveCloudMeta(); } } catch (e) {}
+          cloudPush();
+        });
+      });
+    });
+  }
+  function renderClubSection() {
+    var html = '<p class="section-label ev-sec" style="margin:6px 0 0">' + t("clubSec") + '</p>';
+    var st = clubMsg ? '<div class="share-status' + (clubErr ? ' err' : '') + '">' + escapeHtml(clubMsg) + '</div>' : '';
+    if (clubInfo === undefined) return html + '<p class="yk-note">' + escapeHtml(t("clubLoading")) + '</p>';
+    if (clubInfo === "err") return html + '<p class="yk-note">' + escapeHtml(t("clubLoadErr")) + '</p>' +
+      '<button class="share-close" id="clubRetry" type="button" style="align-self:flex-start;padding:4px 0">' + t("clubRetry") + '</button>';
+    if (clubInfo) {
+      return html + '<div class="yk-form">' +
+        '<div style="font-weight:600;font-size:15px">🏟 ' + escapeHtml(t("clubIn", { name: clubInfo.name || "—" })) + '</div>' +
+        '<p class="yk-note">' + escapeHtml(t("clubInNote")) + '</p>' + st +
+        '<button class="csv-btn" id="clubLeave" type="button" style="margin-top:0' + (clubLeaveArm ? ';border-color:var(--clay);color:var(--clay);font-weight:600' : '') + '"' + (clubBusy ? ' disabled' : '') + '>' +
+          (clubBusy ? t("acWorking") : t(clubLeaveArm ? "clubLeaveSure" : "clubLeave")) + '</button></div>';
+    }
+    return html + '<div class="yk-form">' +
+      '<p class="yk-note">' + escapeHtml(t("clubWhy")) + '</p>' +
+      '<div class="pl-addrow" style="margin:0"><input id="clubCode" type="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="12" aria-label="' + escapeAttr(t("clubCode")) + '" placeholder="' + escapeAttr(t("clubCodePh")) + '" value="' + escapeAttr(clubCodeDraft) + '">' +
+      '<button class="btn-primary" id="clubJoin" type="button"' + (clubBusy ? ' disabled' : '') + '>' + (clubBusy ? t("acWorking") : t("clubJoin")) + '</button></div>' +
+      st + '</div>';
+  }
+  function bindClubSection() {
+    var el;
+    if ((el = document.getElementById("clubRetry"))) el.onclick = function () { clubInfo = undefined; render(); loadClubInfo().then(render); };
+    var join = function () {
+      var inp = document.getElementById("clubCode");
+      clubCodeDraft = inp ? inp.value : "";
+      var code = normClubCode(clubCodeDraft);
+      if (code.length < 4) { clubErr = true; clubMsg = t("clubNeedCode"); render(); return; }
+      clubBusy = true; clubMsg = ""; render();
+      clubJoin(code).then(function () {
+        clubBusy = false; clubErr = false; clubMsg = t("clubJoined"); clubCodeDraft = ""; render();
+      }, function (err) {
+        clubBusy = false; clubErr = true;
+        clubMsg = String(err && err.message) === "NOT_FOUND" ? t("clubNotFound") : t("errNet");
+        render();
+      });
+    };
+    if ((el = document.getElementById("clubJoin"))) el.onclick = join;
+    if ((el = document.getElementById("clubCode"))) el.onkeydown = function (e) { if (e.key === "Enter") join(); };
+    if ((el = document.getElementById("clubLeave"))) el.onclick = function () {
+      if (!clubLeaveArm) { clubLeaveArm = true; render(); return; }
+      clubBusy = true; render();
+      clubLeave().then(function () {
+        clubBusy = false; clubLeaveArm = false; clubErr = false; clubMsg = t("clubLeft"); render();
+      }, function () { clubBusy = false; clubLeaveArm = false; clubErr = true; clubMsg = t("errNet"); render(); });
+    };
+  }
+  function cloudDeleteAccount() {
+    // Hesap silinmeden önce kulüp bağlantısı da kaldırılır.
+    return (clubInfo && clubInfo.id ? clubLeave().catch(function () {}) : Promise.resolve()).then(getIdToken).then(function (a) {
       return fetch(userUrl(a.uid, "", a.idToken), { method: "DELETE" }).then(function (r) {
         if (!r.ok) throw new Error("delete " + r.status);
         return authCall("delete", { idToken: a.idToken });
@@ -8773,7 +8902,12 @@
   var acctOpen = false, acctMsg = "", acctErr = false, acctBusy = false, acctDelArm = false;
   var acctMode = "login";           // "login" | "signup"
   var acctEmail = "", acctName = "", acctNameEdit = false;
-  function openAccount() { acctOpen = true; acctMode = "login"; acctMsg = ""; acctErr = false; acctDelArm = false; acctNameEdit = false; render(); }
+  function openAccount() {
+    acctOpen = true; acctMode = "login"; acctMsg = ""; acctErr = false; acctDelArm = false; acctNameEdit = false;
+    clubMsg = ""; clubErr = false; clubLeaveArm = false;
+    render();
+    if (cloudUser()) loadClubInfo().then(function () { if (acctOpen) render(); });
+  }
   function renderAccount() {
     var u = cloudUser();
     var html = navBarHtml("acBack", u ? "" : t(acctMode === "signup" ? "acHeadSignup" : "acTitle"), "", ykOpen ? t("ykTitle") : t("homeBack")) + '<main class="ev-main yk-main">';
@@ -8818,6 +8952,7 @@
         '<button class="csv-btn" id="acLogout" type="button" style="margin-top:0">' + t("acLogout") + '</button>' +
         '<button class="share-close" id="acSync" type="button" style="align-self:center"' + dis + '>' + (acctBusy ? t("acWorking") : t("acSyncNow")) + '</button>' +
         '<p class="yk-note">' + escapeHtml(t("acInNote")) + '</p>' +
+        renderClubSection() +
         '<div class="reset-row" style="margin-top:8px"><button id="acDelete" type="button"' + (acctDelArm ? ' style="border-color:var(--clay);color:var(--clay);font-weight:600"' : '') + '>' +
           t(acctDelArm ? "acDeleteSure" : "acDelete") + '</button></div>';
     }
@@ -8833,6 +8968,7 @@
     var fail = function (err) { acctBusy = false; acctErr = true; acctMsg = authErrorText(err); render(); };
     var done = function () {
       acctBusy = false; acctErr = false; acctMsg = ""; acctName = "";
+      clubInfo = undefined; loadClubInfo().then(function () { if (acctOpen) render(); });
       return cloudPull().then(function (changed) { if (changed) cloudReload(); else render(); });
     };
     var showErr = function (msg) { acctErr = true; acctMsg = msg; render(); };
@@ -8893,7 +9029,8 @@
         render();
       });
     };
-    if ((el = document.getElementById("acLogout"))) el.onclick = function () { cloudSignOut(); acctMode = "login"; acctDelArm = false; acctMsg = ""; render(); };
+    if ((el = document.getElementById("acLogout"))) el.onclick = function () { cloudSignOut(); clubInfo = undefined; clubMsg = ""; clubLeaveArm = false; acctMode = "login"; acctDelArm = false; acctMsg = ""; render(); };
+    bindClubSection();
     if ((el = document.getElementById("acDelete"))) el.onclick = function () {
       if (!acctDelArm) { acctDelArm = true; render(); return; }
       acctBusy = true; render();

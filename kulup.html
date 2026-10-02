@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Courtside Kulüp Paneli</title>
+<meta name="theme-color" content="#14212B">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brass: #C79A54; --brass-dim: #8A7350; --clay: #C06B57; --grass: #6FA37F;
+    --on1: #4F8F63; --on2: #2C6743; --ball: #CFE21B; --ball-ink: #1E2A0A;
+    --radius: 14px;
+  }
+  :root:not([data-theme="light"]) {
+    --bg: #14212B; --panel: #1C2C38; --panel-2: #253A48; --text: #F4F1E8; --dim: #AEBAC2; --line: #34495A;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #EFEAE0; --panel: #FFFFFF; --panel-2: #F6F2E8; --text: #1C2A33; --dim: #5C6A72; --line: #DAD2C0;
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="dark"] { --bg: #14212B; --panel: #1C2C38; --panel-2: #253A48; --text: #F4F1E8; --dim: #AEBAC2; --line: #34495A; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px 48px; }
+  .serif { font-family: 'Fraunces', Georgia, serif; }
+  button { font-family: inherit; cursor: pointer; }
+  button:disabled { opacity: .55; cursor: default; }
+
+  /* Üst çubuk */
+  .top { display: flex; align-items: center; gap: 12px; padding: 18px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+  .top svg { width: 40px; height: 40px; flex: none; }
+  .brand { flex: 1; min-width: 0; }
+  .brand b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 21px; font-weight: 700; line-height: 1.1; }
+  .brand span { font-size: 12.5px; color: var(--dim); }
+  .who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .who .nm { font-size: 13px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
+  .ghost { background: none; border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 7px 14px; font-size: 13px; }
+  .ghost:hover { border-color: var(--brass); }
+
+  /* Formlar */
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .auth { max-width: 420px; margin: 28px auto 0; display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 600; margin: 0 0 4px; line-height: 1.2; }
+  h2 { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; margin: 0; }
+  .lede { color: var(--dim); font-size: 14.5px; line-height: 1.55; margin: 0; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 13px; color: var(--dim); }
+  input, select {
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px;
+    font-size: 15px; color: var(--text); font-family: inherit; min-width: 0;
+  }
+  input:focus, select:focus { outline: 2px solid var(--brass); outline-offset: 1px; }
+  .primary { background: var(--brass); color: #1B140A; border: none; border-radius: 11px; padding: 12px 18px; font-size: 15px; font-weight: 600; }
+  .primary:hover:not(:disabled) { filter: brightness(1.06); }
+  .link { background: none; border: none; color: var(--brass); font-size: 14px; padding: 6px 0; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .row > input { flex: 1; }
+  .msg { font-size: 13.5px; min-height: 18px; color: var(--grass); }
+  .msg.err { color: var(--clay); }
+  .note { font-size: 12.5px; color: var(--dim); line-height: 1.55; margin: 0; }
+
+  /* Kulüp başlığı */
+  .clubhead { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .clubhead .t { flex: 1; min-width: 220px; }
+  .eyebrow { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); font-weight: 600; margin-bottom: 4px; }
+  .codebox { display: flex; align-items: center; gap: 10px; background: var(--panel); border: 1px dashed var(--brass-dim); border-radius: 12px; padding: 9px 10px 9px 14px; }
+  .codebox .k { font-size: 11.5px; color: var(--dim); }
+  .codebox .v { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 700; letter-spacing: .06em; color: var(--brass); }
+
+  .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .monthnav { display: flex; align-items: center; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
+  .monthnav button { width: 36px; height: 34px; border: none; background: none; color: var(--text); font-size: 20px; border-radius: 8px; }
+  .monthnav button:hover { background: var(--panel-2); }
+  .monthnav span { min-width: 140px; text-align: center; font-weight: 600; text-transform: capitalize; }
+  .toolbar select { padding: 9px 12px; font-size: 14px; }
+  .toolbar .grow { flex: 1; }
+
+  .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 22px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .tile .n { font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tile .l { font-size: 12px; color: var(--dim); margin-top: 2px; }
+  @media (max-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  /* Antrenör ve grup */
+  .coach { margin-top: 26px; }
+  .coachhead { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .av { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: var(--brass); color: #1B140A; font-weight: 700; font-size: 14px; }
+  .coachhead .t { flex: 1; min-width: 0; }
+  .coachhead .t b { display: block; font-size: 16px; }
+  .coachhead .t span { font-size: 12.5px; color: var(--dim); }
+  .group { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; }
+  .grouphead { display: flex; align-items: baseline; gap: 12px; padding: 14px 16px 10px; flex-wrap: wrap; }
+  .grouphead h3 { font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600; margin: 0; }
+  .grouphead .time { font-size: 12.5px; color: var(--dim); }
+  .grouphead .sess { margin-left: auto; font-size: 13px; color: var(--dim); }
+  .grouphead .sess b { font-family: 'Fraunces', Georgia, serif; font-size: 18px; color: var(--text); margin-right: 3px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 9px 16px; font-size: 14px; text-align: right; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  th { font-size: 12px; color: var(--dim); font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; }
+  td.zero { color: var(--dim); }
+  .bar { display: inline-block; width: 64px; height: 6px; border-radius: 3px; background: var(--panel-2); vertical-align: middle; margin-right: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--on1); }
+  details { border-top: 1px solid var(--line); }
+  summary { padding: 11px 16px; font-size: 13.5px; color: var(--brass); cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "▸ "; }
+  details[open] summary::before { content: "▾ "; }
+  .gridwrap { overflow-x: auto; padding: 0 0 12px; -webkit-overflow-scrolling: touch; }
+  .dgrid { border-collapse: separate; border-spacing: 3px; padding: 0 12px; }
+  .dgrid th, .dgrid td { border: none; padding: 0; font-size: 11px; text-align: center; }
+  .dgrid th { color: var(--dim); font-weight: 600; min-width: 26px; line-height: 1.25; padding-bottom: 3px; }
+  .dgrid td.nm, .dgrid th.nm { text-align: left; font-size: 13px; padding-right: 10px; white-space: nowrap; position: sticky; left: 0; background: var(--panel); z-index: 1; }
+  .dgrid th.nm { font-size: 12px; }
+  .cell { width: 26px; height: 24px; border-radius: 6px; background: var(--panel-2); display: grid; place-items: center; font-weight: 700; color: #fff; }
+  .cell.c1 { background: var(--on1); }
+  .cell.c2 { background: var(--on2); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--dim); padding: 0 16px 12px; }
+  .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; background: var(--panel-2); }
+  .sw.c1 { background: var(--on1); } .sw.c2 { background: var(--on2); }
+  .empty { background: var(--panel); border: 1px dashed var(--line); border-radius: var(--radius); padding: 18px; color: var(--dim); font-size: 14px; line-height: 1.55; }
+  .warn { color: var(--clay); }
+
+  /* Sahip bölümü */
+  .owner { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .clubrow { display: grid; grid-template-columns: minmax(0, 1.4fr) auto auto auto; gap: 14px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .clubrow:first-of-type { border-top: none; }
+  .clubrow .code { font-family: 'Fraunces', Georgia, serif; font-weight: 700; letter-spacing: .04em; color: var(--brass); }
+  .clubrow .k { display: block; font-size: 11px; color: var(--dim); font-family: 'IBM Plex Sans', sans-serif; letter-spacing: 0; font-weight: 500; }
+  @media (max-width: 640px) { .clubrow { grid-template-columns: 1fr 1fr; } .clubrow > :first-child { grid-column: 1 / -1; } }
+  .uid { font-size: 11.5px; color: var(--dim); margin-top: 40px; text-align: center; overflow-wrap: anywhere; }
+  .loading { color: var(--dim); padding: 30px 0; text-align: center; }
+  .switcher { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .switcher button { background: var(--panel); border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 7px 14px; font-size: 13.5px; }
+  .switcher button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <svg viewBox="0 0 512 512" aria-hidden="true"><defs><clipPath id="lc"><circle cx="256" cy="256" r="172"/></clipPath></defs><circle cx="256" cy="256" r="188.5" fill="none" stroke="#C79A54" stroke-width="12"/><circle cx="256" cy="256" r="172" fill="#CFE21B"/><g clip-path="url(#lc)" fill="none" stroke="#F7FBDC" stroke-width="20"><circle cx="43.4" cy="256" r="151.6"/><circle cx="468.6" cy="256" r="151.6"/></g></svg>
+    <div class="brand"><b>Courtside</b><span>Kulüp paneli</span></div>
+    <div class="who" id="who"></div>
+  </div>
+  <div id="app"><div class="loading">Yükleniyor…</div></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var FB = {
+    apiKey: "AIzaSyCMSpN9EKOQxbkpdsodfLDAslNg9NNW-X8",
+    db: "https://courtside-62f8e-default-rtdb.europe-west1.firebasedatabase.app",
+    authBase: "https://identitytoolkit.googleapis.com",
+    tokenBase: "https://securetoken.googleapis.com"
+  };
+  var AUTH_KEY = "courtside-club-auth-v1";
+  var YK_KEY = "courtside-attendance-v1";
+  var app = document.getElementById("app"), who = document.getElementById("who");
+
+  // ---------- Yardımcılar ----------
+  function esc(s) { return String(s === null || s === undefined ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function $(id) { return document.getElementById(id); }
+  function val(id) { var e = $(id); return e ? e.value : ""; }
+  function pad(n) { return ("0" + n).slice(-2); }
+  function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function dayFromStr(s) { var p = String(s).split("-"); return new Date(+p[0], (+p[1] || 1) - 1, +p[2] || 1); }
+  function initials(n) {
+    var p = String(n || "").trim().split(/\s+/);
+    return ((p[0] || "").charAt(0) + (p.length > 1 ? p[p.length - 1].charAt(0) : "")).toLocaleUpperCase("tr") || "?";
+  }
+  function monthName(ym) { try { return dayFromStr(ym + "-01").toLocaleDateString("tr-TR", { month: "long", year: "numeric" }); } catch (e) { return ym; } }
+  function fmtDateTime(ts) { try { return new Date(ts).toLocaleString("tr-TR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } }
+  function genCode() {
+    var abc = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", r = new Uint8Array(8), out = "";
+    crypto.getRandomValues(r);
+    for (var i = 0; i < 8; i++) out += abc.charAt(r[i] % abc.length);
+    return out.slice(0, 4) + "-" + out.slice(4);
+  }
+  function normCode(v) {
+    var c = String(v || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+    return c.length === 8 ? c.slice(0, 4) + "-" + c.slice(4) : c;
+  }
+  function copy(text, btn) {
+    var done = function () { if (btn) { var o = btn.textContent; btn.textContent = "Kopyalandı ✓"; setTimeout(function () { btn.textContent = o; }, 1500); } };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+  }
+
+  // ---------- Giriş (Firebase Auth REST) ----------
+  function loadAuth() { try { return JSON.parse(localStorage.getItem(AUTH_KEY) || "null"); } catch (e) { return null; } }
+  function saveAuth(a) { try { localStorage.setItem(AUTH_KEY, JSON.stringify(a)); } catch (e) {} }
+  function authCall(method, body) {
+    return fetch(FB.authBase + "/v1/accounts:" + method + "?key=" + FB.apiKey, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) throw new Error((j && j.error && j.error.message) || ("HTTP " + r.status));
+        return j;
+      });
+    });
+  }
+  function storeAuth(j, email, name) {
+    var a = { uid: j.localId, idToken: j.idToken, refreshToken: j.refreshToken,
+      exp: Date.now() + Number(j.expiresIn || 3600) * 1000, email: email || j.email || "", name: name || j.displayName || "" };
+    saveAuth(a); return a;
+  }
+  function getToken() {
+    var a = loadAuth();
+    if (!a || !a.refreshToken) return Promise.reject(new Error("NO_AUTH"));
+    if (a.idToken && a.exp - Date.now() > 5 * 60 * 1000) return Promise.resolve(a);
+    return fetch(FB.tokenBase + "/v1/token?key=" + FB.apiKey, {
+      method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(a.refreshToken)
+    }).then(function (r) { if (!r.ok) throw new Error("REFRESH"); return r.json(); })
+      .then(function (j) {
+        a.idToken = j.id_token; a.refreshToken = j.refresh_token; a.uid = j.user_id;
+        a.exp = Date.now() + Number(j.expires_in || 3600) * 1000;
+        saveAuth(a); return a;
+      });
+  }
+  function db(method, path, body) {
+    return getToken().then(function (a) {
+      return fetch(FB.db + "/" + path + ".json?auth=" + encodeURIComponent(a.idToken), {
+        method: method, headers: { "Content-Type": "application/json" },
+        body: body === undefined ? undefined : JSON.stringify(body)
+      }).then(function (r) {
+        if (r.status === 401 || r.status === 403) throw new Error("DENIED");
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      });
+    });
+  }
+  function authErr(err) {
+    var m = String((err && err.message) || "");
+    if (m.indexOf("EMAIL_EXISTS") !== -1) return "Bu e-postayla zaten bir hesap var. Giriş yap.";
+    if (/INVALID_EMAIL|MISSING_EMAIL/.test(m)) return "E-posta adresi geçersiz.";
+    if (/WEAK_PASSWORD|MISSING_PASSWORD/.test(m)) return "Şifre en az 6 karakter olmalı.";
+    if (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND|USER_DISABLED/.test(m)) return "E-posta ya da şifre hatalı.";
+    if (m.indexOf("TOO_MANY_ATTEMPTS") !== -1) return "Çok fazla deneme yapıldı. Biraz bekleyip tekrar dene.";
+    if (m === "DENIED") return "Bu işlem için yetkin yok.";
+    return "Bağlantı kurulamadı. İnternetini kontrol edip tekrar dene.";
+  }
+
+  // ---------- Durum ----------
+  var S = {
+    view: "login",          // login | signup | main
+    msg: "", err: false, busy: false,
+    loading: false,
+    isOwner: false, ownerClubs: null,
+    myClubs: [],            // [{id, name}]
+    clubId: null, club: null,        // seçili kulüp ve verisi
+    coaches: [],            // [{uid, name, email, joinedAt, data:{groups, att}|null, syncedAt, error}]
+    month: ymd(new Date()).slice(0, 7),
+    fCoach: "", fGroup: "",
+    joinOpen: false
+  };
+
+  // ---------- Yükleme ----------
+  function loadMain() {
+    var a = loadAuth();
+    S.loading = true; render();
+    var ownerP = db("GET", "owners/" + a.uid).then(function (v) { return v === true; }, function () { return false; });
+    var mineP = db("GET", "userClubs/" + a.uid).then(function (v) {
+      return Object.keys(v || {}).map(function (id) { return { id: id, name: (v[id] && v[id].name) || id }; })
+        .sort(function (x, y) { return x.name.localeCompare(y.name, "tr"); });
+    }, function () { return []; });
+    return Promise.all([ownerP, mineP]).then(function (r) {
+      S.isOwner = r[0]; S.myClubs = r[1];
+      var keep = S.myClubs.some(function (c) { return c.id === S.clubId; });
+      if (!keep) S.clubId = S.myClubs.length ? S.myClubs[0].id : null;
+      return Promise.all([S.isOwner ? loadOwnerClubs() : null, S.clubId ? loadClub(S.clubId) : null]);
+    }).then(function () { S.loading = false; render(); }, function (err) {
+      S.loading = false; S.err = true; S.msg = authErr(err); render();
+    });
+  }
+  function loadOwnerClubs() {
+    return db("GET", "clubs").then(function (v) {
+      S.ownerClubs = Object.keys(v || {}).map(function (id) {
+        var c = v[id] || {};
+        return { id: id, name: c.name || id, coachCode: c.coachCode || "", adminCode: c.adminCode || "",
+          members: Object.keys(c.members || {}).length, admins: Object.keys(c.admins || {}).length, createdAt: c.createdAt || 0 };
+      }).sort(function (x, y) { return x.name.localeCompare(y.name, "tr"); });
+    }, function () { S.ownerClubs = []; });
+  }
+  function loadClub(id) {
+    return db("GET", "clubs/" + id).then(function (c) {
+      S.club = c || {};
+      var members = S.club.members || {};
+      var uids = Object.keys(members);
+      return Promise.all(uids.map(function (uid) {
+        var m = members[uid] || {};
+        var co = { uid: uid, name: m.name || "", email: m.email || "", joinedAt: m.t || 0, data: null, syncedAt: 0, error: false };
+        return db("GET", "users/" + uid + "/data/" + YK_KEY).then(function (rec) {
+          if (rec && typeof rec.v === "string") {
+            try {
+              var d = JSON.parse(rec.v) || {};
+              co.data = { groups: Array.isArray(d.groups) ? d.groups : [], att: d.att && typeof d.att === "object" ? d.att : {} };
+            } catch (e) { co.data = null; }
+            co.syncedAt = rec.t || 0;
+          }
+          return co;
+        }, function () { co.error = true; return co; });
+      }));
+    }).then(function (coaches) {
+      S.coaches = coaches.sort(function (x, y) { return coachName(x).localeCompare(coachName(y), "tr"); });
+      if (S.fCoach && !S.coaches.some(function (c) { return c.uid === S.fCoach; })) { S.fCoach = ""; S.fGroup = ""; }
+    });
+  }
+  function coachName(c) { return c.name || c.email || "Antrenör"; }
+
+  // ---------- Hesaplar ----------
+  function groupKids(g) { return (Array.isArray(g.kids) ? g.kids : []).slice().sort(function (x, y) { return String(x).localeCompare(String(y), "tr"); }); }
+  function groupMonth(co, g, ym) {
+    var a = (co.data.att || {})[g.id] || {}, kids = groupKids(g);
+    var days = Object.keys(a).filter(function (d) { return d.slice(0, 7) === ym; }).sort();
+    var sessions = 0, activeDays = [];
+    days.forEach(function (d) {
+      var m = a[d] || {}, mx = 0;
+      Object.keys(m).forEach(function (n) { if (m[n] > mx) mx = m[n]; });
+      mx = Math.min(2, mx);
+      if (mx) { sessions += mx; activeDays.push(d); }
+    });
+    var rows = kids.map(function (n) {
+      var dcount = 0, s = 0;
+      activeDays.forEach(function (d) { var v = (a[d] || {})[n]; v = v === 2 ? 2 : (v === 1 ? 1 : 0); if (v) { dcount++; s += v; } });
+      return { name: n, days: dcount, sessions: s, rate: sessions ? Math.round(s / sessions * 100) : null };
+    });
+    return { sessions: sessions, activeDays: activeDays, rows: rows, att: a };
+  }
+  function visibleCoaches() { return S.coaches.filter(function (c) { return !S.fCoach || c.uid === S.fCoach; }); }
+  function visibleGroups(co) {
+    if (!co.data) return [];
+    return co.data.groups.filter(function (g) { return g && g.id && (!S.fGroup || String(g.id) === S.fGroup); });
+  }
+  function shiftMonth(n) { var d = dayFromStr(S.month + "-01"); d.setMonth(d.getMonth() + n); S.month = ymd(d).slice(0, 7); }
+
+  // ---------- CSV ----------
+  function csvCell(v) { var s = String(v === null || v === undefined ? "" : v); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+  function downloadCsv(name, rows) {
+    var text = "﻿" + rows.map(function (r) { return r.map(csvCell).join(";"); }).join("\r\n");
+    var url = URL.createObjectURL(new Blob([text], { type: "text/csv;charset=utf-8" }));
+    var a = document.createElement("a"); a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+  function fileSlug() {
+    var n = (S.club && S.club.name) || "kulup";
+    return n.toLocaleLowerCase("tr").replace(/ı/g, "i").replace(/ğ/g, "g").replace(/ü/g, "u").replace(/ş/g, "s").replace(/ö/g, "o").replace(/ç/g, "c").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "kulup";
+  }
+  function exportSummary() {
+    var rows = [["Antrenör", "Grup", "Gün ve saat", "Öğrenci", "Geldiği gün", "Antrenman", "Grubun antrenmanı", "Devam oranı (%)"]];
+    visibleCoaches().forEach(function (co) {
+      visibleGroups(co).forEach(function (g) {
+        var gm = groupMonth(co, g, S.month);
+        gm.rows.forEach(function (r) { rows.push([coachName(co), g.name, g.time || "", r.name, r.days, r.sessions, gm.sessions, r.rate === null ? "" : r.rate]); });
+      });
+    });
+    downloadCsv("courtside-" + fileSlug() + "-yoklama-ozet-" + S.month + ".csv", rows);
+  }
+  function exportDaily() {
+    var rows = [["Antrenör", "Grup", "Öğrenci", "Tarih", "Antrenman"]];
+    visibleCoaches().forEach(function (co) {
+      visibleGroups(co).forEach(function (g) {
+        var gm = groupMonth(co, g, S.month);
+        gm.activeDays.forEach(function (d) {
+          groupKids(g).forEach(function (n) {
+            var v = (gm.att[d] || {})[n];
+            if (v) rows.push([coachName(co), g.name, n, d, v === 2 ? 2 : 1]);
+          });
+        });
+      });
+    });
+    downloadCsv("courtside-" + fileSlug() + "-yoklama-gunluk-" + S.month + ".csv", rows);
+  }
+
+  // ---------- Görünümler ----------
+  function renderWho() {
+    var a = loadAuth();
+    if (S.view !== "main" || !a) { who.innerHTML = ""; return; }
+    who.innerHTML = '<span class="nm">' + esc(a.name || a.email) + '</span><button class="ghost" id="logout" type="button">Çıkış</button>';
+    $("logout").onclick = function () { localStorage.removeItem(AUTH_KEY); S.view = "login"; S.club = null; S.clubId = null; S.coaches = []; S.msg = ""; render(); };
+  }
+  function msgHtml() { return '<div class="msg' + (S.err ? ' err' : '') + '" id="msg">' + esc(S.msg) + '</div>'; }
+
+  function renderLogin() {
+    return '<div class="auth">' +
+      '<div><h1>Kulüp paneli</h1><p class="lede">Kulübüne bağlı antrenörlerin yoklamalarını tek yerden gör. Courtside hesabınla giriş yap.</p></div>' +
+      '<div class="card" style="display:flex;flex-direction:column;gap:12px">' +
+        '<div class="field"><label for="email">E-posta</label><input id="email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false"></div>' +
+        '<div class="field"><label for="pass">Şifre</label><input id="pass" type="password" autocomplete="current-password"></div>' +
+        '<button class="primary" id="doLogin" type="button"' + (S.busy ? " disabled" : "") + '>' + (S.busy ? "Bekle…" : "Giriş yap") + '</button>' +
+        msgHtml() +
+        '<button class="link" id="forgot" type="button" style="align-self:center">Şifremi unuttum</button>' +
+      '</div>' +
+      '<p class="note" style="text-align:center">Hesabın yok mu? <button class="link" id="toSignup" type="button">Yeni hesap aç</button></p>' +
+    '</div>';
+  }
+  function renderSignup() {
+    return '<div class="auth">' +
+      '<div><h1>Yeni hesap</h1><p class="lede">Hesabı açtıktan sonra sana verilen kulüp yönetici koduyla kulübüne bağlanacaksın.</p></div>' +
+      '<div class="card" style="display:flex;flex-direction:column;gap:12px">' +
+        '<div class="field"><label for="name">Ad Soyad</label><input id="name" type="text" autocomplete="name" maxlength="60"></div>' +
+        '<div class="field"><label for="email">E-posta</label><input id="email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false"></div>' +
+        '<div class="field"><label for="pass">Şifre belirle (en az 6 karakter)</label><input id="pass" type="password" autocomplete="new-password"></div>' +
+        '<button class="primary" id="doSignup" type="button"' + (S.busy ? " disabled" : "") + '>' + (S.busy ? "Bekle…" : "Hesabı oluştur") + '</button>' +
+        msgHtml() +
+      '</div>' +
+      '<p class="note" style="text-align:center">Zaten hesabın var mı? <button class="link" id="toLogin" type="button">Giriş yap</button></p>' +
+    '</div>';
+  }
+
+  function renderJoinCard(first) {
+    return '<div class="card" style="display:flex;flex-direction:column;gap:12px;max-width:520px' + (first ? ';margin:10px auto 0' : ';margin-bottom:18px') + '">' +
+      '<h2>' + (first ? "Kulübüne bağlan" : "Başka bir kulüp ekle") + '</h2>' +
+      '<p class="lede" style="font-size:14px">Courtside sana kulübün için bir <b>yönetici kodu</b> verdi. Kodu yaz, kulübün yoklama paneli açılsın.</p>' +
+      '<div class="row"><input id="adminCode" type="text" placeholder="ör. ABCD-2345" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12">' +
+      '<button class="primary" id="doJoin" type="button"' + (S.busy ? " disabled" : "") + '>' + (S.busy ? "Bekle…" : "Bağlan") + '</button></div>' +
+      msgHtml() +
+    '</div>';
+  }
+
+  function renderClub() {
+    var c = S.club || {};
+    var html = "";
+    if (S.myClubs.length > 1) {
+      html += '<div class="switcher">' + S.myClubs.map(function (k) {
+        return '<button type="button" data-club="' + esc(k.id) + '" aria-pressed="' + (k.id === S.clubId) + '">' + esc(k.name) + '</button>';
+      }).join("") + '</div>';
+    }
+    html += '<div class="clubhead"><div class="t"><div class="eyebrow">Kulüp</div><h1>' + esc(c.name || "") + '</h1></div>' +
+      (c.coachCode ? '<div class="codebox"><div><div class="k">Antrenör katılım kodu</div><div class="v">' + esc(c.coachCode) + '</div></div>' +
+        '<button class="ghost" id="copyCoach" type="button">Kopyala</button></div>' : '') +
+    '</div>';
+
+    if (!S.coaches.length) {
+      return html + '<div class="empty">Kulübe henüz bağlı antrenör yok. Antrenörlerine yukarıdaki kodu ver: Courtside uygulamasında <b>Hesap → Kulübe katıl</b> bölümüne yazacaklar. Katıldıkları anda yoklamaları burada görünür.</div>';
+    }
+
+    // Filtreler
+    var coachOpts = '<option value="">Bütün antrenörler (' + S.coaches.length + ')</option>' + S.coaches.map(function (co) {
+      return '<option value="' + esc(co.uid) + '"' + (S.fCoach === co.uid ? " selected" : "") + '>' + esc(coachName(co)) + '</option>';
+    }).join("");
+    var groupOpts = '<option value="">Bütün gruplar</option>';
+    if (S.fCoach) {
+      var cc = S.coaches.filter(function (x) { return x.uid === S.fCoach; })[0];
+      if (cc && cc.data) groupOpts += cc.data.groups.map(function (g) {
+        return '<option value="' + esc(g.id) + '"' + (S.fGroup === String(g.id) ? " selected" : "") + '>' + esc(g.name) + '</option>';
+      }).join("");
+    }
+    html += '<div class="toolbar">' +
+      '<div class="monthnav"><button type="button" id="mPrev" aria-label="Önceki ay">‹</button><span>' + esc(monthName(S.month)) + '</span><button type="button" id="mNext" aria-label="Sonraki ay">›</button></div>' +
+      '<select id="fCoach" aria-label="Antrenör">' + coachOpts + '</select>' +
+      (S.fCoach ? '<select id="fGroup" aria-label="Grup">' + groupOpts + '</select>' : '') +
+      '<span class="grow"></span>' +
+      '<button class="ghost" id="csvSum" type="button">⬇ Özet (Excel)</button>' +
+      '<button class="ghost" id="csvDay" type="button">⬇ Günlük kayıtlar</button>' +
+      '<button class="ghost" id="reload" type="button" aria-label="Yenile">↻</button>' +
+    '</div>';
+
+    // Özet kutuları
+    var nGroups = 0, nKids = 0, nSess = 0;
+    visibleCoaches().forEach(function (co) {
+      visibleGroups(co).forEach(function (g) { nGroups++; nKids += groupKids(g).length; nSess += groupMonth(co, g, S.month).sessions; });
+    });
+    html += '<div class="tiles">' +
+      '<div class="tile"><div class="n">' + visibleCoaches().length + '</div><div class="l">Antrenör</div></div>' +
+      '<div class="tile"><div class="n">' + nGroups + '</div><div class="l">Grup</div></div>' +
+      '<div class="tile"><div class="n">' + nKids + '</div><div class="l">Öğrenci</div></div>' +
+      '<div class="tile"><div class="n">' + nSess + '</div><div class="l">Bu ay yapılan antrenman</div></div>' +
+    '</div>';
+
+    visibleCoaches().forEach(function (co) {
+      var groups = visibleGroups(co);
+      html += '<section class="coach"><div class="coachhead"><span class="av">' + esc(initials(coachName(co))) + '</span><div class="t">' +
+        '<b>' + esc(coachName(co)) + '</b><span>' + esc([co.name && co.email ? co.email : "", co.syncedAt ? "Son güncelleme: " + fmtDateTime(co.syncedAt) : ""].filter(Boolean).join(" · ")) + '</span></div></div>';
+      if (co.error) {
+        html += '<div class="empty warn">Bu antrenörün yoklamaları okunamadı. Kulüpten ayrılmış olabilir; sayfayı yenile.</div>';
+      } else if (!co.data) {
+        html += '<div class="empty">Henüz yoklama yok. Antrenör uygulamada hesabıyla giriş yapıp yoklama aldığında burada görünür.</div>';
+      } else if (!groups.length) {
+        html += '<div class="empty">Bu antrenörün grubu yok.</div>';
+      } else {
+        groups.forEach(function (g) { html += renderGroup(co, g); });
+      }
+      html += '</section>';
+    });
+    return html;
+  }
+
+  function renderGroup(co, g) {
+    var gm = groupMonth(co, g, S.month);
+    var html = '<div class="group"><div class="grouphead"><h3>' + esc(g.name) + '</h3>' +
+      (g.time ? '<span class="time">' + esc(g.time) + '</span>' : '') +
+      '<span class="sess"><b>' + gm.sessions + '</b>antrenman · ' + gm.activeDays.length + ' gün</span></div>';
+    if (!gm.rows.length) return html + '<p class="note" style="padding:0 16px 14px">Bu grupta öğrenci yok.</p></div>';
+    var rows = gm.rows.slice().sort(function (x, y) { return y.sessions - x.sessions || x.name.localeCompare(y.name, "tr"); });
+    html += '<table><thead><tr><th>Öğrenci</th><th>Geldiği gün</th><th>Antrenman</th><th>Devam</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        var z = r.sessions ? "" : ' class="zero"';
+        return '<tr><td' + z + '>' + esc(r.name) + '</td><td' + z + '>' + r.days + '</td><td' + z + '>' + r.sessions + '</td><td' + z + '>' +
+          (r.rate === null ? "—" : '<span class="bar" aria-hidden="true"><i style="width:' + Math.min(100, r.rate) + '%"></i></span>%' + r.rate) + '</td></tr>';
+      }).join("") + '</tbody></table>';
+    if (gm.activeDays.length) {
+      var head = '<tr><th class="nm">Öğrenci</th>' + gm.activeDays.map(function (d) {
+        var dt = dayFromStr(d);
+        return '<th>' + dt.getDate() + '<br>' + esc(dt.toLocaleDateString("tr-TR", { weekday: "short" }).replace(".", "").slice(0, 3)) + '</th>';
+      }).join("") + '</tr>';
+      var body = groupKids(g).map(function (n) {
+        return '<tr><td class="nm">' + esc(n) + '</td>' + gm.activeDays.map(function (d) {
+          var v = (gm.att[d] || {})[n]; v = v === 2 ? 2 : (v === 1 ? 1 : 0);
+          return '<td><div class="cell' + (v ? " c" + v : "") + '" title="' + esc(n + " · " + d + " · " + (v === 2 ? "2 antrenman" : v === 1 ? "geldi" : "gelmedi")) + '">' + (v === 2 ? "2" : "") + '</div></td>';
+        }).join("") + '</tr>';
+      }).join("");
+      html += '<details><summary>Gün gün yoklama</summary><div class="gridwrap"><table class="dgrid"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div>' +
+        '<div class="legend"><span><i class="sw"></i>Gelmedi</span><span><i class="sw c1"></i>Geldi</span><span><i class="sw c2"></i>Aynı gün 2 antrenman</span></div></details>';
+    }
+    return html + '</div>';
+  }
+
+  function renderOwner() {
+    var html = '<section class="owner"><div class="eyebrow">Courtside yönetimi</div><h2 style="margin-bottom:6px">Kulüpler</h2>' +
+      '<p class="note" style="margin-bottom:14px">Bu bölümü sadece sen görürsün. Kulüp açınca iki kod çıkar: <b>yönetici kodu</b> kulüp yöneticisine, <b>antrenör kodu</b> antrenörlere verilir.</p>' +
+      '<div class="card" style="margin-bottom:14px"><div class="row"><input id="newClub" type="text" maxlength="60" placeholder="Kulüp adı, ör. Enka Spor Kulübü">' +
+      '<button class="primary" id="createClub" type="button"' + (S.busy ? " disabled" : "") + '>Kulüp oluştur</button></div>' +
+      '<div class="msg' + (S.err ? ' err' : '') + '" id="ownerMsg">' + esc(S.ownerMsg || "") + '</div></div>';
+    var list = S.ownerClubs || [];
+    if (!list.length) html += '<div class="empty">Henüz kulüp yok.</div>';
+    else {
+      html += '<div class="card" style="padding:4px 18px">' + list.map(function (c) {
+        var mine = S.myClubs.some(function (k) { return k.id === c.id; });
+        return '<div class="clubrow"><div><b>' + esc(c.name) + '</b><div class="note">' + c.members + ' antrenör · ' + c.admins + ' yönetici</div></div>' +
+          '<div class="code"><span class="k">Yönetici kodu</span>' + esc(c.adminCode) + '</div>' +
+          '<div class="code"><span class="k">Antrenör kodu</span>' + esc(c.coachCode) + '</div>' +
+          '<div>' + (mine ? '<button class="ghost" data-club="' + esc(c.id) + '" type="button">Paneli aç</button>'
+            : '<button class="ghost" data-selfjoin="' + esc(c.adminCode) + '" type="button">Kendimi yönetici ekle</button>') + '</div></div>';
+      }).join("") + '</div>';
+    }
+    return html + '</section>';
+  }
+
+  function render() {
+    renderWho();
+    var html;
+    if (S.view === "login") html = renderLogin();
+    else if (S.view === "signup") html = renderSignup();
+    else if (S.loading) html = '<div class="loading">Yükleniyor…</div>';
+    else {
+      html = "";
+      if (!S.clubId) html += renderJoinCard(true);
+      else {
+        html += renderClub();
+        if (S.joinOpen) html += '<div style="margin-top:28px">' + renderJoinCard(false) + '</div>';
+        else html += '<p class="note" style="margin-top:28px;text-align:center"><button class="link" id="openJoin" type="button">+ Başka bir kulübe yönetici kodu ekle</button></p>';
+      }
+      if (S.isOwner) html += renderOwner();
+      var a = loadAuth();
+      if (a) html += '<div class="uid">Kullanıcı kimliğin: <span id="uidTxt">' + esc(a.uid) + '</span> <button class="link" id="copyUid" type="button" style="font-size:11.5px">kopyala</button></div>';
+    }
+    app.innerHTML = html;
+    bind();
+  }
+
+  // ---------- Olaylar ----------
+  function setMsg(m, err) { S.msg = m; S.err = !!err; var e = $("msg"); if (e) { e.textContent = m; e.className = "msg" + (err ? " err" : ""); } }
+  function afterAuth() { S.view = "main"; S.msg = ""; S.busy = false; loadMain(); }
+  function bind() {
+    var el, i, list;
+    if ((el = $("toSignup"))) el.onclick = function () { S.view = "signup"; S.msg = ""; render(); };
+    if ((el = $("toLogin"))) el.onclick = function () { S.view = "login"; S.msg = ""; render(); };
+    var login = function () {
+      var email = val("email").trim(), pass = val("pass");
+      if (!email || !pass) { setMsg("E-posta ve şifreyi yaz.", true); return; }
+      S.busy = true; render(); $("email").value = email;
+      authCall("signInWithPassword", { email: email, password: pass, returnSecureToken: true })
+        .then(function (j) { storeAuth(j, email, j.displayName); afterAuth(); }, function (e) { S.busy = false; render(); $("email").value = email; setMsg(authErr(e), true); });
+    };
+    var signup = function () {
+      var name = val("name").replace(/\s+/g, " ").trim(), email = val("email").trim(), pass = val("pass");
+      if (!name) { setMsg("Adını ve soyadını yaz.", true); return; }
+      if (!email || !pass) { setMsg("E-posta ve şifreyi yaz.", true); return; }
+      S.busy = true; render(); $("name").value = name; $("email").value = email;
+      authCall("signUp", { email: email, password: pass, displayName: name, returnSecureToken: true })
+        .then(function (j) { storeAuth(j, email, name); afterAuth(); }, function (e) { S.busy = false; render(); $("name").value = name; $("email").value = email; setMsg(authErr(e), true); });
+    };
+    if ((el = $("doLogin"))) el.onclick = login;
+    if ((el = $("doSignup"))) el.onclick = signup;
+    if ((el = $("pass"))) el.onkeydown = function (e) { if (e.key === "Enter") (S.view === "signup" ? signup : login)(); };
+    if ((el = $("forgot"))) el.onclick = function () {
+      var email = val("email").trim();
+      if (!email) { setMsg("Önce e-posta adresini yaz.", true); return; }
+      authCall("sendOobCode", { requestType: "PASSWORD_RESET", email: email })
+        .then(function () { setMsg("Şifre yenileme bağlantısı e-postana gönderildi."); }, function (e) { setMsg(authErr(e), true); });
+    };
+
+    // Yönetici kodu ile kulübe bağlan
+    var join = function (codeRaw) {
+      var code = normCode(codeRaw);
+      if (code.length < 4) { setMsg("Yönetici kodunu yaz.", true); return; }
+      var a = loadAuth();
+      S.busy = true; render();
+      db("GET", "adminCodes/" + code).then(function (c) {
+        if (!c || !c.club) throw new Error("NOT_FOUND");
+        return db("PUT", "clubs/" + c.club + "/admins/" + a.uid, { code: code, name: a.name || "", email: a.email || "", t: { ".sv": "timestamp" } })
+          .catch(function (e) { if (String(e.message) !== "DENIED") throw e; }) // zaten yöneticiyse kural yeniden yazmaya izin vermez
+          .then(function () { return db("PUT", "userClubs/" + a.uid + "/" + c.club, { name: c.name || "" }); })
+          .then(function () { S.clubId = c.club; });
+      }).then(function () {
+        S.busy = false; S.joinOpen = false; S.msg = ""; loadMain();
+      }, function (e) {
+        S.busy = false; render();
+        setMsg(String(e.message) === "NOT_FOUND" ? "Bu kod bulunamadı. Kodu tekrar kontrol et." : authErr(e), true);
+      });
+    };
+    if ((el = $("doJoin"))) el.onclick = function () { join(val("adminCode")); };
+    if ((el = $("adminCode"))) el.onkeydown = function (e) { if (e.key === "Enter") join(this.value); };
+    if ((el = $("openJoin"))) el.onclick = function () { S.joinOpen = true; S.msg = ""; render(); var c = $("adminCode"); if (c) c.focus(); };
+    list = app.querySelectorAll("[data-selfjoin]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { join(this.getAttribute("data-selfjoin")); };
+
+    // Kulüp paneli
+    list = app.querySelectorAll("[data-club]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      S.clubId = this.getAttribute("data-club"); S.fCoach = ""; S.fGroup = "";
+      S.loading = true; render();
+      loadClub(S.clubId).then(function () { S.loading = false; render(); window.scrollTo(0, 0); }, function (e) { S.loading = false; S.msg = authErr(e); S.err = true; render(); });
+    };
+    if ((el = $("copyCoach"))) el.onclick = function () { copy(S.club.coachCode, this); };
+    if ((el = $("copyUid"))) el.onclick = function () { copy($("uidTxt").textContent, this); };
+    if ((el = $("mPrev"))) el.onclick = function () { shiftMonth(-1); render(); };
+    if ((el = $("mNext"))) el.onclick = function () { shiftMonth(1); render(); };
+    if ((el = $("fCoach"))) el.onchange = function () { S.fCoach = this.value; S.fGroup = ""; render(); };
+    if ((el = $("fGroup"))) el.onchange = function () { S.fGroup = this.value; render(); };
+    if ((el = $("csvSum"))) el.onclick = exportSummary;
+    if ((el = $("csvDay"))) el.onclick = exportDaily;
+    if ((el = $("reload"))) el.onclick = function () { loadMain(); };
+
+    // Sahip: kulüp oluştur
+    if ((el = $("createClub"))) el.onclick = function () {
+      var name = val("newClub").replace(/\s+/g, " ").trim().slice(0, 60);
+      if (!name) { S.ownerMsg = "Kulübe bir ad ver."; S.err = true; render(); return; }
+      var id = "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      var coachCode = genCode(), adminCode = genCode();
+      S.busy = true; render();
+      db("PUT", "clubs/" + id, { name: name, coachCode: coachCode, adminCode: adminCode, createdAt: { ".sv": "timestamp" } })
+        .then(function () { return db("PUT", "clubCodes/" + coachCode, { club: id, name: name }); })
+        .then(function () { return db("PUT", "adminCodes/" + adminCode, { club: id, name: name }); })
+        .then(function () { return loadOwnerClubs(); })
+        .then(function () { S.busy = false; S.err = false; S.ownerMsg = name + " oluşturuldu. Yönetici kodu: " + adminCode; render(); },
+              function (e) { S.busy = false; S.err = true; S.ownerMsg = authErr(e); render(); });
+    };
+  }
+
+  // ---------- Açılış ----------
+  if (loadAuth()) { S.view = "main"; loadMain(); } else render();
+})();
+</script>
+</body>
+</html>
