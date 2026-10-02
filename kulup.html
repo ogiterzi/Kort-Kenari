@@ -142,6 +142,34 @@
   @media (max-width: 640px) { .clubrow { grid-template-columns: 1fr 1fr; } .clubrow > :first-child { grid-column: 1 / -1; } }
   .uid { font-size: 11.5px; color: var(--dim); margin-top: 40px; text-align: center; overflow-wrap: anywhere; }
   .loading { color: var(--dim); padding: 30px 0; text-align: center; }
+  /* Öğrenci takvimi (açılır pencere) */
+  .kidbtn { background: none; border: none; color: inherit; font: inherit; padding: 0; text-align: left; cursor: pointer; border-bottom: 1px dashed transparent; }
+  .kidbtn:hover, .kidbtn:focus-visible { color: var(--brass); border-bottom-color: var(--brass-dim); outline: none; }
+  .modal { position: fixed; inset: 0; z-index: 50; background: rgba(8, 14, 19, .66); display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .sheet { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; width: 100%; max-width: 440px; max-height: calc(100vh - 32px); overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+  .kidhead { display: flex; align-items: center; gap: 12px; }
+  .kidhead .av { width: 48px; height: 48px; font-size: 17px; }
+  .kidhead .t { flex: 1; min-width: 0; }
+  .kidhead h2 { overflow-wrap: anywhere; }
+  .kidhead .sub { font-size: 12.5px; color: var(--dim); }
+  .xbtn { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: none; color: var(--text); font-size: 18px; line-height: 1; }
+  .sheet .monthnav { align-self: stretch; justify-content: space-between; }
+  .kstats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .kstats .tile { padding: 10px 12px; }
+  .kstats .n { font-size: 22px; }
+  .kcal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+  .kcal .wd { text-align: center; font-size: 11px; color: var(--dim); text-transform: uppercase; padding: 2px 0; }
+  .kcell { position: relative; aspect-ratio: 1; border-radius: 9px; display: grid; place-items: center; background: var(--panel-2); color: var(--dim); font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .kcell.c1 { background: var(--on1); color: #fff; }
+  .kcell.c2 { background: var(--on2); color: #fff; }
+  .kcell.blank { background: none; }
+  .kcell.today { box-shadow: inset 0 0 0 2px var(--brass); }
+  .kcell .x2 { position: absolute; top: -5px; right: -4px; font-size: 9.5px; font-weight: 700; padding: 1px 4px; border-radius: 7px; background: var(--ball); color: var(--ball-ink); }
+  .kdates { border: 1px solid var(--line); border-radius: 12px; }
+  .kdates div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 12px; border-top: 1px solid var(--line); font-size: 13.5px; }
+  .kdates div:first-child { border-top: none; }
+  .kdates span:last-child { color: var(--dim); white-space: nowrap; }
+  .sheet .legend { padding: 0; }
   .switcher { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
   .switcher button { background: var(--panel); border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 7px 14px; font-size: 13.5px; }
   .switcher button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); font-weight: 600; }
@@ -264,7 +292,8 @@
     coaches: [],            // [{uid, name, email, joinedAt, data:{groups, att}|null, syncedAt, error}]
     month: ymd(new Date()).slice(0, 7),
     fCoach: "", fGroup: "",
-    joinOpen: false
+    joinOpen: false,
+    kid: null              // açık öğrenci takvimi: {uid, gid, name}
   };
 
   // ---------- Yükleme ----------
@@ -509,7 +538,7 @@
     html += '<table><thead><tr><th>Öğrenci</th><th>Geldiği gün</th><th>Antrenman</th><th>Devam</th></tr></thead><tbody>' +
       rows.map(function (r) {
         var z = r.sessions ? "" : ' class="zero"';
-        return '<tr><td' + z + '>' + esc(r.name) + '</td><td' + z + '>' + r.days + '</td><td' + z + '>' + r.sessions + '</td><td' + z + '>' +
+        return '<tr><td' + z + '>' + kidBtn(co, g, r.name) + '</td><td' + z + '>' + r.days + '</td><td' + z + '>' + r.sessions + '</td><td' + z + '>' +
           (r.rate === null ? "—" : '<span class="bar" aria-hidden="true"><i style="width:' + Math.min(100, r.rate) + '%"></i></span>%' + r.rate) + '</td></tr>';
       }).join("") + '</tbody></table>';
     if (gm.activeDays.length) {
@@ -518,7 +547,7 @@
         return '<th>' + dt.getDate() + '<br>' + esc(dt.toLocaleDateString("tr-TR", { weekday: "short" }).replace(".", "").slice(0, 3)) + '</th>';
       }).join("") + '</tr>';
       var body = groupKids(g).map(function (n) {
-        return '<tr><td class="nm">' + esc(n) + '</td>' + gm.activeDays.map(function (d) {
+        return '<tr><td class="nm">' + kidBtn(co, g, n) + '</td>' + gm.activeDays.map(function (d) {
           var v = (gm.att[d] || {})[n]; v = v === 2 ? 2 : (v === 1 ? 1 : 0);
           return '<td><div class="cell' + (v ? " c" + v : "") + '" title="' + esc(n + " · " + d + " · " + (v === 2 ? "2 antrenman" : v === 1 ? "geldi" : "gelmedi")) + '">' + (v === 2 ? "2" : "") + '</div></td>';
         }).join("") + '</tr>';
@@ -529,6 +558,56 @@
     return html + '</div>';
   }
 
+  function kidBtn(co, g, name) {
+    return '<button type="button" class="kidbtn" data-kuid="' + esc(co.uid) + '" data-kgid="' + esc(g.id) + '" data-kname="' + esc(name) + '" title="Takvimi aç">' + esc(name) + '</button>';
+  }
+  function findKidCtx() {
+    if (!S.kid) return null;
+    var co = S.coaches.filter(function (c) { return c.uid === S.kid.uid; })[0];
+    if (!co || !co.data) return null;
+    var g = co.data.groups.filter(function (x) { return String(x.id) === String(S.kid.gid); })[0];
+    return g ? { co: co, g: g } : null;
+  }
+  function renderKidModal() {
+    var ctx = findKidCtx();
+    if (!ctx) return "";
+    var co = ctx.co, g = ctx.g, name = S.kid.name, gm = groupMonth(co, g, S.month);
+    var a = gm.att, days = [], sess = 0;
+    Object.keys(a).filter(function (d) { return d.slice(0, 7) === S.month; }).sort().forEach(function (d) {
+      var v = (a[d] || {})[name]; v = v === 2 ? 2 : (v === 1 ? 1 : 0);
+      if (v) { days.push([d, v]); sess += v; }
+    });
+    var map = {}; days.forEach(function (x) { map[x[0]] = x[1]; });
+    var rate = gm.sessions ? "%" + Math.round(sess / gm.sessions * 100) : "—";
+    var wd = "";
+    for (var w = 0; w < 7; w++) wd += '<div class="wd">' + esc(new Date(2024, 0, 1 + w).toLocaleDateString("tr-TR", { weekday: "short" }).replace(".", "")) + '</div>';
+    var first = dayFromStr(S.month + "-01"), n = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    var lead = (first.getDay() + 6) % 7, today = ymd(new Date()), cells = "";
+    for (var e = 0; e < lead; e++) cells += '<div class="kcell blank"></div>';
+    for (var d = 1; d <= n; d++) {
+      var ds = ymd(new Date(first.getFullYear(), first.getMonth(), d)), v = map[ds] || 0;
+      cells += '<div class="kcell' + (v ? " c" + v : "") + (ds === today ? " today" : "") + '" title="' + esc(ds + " · " + (v === 2 ? "2 antrenman" : v === 1 ? "geldi" : "gelmedi")) + '">' + d + (v === 2 ? '<span class="x2">×2</span>' : '') + '</div>';
+    }
+    var list = days.length ? days.map(function (x) {
+      var label; try { label = dayFromStr(x[0]).toLocaleDateString("tr-TR", { day: "numeric", month: "long", weekday: "long" }); } catch (er) { label = x[0]; }
+      return '<div><span>' + esc(label) + '</span><span>' + (x[1] === 2 ? "2 antrenman" : "1 antrenman") + '</span></div>';
+    }).join("") : '<div><span style="color:var(--dim)">Bu ay kayıt yok</span></div>';
+    return '<div class="modal" id="kidModal" role="dialog" aria-modal="true" aria-label="' + esc(name) + ' takvimi"><div class="sheet">' +
+      '<div class="kidhead"><span class="av">' + esc(initials(name)) + '</span><div class="t"><h2>' + esc(name) + '</h2>' +
+        '<div class="sub">' + esc(g.name + " · " + coachName(co)) + '</div></div>' +
+        '<button class="xbtn" id="kidClose" type="button" aria-label="Kapat">×</button></div>' +
+      '<div class="monthnav"><button type="button" id="kPrev" aria-label="Önceki ay">‹</button><span>' + esc(monthName(S.month)) + '</span><button type="button" id="kNext" aria-label="Sonraki ay">›</button></div>' +
+      '<div class="kstats">' +
+        '<div class="tile"><div class="n">' + sess + '</div><div class="l">Antrenman</div></div>' +
+        '<div class="tile"><div class="n">' + days.length + '</div><div class="l">Geldiği gün</div></div>' +
+        '<div class="tile"><div class="n">' + rate + '</div><div class="l">Devam oranı</div></div>' +
+      '</div>' +
+      '<div class="kcal">' + wd + cells + '</div>' +
+      '<div class="legend"><span><i class="sw"></i>Gelmedi</span><span><i class="sw c1"></i>Geldi</span><span><i class="sw c2"></i>Aynı gün 2 antrenman</span></div>' +
+      '<div class="eyebrow" style="margin:0">Geldiği günler</div>' +
+      '<div class="kdates">' + list + '</div>' +
+    '</div></div>';
+  }
   function renderOwner() {
     var html = '<section class="owner"><div class="eyebrow">Courtside yönetimi</div><h2 style="margin-bottom:6px">Kulüpler</h2>' +
       '<p class="note" style="margin-bottom:14px">Bu bölümü sadece sen görürsün. Kulüp açınca iki kod çıkar: <b>yönetici kodu</b> kulüp yöneticisine, <b>antrenör kodu</b> antrenörlere verilir.</p>' +
@@ -566,6 +645,7 @@
       }
       if (S.isOwner) html += renderOwner();
       var a = loadAuth();
+      if (S.kid) html += renderKidModal();
       if (a) html += '<div class="uid">Kullanıcı kimliğin: <span id="uidTxt">' + esc(a.uid) + '</span> <button class="link" id="copyUid" type="button" style="font-size:11.5px">kopyala</button></div>';
     }
     app.innerHTML = html;
@@ -636,6 +716,18 @@
       S.loading = true; render();
       loadClub(S.clubId).then(function () { S.loading = false; render(); window.scrollTo(0, 0); }, function (e) { S.loading = false; S.msg = authErr(e); S.err = true; render(); });
     };
+    list = app.querySelectorAll("[data-kname]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      S.kid = { uid: this.getAttribute("data-kuid"), gid: this.getAttribute("data-kgid"), name: this.getAttribute("data-kname") };
+      S.kidY = window.scrollY; render(); try { window.scrollTo(0, S.kidY); } catch (e) {}
+      var x = $("kidClose"); if (x) x.focus();
+    };
+    var closeKid = function () { var y = window.scrollY; S.kid = null; render(); try { window.scrollTo(0, y); } catch (e) {} };
+    if ((el = $("kidClose"))) el.onclick = closeKid;
+    if ((el = $("kidModal"))) el.onclick = function (e) { if (e.target === this) closeKid(); };
+    var keepKidScroll = function (n) { var y = window.scrollY; shiftMonth(n); render(); try { window.scrollTo(0, y); } catch (e) {} };
+    if ((el = $("kPrev"))) el.onclick = function () { keepKidScroll(-1); };
+    if ((el = $("kNext"))) el.onclick = function () { keepKidScroll(1); };
     if ((el = $("copyCoach"))) el.onclick = function () { copy(S.club.coachCode, this); };
     if ((el = $("copyUid"))) el.onclick = function () { copy($("uidTxt").textContent, this); };
     if ((el = $("mPrev"))) el.onclick = function () { shiftMonth(-1); render(); };
@@ -661,6 +753,10 @@
               function (e) { S.busy = false; S.err = true; S.ownerMsg = authErr(e); render(); });
     };
   }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && S.kid) { var y = window.scrollY; S.kid = null; render(); try { window.scrollTo(0, y); } catch (er) {} }
+  });
 
   // ---------- Açılış ----------
   if (loadAuth()) { S.view = "main"; loadMain(); } else render();
