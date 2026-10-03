@@ -2,8 +2,9 @@
 """Courtside turnuva takvimi güncelleyici.
 
 ikort.com.tr/turnuvalar sayfasındaki güncel turnuvaları okur, her turnuvanın
-detay sayfasından tarih aralığını ve yaş gruplarını çıkarır ve sonucu
-data/takvim.json dosyasına yazar. GitHub Actions her gün bir kez çalıştırır
+detay sayfasından tarih aralığını ve yaş gruplarını çıkarır. Ayrıca ITF'nin
+açık takvim verisinden Türkiye'deki ITF Juniors (J30–J500) turnuvalarını ekler.
+Sonucu data/takvim.json dosyasına yazar. GitHub Actions her gün bir kez çalıştırır
 (.github/workflows/takvim.yml).
 
 Kişisel veri (oyuncu adı, doğum tarihi vb.) okunmaz ve kaydedilmez; yalnızca
@@ -209,6 +210,81 @@ def diagnose(html):
     print("---- /TEŞHİS ----", file=sys.stderr)
 
 
+# ---------- ITF World Tennis Tour Juniors ----------
+# itftennis.com'un takvim sayfası verisini bu adresten alır (robots.txt buna izin veriyor).
+# Ülke eklemek için ITF_NATIONS listesine ülke kodu yaz: "GRE", "BUL", "CYP" gibi.
+ITF_API = "https://www.itftennis.com/tennis/api/TournamentApi/GetCalendar"
+ITF_SITE = "https://www.itftennis.com"
+ITF_NATIONS = ["TUR"]
+ITF_DAYS_AHEAD = 240
+
+
+def fetch_itf(session, today):
+    """Liste döndürür; ITF'ye ulaşılamazsa None (o zaman önceki ITF kayıtları korunur)."""
+    params = {
+        "circuitCode": "JT", "searchString": "", "skip": 0, "take": 200,
+        "nationCodes": ",".join(ITF_NATIONS), "zoneCodes": "",
+        "dateFrom": (today - dt.timedelta(days=7)).isoformat(),
+        "dateTo": (today + dt.timedelta(days=ITF_DAYS_AHEAD)).isoformat(),
+        "indoorOutdoor": "", "categories": "", "surfaceCodes": "",
+        "isOrderAscending": "true", "orderField": "startDate",
+    }
+    headers = dict(HEADERS)
+    headers["Accept"] = "application/json, text/plain, */*"
+    headers["Referer"] = ITF_SITE + "/en/tournament-calendar/world-tennis-tour-juniors-calendar/"
+    try:
+        r = session.get(ITF_API, params=params, headers=headers, timeout=30)
+        r.raise_for_status()
+        items = r.json().get("items") or []
+    except Exception as e:  # ağ hatası, engelleme ya da biçim değişikliği
+        print(f"ITF takvimi alınamadı: {e}", file=sys.stderr)
+        return None
+    out = []
+    for it in items:
+        start = (it.get("startDate") or "")[:10]
+        end = (it.get("endDate") or "")[:10] or start
+        if not start or end < today.isoformat():
+            continue
+        key = it.get("tournamentKey") or ""
+        cat = clean(it.get("category"))
+        city = clean(it.get("location") or it.get("venue"))
+        nation = clean(it.get("hostNation"))
+        if it.get("hostNationCode") == "TUR":
+            # i-Kort'la aynı yazım: "Istanbul" -> "İSTANBUL" (şehir filtresi birleşsin)
+            city = ("İ" + city[1:] if city.startswith("I") else city).replace("i", "İ").upper()
+        elif nation:
+            city = f"{city}, {nation}" if city else nation
+        link = it.get("tournamentLink") or ""
+        status = tr_lower(clean(it.get("tourStatusDesc")))
+        out.append({
+            "id": "itf-" + (key or f"{cat}-{city}-{start}"),
+            "name": "ITF " + clean(it.get("tournamentName") or it.get("name")),
+            "start": start,
+            "end": end,
+            "club": clean(it.get("promotionalName")),
+            "city": city,
+            "category": cat,
+            "surface": {"Clay": "Toprak Zemin", "Hard": "Sert Zemin", "Grass": "Çim Zemin",
+                        "Carpet": "Halı Zemin"}.get(clean(it.get("surfaceDesc")), clean(it.get("surfaceDesc"))),
+            "deadline": "",
+            "ages": ["18"],
+            "cancelled": "cancel" in status or "iptal" in status,
+            "url": ITF_SITE + link if link.startswith("/") else ITF_SITE + "/en/tournament-calendar/world-tennis-tour-juniors-calendar/",
+            "source": "itf",
+        })
+    print(f"ITF: {len(out)} turnuva")
+    return out
+
+
+def previous_itf(path, today):
+    try:
+        with open(path, encoding="utf-8") as f:
+            old = json.load(f).get("tournaments") or []
+    except Exception:
+        return []
+    return [t for t in old if t.get("source") == "itf" and (t.get("end") or t.get("start") or "") >= today.isoformat()]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", help="liste sayfası için kayıtlı HTML (deneme)")
@@ -278,10 +354,18 @@ def main():
         })
         print(f"  {start} {name[:60]} -> {out[-1]['ages']}")
 
+    if not args.list:  # deneme modunda ITF'ye gitme
+        itf = fetch_itf(session, today)
+        if itf is None:
+            itf = previous_itf(args.out, today)
+            print(f"ITF: önceki {len(itf)} kayıt korundu", file=sys.stderr)
+        out.extend(itf)
+
     out.sort(key=lambda x: (x["start"], x["name"]))
     data = {
         "updated": dt.datetime.now(TR_TZ).isoformat(timespec="minutes"),
         "source": LIST_URL,
+        "sources": [LIST_URL, ITF_SITE + "/en/tournament-calendar/world-tennis-tour-juniors-calendar/"],
         "tournaments": out,
     }
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
