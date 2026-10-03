@@ -1651,6 +1651,7 @@
   .pl-score { flex: none; font-size: 15px; color: var(--text); }
   .pl-report { width: 100%; margin-top: 18px; }
   /* ---------- Turnuva takvimi ---------- */
+  .cal-flbl { font-size: 12.5px; color: var(--text-dim); margin: 0 0 8px; }
   .cal-chips { display: flex; gap: 7px; overflow-x: auto; margin: 0 -16px 12px; padding: 2px 16px 4px; scrollbar-width: none; }
   .cal-chips::-webkit-scrollbar { display: none; }
   .cal-chips button { flex: none; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; font-size: 14px; cursor: pointer; }
@@ -2444,7 +2445,7 @@
   Object.assign(I18N.tr, {
     hubCalT: "Turnuva takvimi", hubCalS: "TTF turnuvaları, yaş grubuna göre. Her gün güncellenir.",
     calTitle: "Turnuva takvimi", calAll: "Tümü", calU10: "10 yaş ve altı", calAge: "{n} yaş", calB: "Büyükler",
-    calM: "Masters", calYB: "Yeni başlayan", calCount: "{n} turnuva", calNow: "Devam eden",
+    calM: "Masters", calYB: "Yeni başlayan", calAgeLbl: "Yaş grubu · birden fazla seçebilirsin", calCount: "{n} turnuva", calNow: "Devam eden",
     calNone: "Bu filtrelerde yaklaşan turnuva yok.", calAllCities: "Tüm şehirler", calCitiesMore: "{a} +{n}", calClear: "Temizle", calDone: "Tamam", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
     calLoading: "Takvim yükleniyor…", calErr: "Takvim alınamadı. İnternet bağlantını kontrol et.",
     calOld: "İnternet yok; son kaydedilen takvim gösteriliyor.", calCancelled: "İPTAL", calAnn: "Duyuru mesajı", calAnnHint: "Göndermeden önce metni düzenleyebilirsin.", calAnnWa: "WhatsApp'ta gönder", calAnnCopy: "Kopyala", calAnnCopied: "Kopyalandı ✓", calAnnClose: "Kapat", calFavs: "★ Takip ettiklerim", calFollow: "Takip et", calUnfollow: "Takibi bırak",
@@ -2455,7 +2456,7 @@
   Object.assign(I18N.en, {
     hubCalT: "Tournament calendar", hubCalS: "Turkish Tennis Federation events by age group. Updated daily.",
     calTitle: "Tournament calendar", calAll: "All", calU10: "10 & under", calAge: "{n}s", calB: "Seniors",
-    calM: "Masters", calYB: "Beginners", calCount: "{n} tournaments", calNow: "In progress",
+    calM: "Masters", calYB: "Beginners", calAgeLbl: "Age group · pick as many as you like", calCount: "{n} tournaments", calNow: "In progress",
     calNone: "No upcoming tournaments for these filters.", calAllCities: "All cities", calCitiesMore: "{a} +{n}", calClear: "Clear", calDone: "Done", calEmpty: "The calendar isn't ready yet. Try again a little later.",
     calLoading: "Loading calendar…", calErr: "Couldn't load the calendar. Check your internet connection.",
     calOld: "Offline; showing the last saved calendar.", calCancelled: "CANCELLED", calAnn: "Announcement", calAnnHint: "You can edit the text before sending.", calAnnWa: "Send on WhatsApp", calAnnCopy: "Copy", calAnnCopied: "Copied ✓", calAnnClose: "Close", calFavs: "★ Following", calFollow: "Follow", calUnfollow: "Unfollow",
@@ -6864,9 +6865,13 @@
   var CAL_CACHE_KEY = "courtside-cal-cache-v1", CAL_FILTER_KEY = "courtside-cal-age-v1", CAL_CITY_KEY = "courtside-cal-city-v1";
   var CAL_FILTERS = ["all", "u10", "12", "14", "16", "18", "B", "M"];
   var calOpen = false, calData = null, calLoading = false, calErr = false, calStale = false;
+  // Seçili yaş grupları (birden çok olabilir); boş liste = "Tümü".
   var calFilter = (function () {
-    try { var v = localStorage.getItem(CAL_FILTER_KEY); if (CAL_FILTERS.indexOf(v) !== -1) return v; } catch (e) {}
-    return "all";
+    try {
+      var v = localStorage.getItem(CAL_FILTER_KEY) || "";
+      var arr = v.charAt(0) === "[" ? JSON.parse(v) : [v]; // eski kayıt tek değerdi
+      return arr.filter(function (f) { return f !== "all" && CAL_FILTERS.indexOf(f) !== -1; });
+    } catch (e) { return []; }
   })();
   // Seçili şehirler (birden çok). İstanbul Avrupa/Anadolu tek "İSTANBUL" olarak gösterilir.
   var CAL_FAV_KEY = "courtside-cal-fav-v1", calFavs = [];
@@ -6980,7 +6985,10 @@
     return t("calAge", { n: a });
   }
   // Etiket bir filtreye düşüyor mu? 11/13/15/17 gibi tek yaşlar bir üst gruba sayılır.
-  function calAgeInFilter(a, f) {
+  function calAgeInFilter(a, fs) {
+    return (fs || []).some(function (f) { return calAgeIn1(a, f); });
+  }
+  function calAgeIn1(a, f) {
     if (f === "all") return false;
     if (f === "B") return a === "B";
     if (f === "M") return a.charAt(0) === "M";
@@ -6989,9 +6997,9 @@
     if (f === "u10") return n <= 10;
     return n > +f - 2 && n <= +f;
   }
-  function calMatches(tr, f) {
-    if (f === "all") return true;
-    return (tr.ages || []).some(function (a) { return calAgeInFilter(a, f); });
+  function calMatches(tr, fs) {
+    if (!fs || !fs.length) return true;
+    return (tr.ages || []).some(function (a) { return calAgeInFilter(a, fs); });
   }
   function calDate(iso) { var p = String(iso || "").split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
   function calIsoToday() {
@@ -7067,8 +7075,10 @@
   }
   function renderCalendar() {
     var html = navBarHtml("calBack", t("calTitle")) + '<main class="ev-main">';
-    html += '<div class="cal-chips" role="group">' + CAL_FILTERS.map(function (f) {
-      return '<button type="button" data-calf="' + f + '" aria-pressed="' + (f === calFilter) + '">' + escapeHtml(calFilterLabel(f)) + '</button>';
+    html += '<p class="cal-flbl">' + escapeHtml(t("calAgeLbl")) + '</p>';
+    html += '<div class="cal-chips" role="group" aria-label="' + escapeAttr(t("calAgeLbl")) + '">' + CAL_FILTERS.map(function (f) {
+      var on = f === "all" ? !calFilter.length : calFilter.indexOf(f) !== -1;
+      return '<button type="button" data-calf="' + f + '" aria-pressed="' + on + '">' + (on && f !== "all" ? '✓ ' : '') + escapeHtml(calFilterLabel(f)) + '</button>';
     }).join("") + '</div>';
     if (!calData) {
       html += '<p class="empty-state">' + escapeHtml(t(calLoading ? "calLoading" : (calErr ? "calErr" : "calEmpty"))) + '</p>';
@@ -7176,9 +7186,18 @@
     };
     list = app.querySelectorAll("[data-calf]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
-      calFilter = this.getAttribute("data-calf");
-      try { localStorage.setItem(CAL_FILTER_KEY, calFilter); } catch (e) {}
+      var f = this.getAttribute("data-calf");
+      if (f === "all") calFilter = [];
+      else {
+        var k = calFilter.indexOf(f);
+        if (k === -1) calFilter.push(f); else calFilter.splice(k, 1);
+        calFilter.sort(function (a, b) { return CAL_FILTERS.indexOf(a) - CAL_FILTERS.indexOf(b); });
+      }
+      try { localStorage.setItem(CAL_FILTER_KEY, JSON.stringify(calFilter)); } catch (e) {}
+      var sx = this.parentNode ? this.parentNode.scrollLeft : 0, y = window.scrollY;
       render();
+      var ch = app.querySelector(".cal-chips"); if (ch) ch.scrollLeft = sx;
+      try { window.scrollTo(0, y); } catch (e) {}
     };
   }
 
