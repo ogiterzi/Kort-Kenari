@@ -1,6 +1,10 @@
 {
- "updated": "2026-10-03T12:17+03:00",
+ "updated": "2026-10-03T12:43+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
+ "sources": [
+  "https://www.ikort.com.tr/turnuvalar",
+  "https://www.itftennis.com/en/tournament-calendar/world-tennis-tour-juniors-calendar/"
+ ],
  "tournaments": [
   {
    "id": "5699",
@@ -57,6 +61,23 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5373"
   },
   {
+   "id": "itf-J-J200-TUR-2026-002",
+   "name": "ITF J200 Istanbul",
+   "start": "2026-09-28",
+   "end": "2026-10-04",
+   "club": "Prof. Dr. Cemil Tasçioglu Cup",
+   "city": "İSTANBUL",
+   "category": "J200",
+   "surface": "Sert Zemin",
+   "deadline": "",
+   "ages": [
+    "18"
+   ],
+   "cancelled": false,
+   "url": "https://www.itftennis.com/en/tournament/j200-istanbul/tur/2026/j-j200-tur-2026-002/",
+   "source": "itf"
+  },
+  {
    "id": "5469",
    "name": "BU PİLİÇ T400 MASTERS TURNUVASI",
    "start": "2026-10-01",
@@ -87,6 +108,23 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5701"
+  },
+  {
+   "id": "itf-J-J30-TUR-2026-006",
+   "name": "ITF J30 Bursa",
+   "start": "2026-10-05",
+   "end": "2026-10-11",
+   "club": "Yenigün Bursa",
+   "city": "BURSA",
+   "category": "J30",
+   "surface": "Toprak Zemin",
+   "deadline": "",
+   "ages": [
+    "18"
+   ],
+   "cancelled": false,
+   "url": "https://www.itftennis.com/en/tournament/j30-bursa/tur/2026/j-j30-tur-2026-006/",
+   "source": "itf"
   },
   {
    "id": "5672",
@@ -485,6 +523,23 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5713"
+  },
+  {
+   "id": "itf-J-J30-TUR-2026-009",
+   "name": "ITF J30 Istanbul",
+   "start": "2026-10-12",
+   "end": "2026-10-17",
+   "club": "4. EMIN BÜLENT CUP",
+   "city": "İSTANBUL",
+   "category": "J30",
+   "surface": "Sert Zemin",
+   "deadline": "",
+   "ages": [
+    "18"
+   ],
+   "cancelled": false,
+   "url": "https://www.itftennis.com/en/tournament/j30-istanbul/tur/2026/j-j30-tur-2026-009/",
+   "source": "itf"
   },
   {
    "id": "5368",
@@ -1014,6 +1069,23 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5647"
   },
   {
+   "id": "itf-J-J30-TUR-2026-005",
+   "name": "ITF J30 Istanbul",
+   "start": "2026-11-09",
+   "end": "2026-11-14",
+   "club": "MATRIX SAILING ISTANBUL OPTIMUM",
+   "city": "İSTANBUL",
+   "category": "J30",
+   "surface": "Sert Zemin",
+   "deadline": "",
+   "ages": [
+    "18"
+   ],
+   "cancelled": false,
+   "url": "https://www.itftennis.com/en/tournament/j30-istanbul/tur/2026/j-j30-tur-2026-005/",
+   "source": "itf"
+  },
+  {
    "id": "5681",
    "name": "YALOVA T400 50+,55+,60+,65+,70+,75+ VE 80+ MASTERS TURNUVASI",
    "start": "2026-11-12",
@@ -1345,6 +1417,23 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5682"
   },
   {
+   "id": "itf-J-J60-TUR-2026-006",
+   "name": "ITF J60 Antalya",
+   "start": "2026-11-23",
+   "end": "2026-11-28",
+   "club": "J60 MTA OPEN II",
+   "city": "ANTALYA",
+   "category": "J60",
+   "surface": "Toprak Zemin",
+   "deadline": "",
+   "ages": [
+    "18"
+   ],
+   "cancelled": false,
+   "url": "https://www.itftennis.com/en/tournament/j60-antalya/tur/2026/j-j60-tur-2026-006/",
+   "source": "itf"
+  },
+  {
    "id": "5778",
    "name": "12 Yaş Haftasonu Turnuvası",
    "start": "2026-11-26",
@@ -1471,6 +1560,23 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5772"
+  },
+  {
+   "id": "itf-J-J100-TUR-2026-009",
+   "name": "ITF J100 Antalya",
+   "start": "2026-11-30",
+   "end": "2026-12-06",
+   "club": "MTA OPEN J100",
+   "city": "ANTALYA",
+   "category": "J100",
+   "surface": "Toprak Zemin",
+   "deadline": "",
+   "ages": [
+    "18"
+   ],
+   "cancelled": false,
+   "url": "https://www.itftennis.com/en/tournament/j100-antalya/tur/2026/j-j100-tur-2026-009/",
+   "source": "itf"
   },
   {
    "id": "5556",
