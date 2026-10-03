@@ -40,5 +40,10 @@ jobs:
             echo "Değişiklik yok."
           else
             git commit -m "Turnuva takvimi: $(date -u +%Y-%m-%d)"
-            git push
+            # Betik çalışırken depoya başka dosya yüklenmiş olabilir: önce onları al, sonra gönder.
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              sleep 5
+            done
+            exit 1
           fi
