@@ -2445,7 +2445,8 @@
     clubLeave: "Kulüpten ayrıl", clubLeaveSure: "Emin misin? Kulüp yoklamalarını artık göremez",
     clubJoined: "Kulübe katıldın ✓", clubLeft: "Kulüpten ayrıldın.",
     clubLoading: "Kulüp bilgisi yükleniyor…", clubLoadErr: "Kulüp bilgisi alınamadı.", clubRetry: "Tekrar dene",
-    ykClubOn: "Yoklamaların {name} ile paylaşılıyor."
+    ykClubOn: "Yoklamaların {name} ile paylaşılıyor.",
+    clubRemoved: "{name} seni kulüpten çıkardı. Yoklamaların artık kulüple paylaşılmıyor."
   });
   Object.assign(I18N.en, {
     clubSec: "Club",
@@ -2457,7 +2458,8 @@
     clubLeave: "Leave club", clubLeaveSure: "Sure? The club will no longer see your attendance",
     clubJoined: "You joined the club ✓", clubLeft: "You left the club.",
     clubLoading: "Loading club…", clubLoadErr: "Couldn't load club details.", clubRetry: "Try again",
-    ykClubOn: "Your attendance is shared with {name}."
+    ykClubOn: "Your attendance is shared with {name}.",
+    clubRemoved: "{name} removed you from the club. Your attendance is no longer shared."
   });
   var LANG = detectLang();
   function t(key, params) {
@@ -8774,9 +8776,19 @@
   }
   function loadClubInfo() {
     if (!cloudUser()) { clubInfo = null; return Promise.resolve(); }
-    return getIdToken().then(function (a) { return dbReq("GET", "users/" + a.uid + "/club", a.idToken); })
-      .then(function (c) { clubInfo = c && c.id ? { id: String(c.id), name: String(c.name || "") } : null; },
-            function () { clubInfo = "err"; });
+    return getIdToken().then(function (a) {
+      return dbReq("GET", "users/" + a.uid + "/club", a.idToken).then(function (c) {
+        if (!c || !c.id) return null;
+        var info = { id: String(c.id), name: String(c.name || "") };
+        // Kulüp yöneticisi antrenörü çıkardıysa bağlantı burada da temizlenir.
+        return dbReq("GET", "clubs/" + info.id + "/members/" + a.uid, a.idToken).then(function (m) {
+          if (m) return info;
+          return dbReq("DELETE", "users/" + a.uid + "/club", a.idToken).catch(function () {}).then(function () {
+            clubErr = false; clubMsg = t("clubRemoved", { name: info.name || "—" }); return null;
+          });
+        }, function () { return info; });
+      });
+    }).then(function (info) { clubInfo = info; }, function () { clubInfo = "err"; });
   }
   function clubLeave() {
     if (!clubInfo || !clubInfo.id) return Promise.resolve();
