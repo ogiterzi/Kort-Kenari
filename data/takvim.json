@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-04T12:56+03:00",
+ "updated": "2026-10-05T13:38+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -7,26 +7,10 @@
  ],
  "tournaments": [
   {
-   "id": "5699",
-   "name": "5. AYDIN GÜMRÜK MÜŞAVİRLİĞİ T200 MASTERS TURNUVASI",
-   "start": "2026-09-24",
-   "end": "2026-10-04",
-   "club": "YENİLİKÇİ CREA TENİS KULÜBÜ",
-   "city": "İZMİR",
-   "category": "T200",
-   "surface": "Sert Zemin",
-   "deadline": "2026-09-19",
-   "ages": [
-    "M"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5699"
-  },
-  {
    "id": "5382",
    "name": "LEXUS OPEN T400 MASTERS TURNUVASI",
    "start": "2026-09-24",
-   "end": "2026-10-04",
+   "end": "2026-10-07",
    "club": "LEVENT TENİS KULÜBÜ",
    "city": "İSTANBUL AVRUPA",
    "category": "T400",
@@ -37,45 +21,6 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5382"
-  },
-  {
-   "id": "5373",
-   "name": "MK ELEKTRİK T500 50+,55+,60+,65+,70+,75+ VE 80+ YAŞ MASTERS TURNUVASI",
-   "start": "2026-09-24",
-   "end": "2026-10-04",
-   "club": "MERSİN TENİS YELKEN VE YÜZME KULÜBÜ",
-   "city": "MERSİN",
-   "category": "T500",
-   "surface": "Toprak Zemin",
-   "deadline": "2026-09-19",
-   "ages": [
-    "M50",
-    "M55",
-    "M60",
-    "M65",
-    "M70",
-    "M75",
-    "M80"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5373"
-  },
-  {
-   "id": "itf-J-J200-TUR-2026-002",
-   "name": "ITF J200 Istanbul",
-   "start": "2026-09-28",
-   "end": "2026-10-04",
-   "club": "Prof. Dr. Cemil Tasçioglu Cup",
-   "city": "İSTANBUL",
-   "category": "J200",
-   "surface": "Sert Zemin",
-   "deadline": "",
-   "ages": [
-    "18"
-   ],
-   "cancelled": false,
-   "url": "https://www.itftennis.com/en/tournament/j200-istanbul/tur/2026/j-j200-tur-2026-002/",
-   "source": "itf"
   },
   {
    "id": "5469",
@@ -1505,7 +1450,7 @@
    "club": "İZMİT TENİS KULÜBÜ",
    "city": "KOCAELİ",
    "category": "Haftasonu-A",
-   "surface": "Toprak Zemin",
+   "surface": "Sert Zemin",
    "deadline": "2026-11-17",
    "ages": [
     "14"
