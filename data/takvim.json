@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-14T11:51+03:00",
+ "updated": "2026-10-15T11:27+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -364,7 +364,7 @@
    "city": "ORDU",
    "category": "T100",
    "surface": "Sert Zemin",
-   "deadline": "2026-10-14",
+   "deadline": "2026-10-15",
    "ages": [
     "M"
    ],
