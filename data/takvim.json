@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-02T14:23+03:00",
+ "updated": "2026-11-03T14:00+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -121,6 +121,23 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5647"
+  },
+  {
+   "id": "5807",
+   "name": "14 Yaş En İyi 8 Master Turnuvası",
+   "start": "2026-11-09",
+   "end": "2026-11-13",
+   "club": "ADANA ATLI SPOR KULÜBÜ",
+   "city": "ADANA",
+   "category": "Super kategori",
+   "surface": "Toprak Zemin",
+   "deadline": "2026-11-05",
+   "ages": [
+    "14",
+    "M"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5807"
   },
   {
    "id": "itf-J-J30-TUR-2026-005",
@@ -320,52 +337,21 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5792"
   },
   {
-   "id": "5762",
-   "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
+   "id": "5808",
+   "name": "12 Yaş En İyi 8 Master Turnuvası",
    "start": "2026-11-16",
    "end": "2026-11-20",
-   "club": "ÇAYCUMA TENİS SPOR KULÜBÜ",
-   "city": "ZONGULDAK",
-   "category": "Kategori 2",
+   "club": "ANTALYA TENİS İHTİSAS SPOR KULÜBÜ",
+   "city": "ANTALYA",
+   "category": "Super kategori",
    "surface": "Sert Zemin",
-   "deadline": "2026-11-03",
+   "deadline": "2026-11-12",
    "ages": [
-    "12"
+    "12",
+    "M"
    ],
    "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5762"
-  },
-  {
-   "id": "5763",
-   "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
-   "start": "2026-11-16",
-   "end": "2026-11-20",
-   "club": "GAZİANTEP BELEDİYE SPOR KULÜBÜ",
-   "city": "GAZİANTEP",
-   "category": "Kategori 2",
-   "surface": "Sert Zemin",
-   "deadline": "2026-11-03",
-   "ages": [
-    "12"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5763"
-  },
-  {
-   "id": "5764",
-   "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
-   "start": "2026-11-16",
-   "end": "2026-11-20",
-   "club": "SPORTPLUS TENİS AKADEMİ",
-   "city": "İSTANBUL ANADOLU",
-   "category": "Kategori 1",
-   "surface": "Sert Zemin",
-   "deadline": "2026-11-03",
-   "ages": [
-    "12"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5764"
+   "url": "https://www.ikort.com.tr/turnuva-detay/5808"
   },
   {
    "id": "5793",
@@ -384,6 +370,54 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5793"
   },
   {
+   "id": "5764",
+   "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
+   "start": "2026-11-16",
+   "end": "2026-11-20",
+   "club": "SPORTPLUS TENİS AKADEMİ",
+   "city": "İSTANBUL ANADOLU",
+   "category": "Kategori 1",
+   "surface": "Sert Zemin",
+   "deadline": "2026-11-03",
+   "ages": [
+    "12"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5764"
+  },
+  {
+   "id": "5763",
+   "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
+   "start": "2026-11-16",
+   "end": "2026-11-20",
+   "club": "GAZİANTEP BELEDİYE SPOR KULÜBÜ",
+   "city": "GAZİANTEP",
+   "category": "Kategori 2",
+   "surface": "Sert Zemin",
+   "deadline": "2026-11-03",
+   "ages": [
+    "12"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5763"
+  },
+  {
+   "id": "5762",
+   "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
+   "start": "2026-11-16",
+   "end": "2026-11-20",
+   "club": "ÇAYCUMA TENİS SPOR KULÜBÜ",
+   "city": "ZONGULDAK",
+   "category": "Kategori 2",
+   "surface": "Sert Zemin",
+   "deadline": "2026-11-03",
+   "ages": [
+    "12"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5762"
+  },
+  {
    "id": "5758",
    "name": "14 Yaş Sonbahar Kupası Türkiye Serisi-3",
    "start": "2026-11-16",
@@ -398,38 +432,6 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5758"
-  },
-  {
-   "id": "5761",
-   "name": "14 Yaş Sonbahar Kupası Türkiye Serisi-3",
-   "start": "2026-11-16",
-   "end": "2026-11-20",
-   "club": "ADANA ATLI SPOR KULÜBÜ",
-   "city": "ADANA",
-   "category": "Kategori 2",
-   "surface": "Toprak Zemin",
-   "deadline": "2026-11-03",
-   "ages": [
-    "14"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5761"
-  },
-  {
-   "id": "5760",
-   "name": "14 Yaş Sonbahar Kupası Türkiye Serisi-3",
-   "start": "2026-11-16",
-   "end": "2026-11-20",
-   "club": "İZMİT TENİS KULÜBÜ",
-   "city": "KOCAELİ",
-   "category": "Kategori 1",
-   "surface": "Sert Zemin",
-   "deadline": "2026-11-03",
-   "ages": [
-    "14"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5760"
   },
   {
    "id": "5759",
@@ -448,22 +450,36 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5759"
   },
   {
-   "id": "5781",
-   "name": "8-9-10 Yaş Sonbahar Kupası Türkiye Serisi-1",
+   "id": "5760",
+   "name": "14 Yaş Sonbahar Kupası Türkiye Serisi-3",
    "start": "2026-11-16",
-   "end": "2026-11-21",
-   "club": "SAMSUN TENİS SPOR KULÜBÜ",
-   "city": "SAMSUN",
+   "end": "2026-11-20",
+   "club": "İZMİT TENİS KULÜBÜ",
+   "city": "KOCAELİ",
    "category": "Kategori 1",
    "surface": "Sert Zemin",
-   "deadline": "2026-11-10",
+   "deadline": "2026-11-03",
    "ages": [
-    "8",
-    "9",
-    "10"
+    "14"
    ],
    "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5781"
+   "url": "https://www.ikort.com.tr/turnuva-detay/5760"
+  },
+  {
+   "id": "5761",
+   "name": "14 Yaş Sonbahar Kupası Türkiye Serisi-3",
+   "start": "2026-11-16",
+   "end": "2026-11-20",
+   "club": "ADANA ATLI SPOR KULÜBÜ",
+   "city": "ADANA",
+   "category": "Kategori 2",
+   "surface": "Toprak Zemin",
+   "deadline": "2026-11-03",
+   "ages": [
+    "14"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5761"
   },
   {
    "id": "5780",
@@ -500,6 +516,24 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5779"
+  },
+  {
+   "id": "5781",
+   "name": "8-9-10 Yaş Sonbahar Kupası Türkiye Serisi-1",
+   "start": "2026-11-16",
+   "end": "2026-11-21",
+   "club": "SAMSUN TENİS SPOR KULÜBÜ",
+   "city": "SAMSUN",
+   "category": "Kategori 1",
+   "surface": "Sert Zemin",
+   "deadline": "2026-11-10",
+   "ages": [
+    "8",
+    "9",
+    "10"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5781"
   },
   {
    "id": "5682",
@@ -554,22 +588,6 @@
    "source": "itf"
   },
   {
-   "id": "5778",
-   "name": "12 Yaş Haftasonu Turnuvası",
-   "start": "2026-11-26",
-   "end": "2026-11-29",
-   "club": "ATA TENİS AKADEMİ SPOR KULÜBÜ",
-   "city": "MERSİN",
-   "category": "Haftasonu-A",
-   "surface": "Toprak Zemin",
-   "deadline": "2026-11-17",
-   "ages": [
-    "12"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5778"
-  },
-  {
    "id": "5777",
    "name": "12 Yaş Haftasonu Turnuvası",
    "start": "2026-11-26",
@@ -602,6 +620,22 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5776"
   },
   {
+   "id": "5778",
+   "name": "12 Yaş Haftasonu Turnuvası",
+   "start": "2026-11-26",
+   "end": "2026-11-29",
+   "club": "ATA TENİS AKADEMİ SPOR KULÜBÜ",
+   "city": "MERSİN",
+   "category": "Haftasonu-A",
+   "surface": "Toprak Zemin",
+   "deadline": "2026-11-17",
+   "ages": [
+    "12"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5778"
+  },
+  {
    "id": "5775",
    "name": "12 Yaş Haftasonu Turnuvası",
    "start": "2026-11-26",
@@ -616,22 +650,6 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5775"
-  },
-  {
-   "id": "5773",
-   "name": "14 Yaş Haftasonu Turnuvası",
-   "start": "2026-11-26",
-   "end": "2026-11-29",
-   "club": "İZMİT TENİS KULÜBÜ",
-   "city": "KOCAELİ",
-   "category": "Haftasonu-A",
-   "surface": "Sert Zemin",
-   "deadline": "2026-11-17",
-   "ages": [
-    "14"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5773"
   },
   {
    "id": "5774",
@@ -650,20 +668,20 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5774"
   },
   {
-   "id": "5771",
-   "name": "16 Yaş Haftasonu Turnuvası",
+   "id": "5773",
+   "name": "14 Yaş Haftasonu Turnuvası",
    "start": "2026-11-26",
    "end": "2026-11-29",
-   "club": "ALAÇATI TENİS SPOR KULÜBÜ",
-   "city": "İZMİR",
+   "club": "İZMİT TENİS KULÜBÜ",
+   "city": "KOCAELİ",
    "category": "Haftasonu-A",
-   "surface": "Toprak Zemin",
+   "surface": "Sert Zemin",
    "deadline": "2026-11-17",
    "ages": [
-    "16"
+    "14"
    ],
    "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5771"
+   "url": "https://www.ikort.com.tr/turnuva-detay/5773"
   },
   {
    "id": "5772",
@@ -680,6 +698,22 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5772"
+  },
+  {
+   "id": "5771",
+   "name": "16 Yaş Haftasonu Turnuvası",
+   "start": "2026-11-26",
+   "end": "2026-11-29",
+   "club": "ALAÇATI TENİS SPOR KULÜBÜ",
+   "city": "İZMİR",
+   "category": "Haftasonu-A",
+   "surface": "Toprak Zemin",
+   "deadline": "2026-11-17",
+   "ages": [
+    "16"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5771"
   },
   {
    "id": "5789",
