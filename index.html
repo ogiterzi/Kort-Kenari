@@ -1673,6 +1673,14 @@
   .push-sw[aria-checked="true"] { background: #34C759; }
   .push-sw[aria-checked="true"] span { transform: translateX(20px); }
   .push-sw[disabled] { opacity: .6; }
+  .push-txt .push-err.ok { color: var(--brass); }
+  .push-edit { align-self: flex-start; margin-top: 4px; padding: 0; background: none; border: 0; color: var(--brass); font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .push-sheet { max-height: 86vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .push-sheet .cal-flbl { margin: 14px 0 8px; }
+  .push-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .push-chips button { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--hairline); background: var(--panel-2); color: var(--text); font-family: inherit; font-size: 13.5px; cursor: pointer; }
+  .push-chips button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .push-sheet .zone-actions { margin-top: 18px; }
   .cal-flbl { font-size: 12.5px; color: var(--text-dim); margin: 0 0 8px; }
   .cal-chips { display: flex; gap: 7px; overflow-x: auto; margin: 0 -16px 12px; padding: 2px 16px 4px; scrollbar-width: none; }
   .cal-chips::-webkit-scrollbar { display: none; }
@@ -2561,7 +2569,7 @@
   // ---------- Turnuva takvimi metinleri ----------
   Object.assign(I18N.tr, {
     hubCalT: "Turnuva takvimi", hubCalS: "TTF turnuvaları, yaş grubuna göre. Her gün güncellenir.",
-    pushT: "Bildirimler", pushOnS: "Seçtiğin yaş grupları ve şehirler için: yeni turnuvalar (her gün ~10:30) ve son kayıt günü sabahı hatırlatma. ★ ile takip ettiklerin her zaman.", pushOffS: "Yeni turnuva açılınca ve son kayıt günü gelince haber al.", pushDenied: "Bildirim izni kapalı. Ayarlar → Courtside → Bildirimler'den açabilirsin.", pushErr: "Bildirimler açılamadı. İnternetini kontrol edip tekrar dene.", pushWorking: "Açılıyor…",
+    pushT: "Bildirimler", pushOnS: "{sel} · yeni turnuvalar (~10:30) ve son kayıt günü sabahı. ★ ile takip ettiklerin her zaman.", pushOffS: "Yeni turnuva açılınca ve son kayıt günü gelince haber al.", pushEdit: "Değiştir", pushQ: "Hangi turnuvalar için bildirim almak istersin?", pushQSub: "Bu seçim sadece bildirimler için; takvimdeki arama filtrelerinden ayrı.", pushAges: "Yaş grubu", pushCities: "Şehir", pushAllAges: "Bütün yaşlar", pushAllCities: "Bütün şehirler", pushOn: "Bildirimleri aç", pushSave: "Kaydet", pushOff: "Bildirimleri kapat", pushSaved: "Bildirim tercihlerin kaydedildi ✓", pushDenied: "Bildirim izni kapalı. Ayarlar → Courtside → Bildirimler'den açabilirsin.", pushErr: "Bildirimler açılamadı. İnternetini kontrol edip tekrar dene.", pushWorking: "Açılıyor…",
     calTitle: "Turnuva takvimi", calAll: "Tümü", calU10: "10 yaş ve altı", calAge: "{n} yaş", calB: "Büyükler",
     calM: "Masters", calYB: "Yeni başlayan", calAgeLbl: "Yaş grubu · birden fazla seçebilirsin", calItfAges: "ITF Juniors · 14–18 yaş", calCount: "{n} turnuva", calNow: "Devam eden",
     calNone: "Bu filtrelerde yaklaşan turnuva yok.", calAllCities: "Tüm şehirler", calCitiesMore: "{a} +{n}", calClear: "Temizle", calDone: "Tamam", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
@@ -2573,7 +2581,7 @@
   });
   Object.assign(I18N.en, {
     hubCalT: "Tournament calendar", hubCalS: "Turkish Tennis Federation events by age group. Updated daily.",
-    pushT: "Notifications", pushOnS: "For the age groups and cities you picked: new tournaments (daily ~10:30) and a reminder on the morning of the entry deadline. Always for the ones you follow with ★.", pushOffS: "Get notified when new tournaments open and when entries close.", pushDenied: "Notifications are turned off. Turn them on in Settings → Courtside → Notifications.", pushErr: "Couldn't turn on notifications. Check your connection and try again.", pushWorking: "Turning on…",
+    pushT: "Notifications", pushOnS: "{sel} · new tournaments (~10:30) and the morning entries close. Always for the ones you follow with ★.", pushOffS: "Get notified when new tournaments open and when entries close.", pushEdit: "Change", pushQ: "Which tournaments do you want notifications for?", pushQSub: "This is only for notifications; it's separate from the calendar's search filters.", pushAges: "Age group", pushCities: "City", pushAllAges: "All ages", pushAllCities: "All cities", pushOn: "Turn on notifications", pushSave: "Save", pushOff: "Turn off notifications", pushSaved: "Notification settings saved ✓", pushDenied: "Notifications are turned off. Turn them on in Settings → Courtside → Notifications.", pushErr: "Couldn't turn on notifications. Check your connection and try again.", pushWorking: "Turning on…",
     calTitle: "Tournament calendar", calAll: "All", calU10: "10 & under", calAge: "{n}s", calB: "Seniors",
     calM: "Masters", calYB: "Beginners", calAgeLbl: "Age group · pick as many as you like", calItfAges: "ITF Juniors · ages 14–18", calCount: "{n} tournaments", calNow: "In progress",
     calNone: "No upcoming tournaments for these filters.", calAllCities: "All cities", calCitiesMore: "{a} +{n}", calClear: "Clear", calDone: "Done", calEmpty: "The calendar isn't ready yet. Try again a little later.",
@@ -7181,7 +7189,7 @@
     calCities = calCities.map(calCityName).filter(function (c, i, a) { return c && a.indexOf(c) === i; });
   } catch (e) { calCities = []; }
   function calCityName(c) { c = String(c || "").trim(); return /^İSTANBUL/.test(c) ? "İSTANBUL" : c; }
-  function calSaveCities() { try { localStorage.setItem(CAL_CITY_KEY, JSON.stringify(calCities)); } catch (e) {} pushSyncSoon(); }
+  function calSaveCities() { try { localStorage.setItem(CAL_CITY_KEY, JSON.stringify(calCities)); } catch (e) {} }
   try { calData = JSON.parse(localStorage.getItem(CAL_CACHE_KEY) || "null"); } catch (e) { calData = null; }
 
   function calLoad() {
@@ -7377,7 +7385,7 @@
     html += '<div class="cal-foot">' + (list.length ? escapeHtml(t("calTap")) + '<br>' : '') + escapeHtml(t("calSource", { d: updTxt })) +
       '<br><button class="cal-refresh" id="calRefresh" type="button"' + (calLoading ? ' disabled' : '') + '>' +
       escapeHtml(t(calLoading ? "calLoading" : "calRefresh")) + '</button></div>';
-    return html + '</main>' + renderCalAnn();
+    return html + '</main>' + renderCalAnn() + renderPushSheet();
   }
   function bindCalendar() {
     var el, i, list;
@@ -7390,7 +7398,7 @@
     }
     if ((el = document.getElementById("calBack"))) el.onclick = function () { calOpen = false; calCityOpen = false; calAnnId = null; render(); };
     if ((el = document.getElementById("calRefresh"))) el.onclick = function () { calLoad(); render(); };
-    if ((el = document.getElementById("pushTgl"))) el.onclick = function () { pushToggle(); };
+    bindPushCard();
     if ((el = document.getElementById("calCityBtn"))) el.onclick = function () { calCityOpen = !calCityOpen; render(); };
     if ((el = document.getElementById("calCityDone"))) el.onclick = function () { calCityOpen = false; render(); };
     if ((el = document.getElementById("calCityClear"))) el.onclick = function () { calCities = []; calSaveCities(); render(); };
@@ -7434,7 +7442,6 @@
         calFilter.sort(function (a, b) { return CAL_FILTERS.indexOf(a) - CAL_FILTERS.indexOf(b); });
       }
       try { localStorage.setItem(CAL_FILTER_KEY, JSON.stringify(calFilter)); } catch (e) {}
-      pushSyncSoon();
       var sx = this.parentNode ? this.parentNode.scrollLeft : 0, y = window.scrollY;
       render();
       var ch = app.querySelector(".cal-chips"); if (ch) ch.scrollLeft = sx;
@@ -7449,13 +7456,17 @@
   // Eklenti: @capacitor/push-notifications (bkz. scripts/BILDIRIM_KURULUM.md). Eklenti yoksa
   // (web sürümü) anahtar hiç görünmez.
   var PUSH_KEY = "courtside-push-v1";
+  // {on, token, ages:[...], cities:[...]} — yaş/şehir seçimi yalnızca bildirimler için.
   var pushSt = (function () { try { return JSON.parse(localStorage.getItem(PUSH_KEY) || "null") || {}; } catch (e) { return {}; } })();
-  var pushBusy = false, pushMsg = "", pushTimer = null, pushListening = false;
+  if (!Array.isArray(pushSt.ages)) pushSt.ages = [];
+  if (!Array.isArray(pushSt.cities)) pushSt.cities = [];
+  var pushMsg = "", pushTimer = null, pushReady = false;
+  var pushSheet = null;   // açık tercih penceresi: {ages:[...], cities:[...], first:bool}
   function pushSave() { try { localStorage.setItem(PUSH_KEY, JSON.stringify(pushSt)); } catch (e) {} }
   function pushAvailable() { return !!nativePlugin("PushNotifications"); }
   function pushRecord() {
     var a = loadAuth() || {};
-    return { ages: calFilter.slice(), cities: calCities.slice(), favs: calFavs.slice(0, 200), lang: LANG, uid: a.uid || "", t: { ".sv": "timestamp" } };
+    return { ages: pushSt.ages.slice(), cities: pushSt.cities.slice(), favs: calFavs.slice(0, 200), lang: LANG, uid: a.uid || "", t: { ".sv": "timestamp" } };
   }
   function pushWrite() {
     if (!pushSt.on || !pushSt.token) return Promise.resolve();
@@ -7466,60 +7477,144 @@
     clearTimeout(pushTimer);
     pushTimer = setTimeout(function () { pushWrite().catch(function () {}); }, 1500);
   }
-  // Apple'dan belirteci alır (her açılışta da çağrılır: belirteç değişebilir).
+  // Dinleyiciler bir kez, açılışta kurulur. Belirteç ne zaman gelirse kaydedilir; ekran onu beklemez.
+  function pushSetup() {
+    var P = nativePlugin("PushNotifications");
+    if (!P || pushReady) return;
+    pushReady = true;
+    try {
+      P.addListener("registration", function (tk) {
+        var token = tk && tk.value ? String(tk.value) : "";
+        if (!token) return;
+        var old = pushSt.token;
+        pushSt.token = token; pushSave();
+        if (old && old !== token) getIdToken().then(function (a) { return dbReq("DELETE", "bildirim/" + old, a.idToken); }).catch(function () {});
+        pushWrite().catch(function () {});
+      });
+      P.addListener("registrationError", function () {});
+      P.addListener("pushNotificationActionPerformed", function () {
+        setTimeout(function () { if (!calOpen) { calOpen = true; render(); calLoad(); } }, 0);
+      });
+    } catch (e) {}
+  }
   function pushRegister() {
     var P = nativePlugin("PushNotifications");
-    if (!P) return Promise.reject(new Error("noplugin"));
-    if (!pushListening) {
-      pushListening = true;
-      P.addListener("pushNotificationActionPerformed", function () { calOpen = true; render(); calLoad(); });
-    }
-    return new Promise(function (resolve, reject) {
-      var h1, h2, done = false;
-      var finish = function (fn, v) { if (done) return; done = true; try { h1 && h1.remove && h1.remove(); h2 && h2.remove && h2.remove(); } catch (e) {} fn(v); };
-      Promise.resolve(P.addListener("registration", function (tk) { finish(resolve, tk && tk.value); })).then(function (h) { h1 = h; });
-      Promise.resolve(P.addListener("registrationError", function (e) { finish(reject, new Error("reg")); })).then(function (h) { h2 = h; });
-      P.register().catch(function (e) { finish(reject, e); });
-      setTimeout(function () { finish(reject, new Error("timeout")); }, 20000);
-    }).then(function (token) {
-      if (!token) throw new Error("notoken");
-      var old = pushSt.token;
-      pushSt.token = String(token); pushSave();
-      if (old && old !== pushSt.token) getIdToken().then(function (a) { return dbReq("DELETE", "bildirim/" + old, a.idToken); }).catch(function () {});
-      return pushWrite();
-    });
+    if (!P) return;
+    pushSetup();
+    try { Promise.resolve(P.register()).catch(function () {}); } catch (e) {}
   }
-  function pushToggle() {
-    var P = nativePlugin("PushNotifications");
-    if (!P || pushBusy) return;
-    pushMsg = "";
-    if (pushSt.on) {
-      var tok = pushSt.token;
-      pushSt.on = false; pushSave(); render();
-      if (tok) getIdToken().then(function (a) { return dbReq("DELETE", "bildirim/" + tok, a.idToken); }).catch(function () {});
-      return;
-    }
-    pushBusy = true; render();
-    P.requestPermissions().then(function (r) {
-      if (!r || r.receive !== "granted") throw new Error("denied");
-      pushSt.on = true; pushSave();
-      return pushRegister();
-    }).then(function () { pushBusy = false; render(); }, function (err) {
-      pushBusy = false;
-      if (String(err && err.message) === "denied") { pushSt.on = false; pushSave(); pushMsg = t("pushDenied"); }
-      else { pushMsg = t("pushErr"); }
-      render();
-    });
+  function pushKeep() { var y = window.scrollY; render(); try { window.scrollTo(0, y); } catch (e) {} }
+  // Tercih penceresinde "Aç"/"Kaydet": önce ekranı güncelle, izin ve kayıt arkadan gelsin.
+  function pushApply() {
+    var P = nativePlugin("PushNotifications"), sh = pushSheet;
+    if (!P || !sh) return;
+    var wasOn = !!pushSt.on;
+    pushSt.ages = sh.ages.slice(); pushSt.cities = sh.cities.slice(); pushSt.on = true; pushSave();
+    pushSheet = null; pushMsg = wasOn ? t("pushSaved") : ""; pushKeep();
+    if (wasOn) { pushWrite().catch(function () {}); return; }
+    setTimeout(function () {
+      Promise.resolve(P.requestPermissions()).then(function (r) {
+        if (!r || r.receive !== "granted") throw new Error("denied");
+        pushRegister();
+        if (pushSt.token) pushWrite().catch(function () {});
+      }).catch(function (err) {
+        pushSt.on = false; pushSave();
+        pushMsg = String(err && err.message) === "denied" ? t("pushDenied") : t("pushErr");
+        if (calOpen) pushKeep();
+      });
+    }, 50);
+  }
+  function pushTurnOff() {
+    var tok = pushSt.token;
+    pushSt.on = false; pushSave(); pushSheet = null; pushMsg = ""; pushKeep();
+    if (tok) getIdToken().then(function (a) { return dbReq("DELETE", "bildirim/" + tok, a.idToken); }).catch(function () {});
+  }
+  function pushSelText() {
+    var a = pushSt.ages.length ? pushSt.ages.map(calFilterLabel).join(", ") : t("pushAllAges");
+    var c = pushSt.cities.length ? (pushSt.cities.length <= 2 ? pushSt.cities.map(function (x) { return calNice(x); }).join(", ") : t("calCitiesMore", { a: pushSt.cities.slice(0, 2).map(function (x) { return calNice(x); }).join(", "), n: pushSt.cities.length - 2 })) : t("pushAllCities");
+    return a + " · " + c;
   }
   function renderPushToggle() {
     if (!pushAvailable()) return "";
     var on = !!pushSt.on;
-    return '<div class="push-card"><div class="push-txt"><b>🔔 ' + escapeHtml(t("pushT")) + '</b><span>' + escapeHtml(t(on ? "pushOnS" : "pushOffS")) + '</span>' +
-      (pushMsg ? '<span class="push-err">' + escapeHtml(pushMsg) + '</span>' : '') + '</div>' +
-      '<button type="button" class="push-sw" id="pushTgl" role="switch" aria-checked="' + on + '" aria-label="' + escapeAttr(t("pushT")) + '"' + (pushBusy ? ' disabled' : '') + '><span></span></button></div>';
+    return '<div class="push-card"><div class="push-txt"><b>🔔 ' + escapeHtml(t("pushT")) + '</b><span>' + escapeHtml(on ? t("pushOnS", { sel: pushSelText() }) : t("pushOffS")) + '</span>' +
+      (on ? '<button type="button" class="push-edit" id="pushEdit">' + escapeHtml(t("pushEdit")) + '</button>' : '') +
+      (pushMsg ? '<span class="push-err' + (pushMsg === t("pushSaved") ? ' ok' : '') + '">' + escapeHtml(pushMsg) + '</span>' : '') + '</div>' +
+      '<button type="button" class="push-sw" id="pushTgl" role="switch" aria-checked="' + on + '" aria-label="' + escapeAttr(t("pushT")) + '"><span></span></button></div>';
   }
-  // Açılışta: bildirim açıksa belirteci ve seçimleri tazele.
-  if (pushSt.on && pushAvailable()) setTimeout(function () { pushRegister().catch(function () {}); }, 2500);
+  function pushCityList() {
+    var seen = {}, out = [], today = calIsoToday();
+    ((calData && calData.tournaments) || []).forEach(function (tr) {
+      if ((tr.end || tr.start) < today) return;
+      var c = calCityName(tr.city); if (c && !seen[c]) { seen[c] = 1; out.push(c); }
+    });
+    pushSt.cities.forEach(function (c) { if (!seen[c]) { seen[c] = 1; out.push(c); } });
+    return out.sort(function (a, b) { return a.localeCompare(b, "tr"); });
+  }
+  function renderPushSheet() {
+    var sh = pushSheet; if (!sh) return "";
+    var ages = CAL_FILTERS.filter(function (f) { return f !== "all"; });
+    return '<div class="zone-modal" id="pushModal"><div class="zone-card push-sheet">' +
+      '<div class="zone-title">' + escapeHtml(t("pushQ")) + '</div>' +
+      '<div class="zone-sub">' + escapeHtml(t("pushQSub")) + '</div>' +
+      '<p class="cal-flbl">' + escapeHtml(t("pushAges")) + '</p>' +
+      '<div class="push-chips"><button type="button" data-pusha="all" aria-pressed="' + !sh.ages.length + '">' + escapeHtml(t("pushAllAges")) + '</button>' +
+        ages.map(function (f) { var on = sh.ages.indexOf(f) !== -1; return '<button type="button" data-pusha="' + f + '" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + escapeHtml(calFilterLabel(f)) + '</button>'; }).join("") + '</div>' +
+      '<p class="cal-flbl">' + escapeHtml(t("pushCities")) + '</p>' +
+      '<div class="push-chips"><button type="button" data-pushc="" aria-pressed="' + !sh.cities.length + '">' + escapeHtml(t("pushAllCities")) + '</button>' +
+        pushCityList().map(function (c) { var on = sh.cities.indexOf(c) !== -1; return '<button type="button" data-pushc="' + escapeAttr(c) + '" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + escapeHtml(calNice(c)) + '</button>'; }).join("") + '</div>' +
+      '<div class="zone-actions"><button type="button" id="pushCancel">' + t("cancel") + '</button><button type="button" class="primary" id="pushGo">' + escapeHtml(t(sh.first ? "pushOn" : "pushSave")) + '</button></div>' +
+      (sh.first ? '' : '<button type="button" class="ls-del" id="pushOffBtn">' + escapeHtml(t("pushOff")) + '</button>') +
+    '</div></div>';
+  }
+  // Pencere içindeki seçimler yalnız pencereyi yeniler: takvim listesi yeniden çizilmez, kaymaz.
+  function pushSheetRefresh() {
+    var m = document.getElementById("pushModal"); if (!m) return;
+    var box = m.querySelector(".push-sheet"), st = box ? box.scrollTop : 0;
+    var tmp = document.createElement("div"); tmp.innerHTML = renderPushSheet();
+    m.parentNode.replaceChild(tmp.firstChild, m);
+    var nb = document.querySelector("#pushModal .push-sheet"); if (nb) nb.scrollTop = st;
+    bindPushSheet();
+  }
+  function bindPushSheet() {
+    var el, i, list;
+    if ((el = document.getElementById("pushModal"))) el.onclick = function (e) { if (e.target === this) { pushSheet = null; pushKeep(); } };
+    if ((el = document.getElementById("pushCancel"))) el.onclick = function () { pushSheet = null; pushKeep(); };
+    if ((el = document.getElementById("pushGo"))) el.onclick = function () { pushApply(); };
+    if ((el = document.getElementById("pushOffBtn"))) el.onclick = function () { pushTurnOff(); };
+    list = document.querySelectorAll("[data-pusha]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var f = this.getAttribute("data-pusha"), a = pushSheet.ages;
+      if (f === "all") pushSheet.ages = [];
+      else { var k = a.indexOf(f); if (k === -1) a.push(f); else a.splice(k, 1); a.sort(function (x, y) { return CAL_FILTERS.indexOf(x) - CAL_FILTERS.indexOf(y); }); }
+      pushSheetRefresh();
+    };
+    list = document.querySelectorAll("[data-pushc]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var c = this.getAttribute("data-pushc"), a = pushSheet.cities;
+      if (!c) pushSheet.cities = [];
+      else { var k = a.indexOf(c); if (k === -1) a.push(c); else a.splice(k, 1); }
+      pushSheetRefresh();
+    };
+  }
+  function bindPushCard() {
+    var el;
+    if ((el = document.getElementById("pushTgl"))) el.onclick = function () {
+      pushMsg = "";
+      if (pushSt.on) { pushTurnOff(); return; }
+      pushSheet = { ages: pushSt.ages.slice(), cities: pushSt.cities.slice(), first: true }; pushKeep();
+    };
+    if ((el = document.getElementById("pushEdit"))) el.onclick = function () {
+      pushMsg = ""; pushSheet = { ages: pushSt.ages.slice(), cities: pushSt.cities.slice(), first: false }; pushKeep();
+    };
+    bindPushSheet();
+  }
+  // Açılışta: bildirim açıksa dinleyicileri kur ve belirteci tazele.
+  if (pushAvailable()) { pushSetup(); if (pushSt.on) setTimeout(pushRegister, 2500); }
+  (function () {
+    var r = null; try { r = sessionStorage.getItem("courtside-reopen"); sessionStorage.removeItem("courtside-reopen"); } catch (e) {}
+    if (r === "cal") setTimeout(function () { if (!calOpen) openCalendar(); }, 0);
+  })();
 
   // ================= Turnuva modu: birden çok maçı oyun oyun takip et =================
   // Yönetici turnuvayı adı ve kurallarıyla kurar, günlere maç programı girer (ileri tarih
@@ -9661,6 +9756,8 @@
   }
   // Buluttan veri geldiyse uygulama baştan açılır; bütün ekranlar yeni veriyi okur.
   function cloudReload() {
+    // Takvimdeyken yenilenirse (ör. bildirim izni sonrası eşitleme) yine takvimde açılsın.
+    try { if (calOpen) sessionStorage.setItem("courtside-reopen", "cal"); } catch (e) {}
     try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
     location.reload();
   }
