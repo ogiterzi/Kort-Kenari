@@ -162,6 +162,12 @@
     color: var(--brass);
     font-weight: 600;
   }
+  .ac-apple { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; min-height: 50px; border-radius: 12px; border: 0; background: #fff; color: #000; font-family: -apple-system, system-ui, sans-serif; font-size: 17px; font-weight: 600; cursor: pointer; }
+  .ac-apple[disabled] { opacity: .6; }
+  :root[data-theme="light"] .ac-apple { background: #000; color: #fff; }
+  @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .ac-apple { background: #000; color: #fff; } }
+  .ac-or { display: flex; align-items: center; gap: 10px; color: var(--text-dim); font-size: 12.5px; }
+  .ac-or::before, .ac-or::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
   .btn-primary {
     margin-top: 8px;
     padding: 15px;
@@ -284,6 +290,9 @@
     color: var(--text-dim);
   }
   .game-count.lead { color: var(--brass); box-shadow: inset 0 0 0 1.5px var(--brass-dim); }
+  .game-count small { display: block; margin-top: 4px; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 9.5px; font-weight: 700; letter-spacing: .12em; color: var(--text-dim); }
+  .bd-sets { font-size: 14px; font-weight: 600; color: var(--text); }
+  .bd-setlbl { font-size: 9.5px; font-weight: 700; letter-spacing: .12em; color: var(--text-dim); }
 
   .scorepanel {
     display: flex;
@@ -831,17 +840,19 @@
   .simple-q { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; text-align: center; margin: 2px 0 12px; }
   .simple-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
   .big-pt {
-    min-height: 150px; border-radius: 18px; border: 1px solid var(--hairline);
+    min-height: clamp(190px, 40vh, 340px); border-radius: 18px; border: 1px solid var(--hairline);
     background: var(--panel); color: var(--text); font-family: inherit;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
     padding: 12px 8px; min-width: 0; cursor: pointer;
     -webkit-tap-highlight-color: transparent; touch-action: manipulation;
   }
   .big-pt:active { background: var(--panel-2); border-color: var(--brass); transform: scale(.98); }
-  .big-pt .nm { font-family: 'Fraunces', Georgia, serif; font-size: 25px; font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .big-pt .nm { font-family: 'Fraunces', Georgia, serif; font-size: 30px; font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .big-pt .sub { font-size: 13px; color: var(--text-dim); }
   .big-pt { position: relative; }
   .big-pt .serve-ball { width: 17px; height: 17px; position: absolute; top: 14px; left: 50%; margin-left: -8.5px; }
+  .last-line { text-align: center; font-size: 14px; color: var(--text-dim); margin: -4px 0 12px; }
+  .last-line b { color: var(--text); }
   .last-pt { background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; }
   .last-pt .lp-head { font-size: 14.5px; }
   .last-pt .lp-sub { font-size: 12px; color: var(--text-dim); margin: 2px 0 10px; }
@@ -1433,6 +1444,7 @@
     border-radius: 999px; padding: 7px 14px; font-family: inherit; font-size: 13px; cursor: pointer;
   }
   .live-go[disabled] { opacity: .6; }
+  .live-go.mb-golive { padding: 5px 11px; font-size: 12px; font-weight: 600; white-space: nowrap; }
   .live-pill {
     display: inline-flex; align-items: center; gap: 7px; flex: none;
     font-size: 12px; font-weight: 700; letter-spacing: .04em; color: #fff;
@@ -1651,6 +1663,16 @@
   .pl-score { flex: none; font-size: 15px; color: var(--text); }
   .pl-report { width: 100%; margin-top: 18px; }
   /* ---------- Turnuva takvimi ---------- */
+  .push-card { display: flex; align-items: center; gap: 12px; padding: 12px 14px; margin-bottom: 14px; border-radius: 14px; border: 1px solid var(--hairline); background: var(--panel); }
+  .push-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .push-txt b { font-size: 14.5px; font-weight: 600; }
+  .push-txt span { font-size: 12.5px; line-height: 1.4; color: var(--text-dim); }
+  .push-txt .push-err { color: var(--clay); }
+  .push-sw { flex: none; width: 51px; height: 31px; border-radius: 999px; border: 0; padding: 2px; background: var(--panel-2); cursor: pointer; transition: background .2s; }
+  .push-sw span { display: block; width: 27px; height: 27px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: transform .2s; }
+  .push-sw[aria-checked="true"] { background: #34C759; }
+  .push-sw[aria-checked="true"] span { transform: translateX(20px); }
+  .push-sw[disabled] { opacity: .6; }
   .cal-flbl { font-size: 12.5px; color: var(--text-dim); margin: 0 0 8px; }
   .cal-chips { display: flex; gap: 7px; overflow-x: auto; margin: 0 -16px 12px; padding: 2px 16px 4px; scrollbar-width: none; }
   .cal-chips::-webkit-scrollbar { display: none; }
@@ -1734,6 +1756,11 @@
   @media (prefers-reduced-motion: reduce) {
     #app.scr-fwd, #app.scr-back, .hub-anim .hub-tile, .hub-anim .hub-in, .hub-anim .hub-ball, .hub-anim .hub-word, .hub-anim .hub-tag { animation: none; }
   }
+  .cs-cta { display: flex; align-items: center; gap: 12px; margin: 22px 16px 0; padding: 12px 14px; border-radius: 16px; border: 1.5px solid var(--brass); background: var(--panel); color: var(--text); text-decoration: none; }
+  .cs-ball { flex: none; width: 38px; height: 38px; border-radius: 50%; background: #CFE21B; box-shadow: inset 0 0 0 3px var(--brass); }
+  .cs-t { flex: 1; min-width: 0; font-size: 12.5px; color: var(--text-dim); line-height: 1.35; }
+  .cs-t b { display: block; font-size: 14px; color: var(--text); }
+  .cs-btn { flex: none; background: var(--brass); color: #1B140A; font-weight: 700; font-size: 13px; border-radius: 10px; padding: 8px 12px; }
   .live-foot { text-align: center; font-size: 11.5px; color: var(--text-dim); padding: 18px 0 6px; }
 
   /* ---- Uygulama açılış animasyonu (yalnızca iOS uygulamasında) ----
@@ -1790,6 +1817,18 @@
   .yk-main { display: flex; flex-direction: column; gap: 14px; }
   .yk-card { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 15px 14px 15px 16px; border-radius: 16px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-family: inherit; cursor: pointer; }
   .yk-card:active { transform: scale(.98); }
+  .pl-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .pl-other { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 0; background: none; border: 0; border-bottom: 1px solid var(--hairline); color: var(--text); font-family: inherit; text-align: left; cursor: pointer; }
+  .pl-other:last-child { border-bottom: 0; }
+  .pl-other .pl-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pl-other .pl-sub { font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+  .yk-peerhead { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 14px 2px 0; }
+  .yk-peerhead .section-label { margin: 0; }
+  .yk-peercard { background: transparent; border-style: dashed; }
+  .yk-coach { display: inline-block; font-size: 11.5px; font-weight: 700; color: var(--brass); letter-spacing: .02em; }
+  .yk-ro { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: var(--panel-2); color: var(--text-dim); font-size: 13px; line-height: 1.4; }
+  .yk-ro b { color: var(--text); font-weight: 600; }
+  .yk-ext { font-size: 12.5px; color: var(--text-dim); text-align: center; margin: 0; }
   .yk-card .yk-cmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
   .yk-card .yk-cname { font-family: 'Fraunces', Georgia, serif; font-size: 18px; font-weight: 600; }
   .yk-card .yk-csub { font-size: 12.5px; color: var(--text-dim); }
@@ -1847,6 +1886,83 @@
   .yk-name .yk-nm { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-width: 0; }
   .yk-main > * { min-width: 0; }
   #app { overflow-x: clip; }
+  .ls-main { display: flex; flex-direction: column; gap: 14px; }
+  .ls-intro { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 18px 8px 4px; }
+  .ls-intro svg { width: 96px; height: 96px; }
+  .ls-intro p { margin: 0; color: var(--text-dim); font-size: 14.5px; line-height: 1.55; }
+  .ls-ask { background: var(--panel); border: 1px solid var(--brass); border-radius: 20px; padding: 16px 14px 12px; display: flex; flex-direction: column; gap: 12px; }
+  .ls-q { font-family: 'Fraunces', Georgia, serif; font-size: 21px; font-weight: 600; line-height: 1.25; }
+  .ls-dayseg { display: inline-flex; align-self: flex-start; background: var(--panel-2); border-radius: 999px; padding: 3px; }
+  .ls-dayseg button { border: none; background: none; color: var(--text-dim); font-family: inherit; font-size: 13.5px; font-weight: 600; padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+  .ls-dayseg button[aria-pressed="true"] { background: var(--bg); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+  .ls-calbtn { position: relative; display: inline-flex; align-items: center; gap: 5px; color: var(--text-dim); font-size: 13.5px; font-weight: 600; padding: 6px 12px; border-radius: 999px; cursor: pointer; overflow: hidden; }
+  .ls-calbtn[aria-pressed="true"] { background: var(--bg); color: var(--brass); box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+  .ls-calbtn input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; border: 0; padding: 0; margin: 0; cursor: pointer; font-size: 16px; }
+  .ls-picks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ls-pick { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 5px 14px 5px 5px; border-radius: 999px; border: 1.5px solid var(--hairline); background: var(--bg); color: var(--text); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s; }
+  .ls-pav { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--panel-2); color: var(--brass); font-size: 12.5px; font-weight: 700; }
+  .ls-pn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ls-pick[aria-pressed="true"] { background: var(--brass); border-color: var(--brass); color: #1B140A; }
+  .ls-pick[aria-pressed="true"] .ls-pav { background: #1B140A; color: var(--brass); font-size: 16px; }
+  .ls-px { font-size: 12px; font-weight: 700; opacity: .8; }
+  .ls-pick:active { transform: scale(.97); }
+  .ls-pgrp { display: inline-flex; align-items: stretch; max-width: 100%; border-radius: 999px; background: var(--brass); }
+  .ls-pgrp .ls-pick { min-width: 0; padding-right: 10px; }
+  .ls-pmore { flex: none; width: 40px; border: 0; border-left: 1.5px solid rgba(27,20,10,.25); border-radius: 0 999px 999px 0; background: transparent; color: #1B140A; font-family: inherit; font-size: 20px; font-weight: 700; cursor: pointer; }
+  .ls-pmore:active { transform: scale(.94); }
+  .ls-pnew { border-style: dashed; color: var(--text-dim); font-weight: 500; }
+  .ls-pnew .ls-pav { font-size: 18px; }
+  .ls-durline { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-dim); }
+  .ls-durline span { margin-right: 2px; }
+  .ls-durline button { border: 1px solid var(--hairline); background: none; color: var(--text-dim); border-radius: 999px; padding: 4px 10px; font-family: inherit; font-size: 12.5px; cursor: pointer; }
+  .ls-durline button[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); font-weight: 600; }
+  .ls-done { margin: 0; font-size: 12.5px; color: var(--text-dim); }
+  .ls-mnav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+  .ls-mnav span { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; text-transform: capitalize; }
+  .ls-mnav button { width: 42px; height: 38px; border-radius: 10px; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); font-size: 20px; cursor: pointer; }
+  .ls-mnav button:disabled { opacity: .35; cursor: default; }
+  .ls-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .ls-sum div { background: var(--panel); border: 1px solid var(--hairline); border-radius: 14px; padding: 10px 12px; }
+  .ls-sum b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .ls-sum span { font-size: 12px; color: var(--text-dim); }
+  .ls-studs { display: flex; flex-direction: column; gap: 8px; }
+  .ls-stud { display: flex; border: 1px solid var(--hairline); border-radius: 16px; background: var(--panel); overflow: hidden; }
+  .ls-sopen { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; background: none; border: none; padding: 12px 12px 12px 12px; text-align: left; color: var(--text); font-family: inherit; cursor: pointer; }
+  .ls-av { flex: none; width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: var(--panel-2); color: var(--brass); font-weight: 700; font-size: 14px; }
+  .ls-av.big { width: 58px; height: 58px; font-size: 19px; }
+  .ls-st { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .ls-sn { font-size: 16px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ls-ss, .ls-snote { font-size: 12.5px; color: var(--text-dim); }
+  .ls-snote { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: .85; }
+  .ls-cnt { flex: none; min-width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center; padding: 0 8px; background: var(--brass); color: #1B140A; font-weight: 700; font-size: 14px; }
+  .ls-addstud { align-self: center; background: none; border: 1px dashed var(--hairline); color: var(--brass); font-family: inherit; font-weight: 600; font-size: 14.5px; padding: 10px 18px; border-radius: 999px; cursor: pointer; }
+  .ls-head { display: flex; align-items: center; gap: 14px; }
+  .ls-ht { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .ls-hn { font-family: 'Fraunces', Georgia, serif; font-size: 22px; font-weight: 600; }
+  .ls-phone { font-size: 14px; color: var(--brass); text-decoration: none; font-weight: 600; }
+  .ls-tot { font-size: 14px; color: var(--text-dim); margin-top: -4px; }
+  .ls-tot b { color: var(--text); font-size: 16px; }
+  .ls-list { display: flex; flex-direction: column; border: 1px solid var(--hairline); border-radius: 14px; background: var(--panel); overflow: hidden; }
+  .ls-row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; background: none; border: none; border-top: 1px solid var(--hairline); padding: 13px 14px; color: var(--text); font-family: inherit; cursor: pointer; }
+  .ls-row:first-child { border-top: none; }
+  .ls-rmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .ls-rname { font-size: 15px; font-weight: 600; text-transform: capitalize; }
+  .ls-rnote { font-size: 12.5px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ls-rdur { flex: none; font-size: 13.5px; color: var(--text-dim); }
+  .ls-card { max-height: calc(100vh - 40px); overflow-y: auto; gap: 14px; text-align: left; }
+  .ls-card .field label { font-size: 13px; color: var(--text-dim); }
+  .ls-card input[type="text"], .ls-card input[type="tel"] { width: 100%; }
+  .ls-days { flex-wrap: wrap; }
+  .ls-days button { flex: 1 1 0; }
+  .ls-days input[type="date"] { flex: 1 1 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--hairline); background: var(--panel-2); color: var(--text); font-family: inherit; font-size: 15px; }
+  .ls-days input.on { border-color: var(--brass); color: var(--brass); }
+  .ls-durs { flex-wrap: wrap; gap: 8px; }
+  .ls-durs button { flex: 1 1 28%; min-width: 0; padding-left: 4px; padding-right: 4px; }
+  .ls-del { align-self: center; background: none; border: none; color: var(--text-dim); font-family: inherit; font-size: 13.5px; padding: 6px 10px; cursor: pointer; }
+  .ls-del.armed { color: var(--clay); font-weight: 600; }
+  .ls-share { display: flex; gap: 8px; }
+  .ls-share a, .ls-share button { flex: 1; text-align: center; text-decoration: none; padding: 12px; border-radius: 12px; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--panel); color: var(--text); }
+  .ls-share a.ls-wa { background: #25D366; border-color: #25D366; color: #fff; }
   @media (prefers-reduced-motion: reduce) { .yk-name { transition: none; } }
 
 </style>
@@ -1861,7 +1977,7 @@
   // ---------- Bulut eşitleme kancası ----------
   // Uygulama verisi (maç, arşiv, oyuncular, turnuvalar, yoklama) localStorage'a her yazıldığında
   // bulut modülü haberdar edilir. Asıl eşitleme aşağıdaki "Hesap ve bulut" bölümünde.
-  var CLOUD_KEYS = ["courtside-match-v1", "courtside-archive-v1", "courtside-players-v1", "courtside-tournaments-v1", "courtside-attendance-v1", "courtside-cal-fav-v1"];
+  var CLOUD_KEYS = ["courtside-match-v1", "courtside-archive-v1", "courtside-players-v1", "courtside-tournaments-v1", "courtside-attendance-v1", "courtside-cal-fav-v1", "courtside-lessons-v1"];
   var CLOUD_META_KEY = "courtside-sync-v1";
   var _lsSet = null, _lsRemove = null, cloudHook = null;
   function isLS(s) { try { return s === window.localStorage; } catch (e) { return false; } }
@@ -1884,6 +2000,7 @@
   // Aynı dosya hem web'de hem App Store uygulamasında çalışır. Uygulamada sayfa
   // capacitor://localhost adresinden açıldığı için paylaşım linkleri web sürümünü göstermeli.
   var WEB_APP_URL = "https://ogiterzi.github.io/Kort-Kenari/"; // web sürümünün adresi (GitHub Pages)
+  var APP_STORE_URL = "https://apps.apple.com/tr/app/id6815723582"; // paylaşılan her şeyin altındaki "Courtside ile" bağlantısı
   var IS_NATIVE = !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === "function" && window.Capacitor.isNativePlatform());
   if (IS_NATIVE) { try { document.documentElement.classList.add("native"); } catch (e) {} }
   function nativePlugin(name) {
@@ -1971,7 +2088,7 @@
       h2hTitle: "Karşılıklı geçmiş", tied: "berabere", ahead: "{name} önde",
       playerTotals: "Oyuncu toplamları (tamamlanan + yarım maçlar)",
       thPlayer: "Oyuncu", thMatches: "Maç", thWL: "G–M", thSets: "Set", thAce: "Ace", thWin: "Win", thErr: "Hata",
-      back: "← Geri", matchArchive: "Maç arşivi", importBtn: "İçe aktar",
+      back: "← Geri", matchArchive: "Maçlar ve oyuncular", importBtn: "İçe aktar", plOthers: "Maçlarda geçen diğer isimler", plOthersSub: "Listende olmayan ama maçlarda geçen isimler. Dokununca profili açılır, ☆ ile listene eklersin.", plMine: "Oyuncularım",
       lede: "Maçı izlerken puan puan takip et: her puanın nasıl kazanıldığını ve ralliyi işle, otomatik skor ve istatistik sana kalsın.",
       phA: "Örn. Elif", phB: "Örn. Bora",
       matchFormat: "Maç formatı", fmtStandard: "Standart",
@@ -2020,8 +2137,8 @@
       resetQ: "Mevcut kayıt silinsin mi?", resetYes: "Evet, yeni maç", newMatch: "Yeni maç başlat",
       hubTag: "Tenis maçlarını puan puan takip et, turnuvanı yönet.",
       hubMatchT: "Maç takibi", hubMatchS: "Tek maçı puan puan izle; skor ve istatistik otomatik.",
-      hubTourT: "Turnuva modu", hubTourS: "Program, kortlar ve canlı skor paylaşımı.",
-      hubArcT: "Geçmiş maçlar", hubArcS: "{n} maç · oyuncu istatistikleri", hubArcS0: "Biten maçların burada birikir.",
+      hubTourT: "Turnuva yönet", hubTourS: "Kendi turnuvan: program, kortlar ve canlı skor.",
+      hubArcT: "Maçlar ve oyuncular", hubArcS: "{n} maç · {p} oyuncu · profiller ve raporlar", hubArcS0: "Oyuncuların ve biten maçların burada toplanır.",
       hubPlayersT: "Oyuncularım", hubPlayersS: "Oyuncu profilleri, maç ve turnuva geçmişi, rapor.",
       plTitle: "Oyuncularım", plAdd: "+ Ekle", plAddPh: "Ad Soyad", plAddThis: "☆ Oyuncularıma ekle",
       plEmpty: "Henüz oyuncu yok. Sorumlu olduğun oyuncuları ad soyadla ekle; maç takibinde ve turnuvalarda bu isimle girilen bütün maçlar profillerinde toplanır.",
@@ -2039,7 +2156,7 @@
       repBtnT: "📊 Sonuç raporu", repGroupBtn: "📄 Rapor", repModalTitle: "Sonuç raporu", repPreparing: "Rapor hazırlanıyor…",
       repImg: "🖼 Görsel", repPdf: "📄 PDF", repSaved: "İndirildi ✓", repNone: "Raporlanacak maç yok.",
       repMyPlayers: "Oyuncularım", repAllPlayers: "Tüm oyuncular", repChampion: "🏆 Şampiyon", repFinalist: "Finalist",
-      repOngoing: "devam ediyor", repMatchN: "{n}. maç", repFooter: "Courtside ile hazırlandı · {date}",
+      repOngoing: "devam ediyor", repMatchN: "{n}. maç", repFooter: "Courtside ile hazırlandı · {date} · App Store'da ücretsiz",
       spQ: "Durum", spNormal: "Normal", spBye: "Bye", spWO: "Hükmen (W.O.)", spRet: "Çekilme (ret.)", spWinner: "Kazanan",
       spNeedWinner: "Kazananı seç.", spByeHint: "Sadece turu bye ile geçen oyuncuyu yaz. Bye galibiyet ya da maç sayılmaz.",
       spRetHint: "Rakip çekildiği andaki skoru yaz: 6-3 2-1", byeName: "Bye", byeShort: "B", byePassed: "Bye ile geçti",
@@ -2050,7 +2167,7 @@
       newConfirmKeep: "Devam et",
       modeQ: "Takip modu", modeSimple: "Basit", modeSimpleSub: "Puan ve skor takibi.",
       modeDetailed: "Coach", modeDetailedSub: "Detaylı istatistik.",
-      whoWonPoint: "Puanı kim aldı?", tookPoint: "puanı aldı",
+      whoWonPoint: "Puanı kim aldı?", tookPoint: "puanı aldı", hdrGames: "OYUN", hdrSets: "SETLER", goLiveShort: "📡 Yayınla",
       lastPoint: "Son puan: <b>{name}</b> aldı", howOptional: "Nasıl bitti? İstersen işaretle, zorunlu değil.",
       chipErr: "{name} hata yaptı", chipDf: "{name} çift hata", oError: "✕ Hata", sErrors: "Hata", newConfirmGo: "Yeni maça geç",
       stillPlaying: "Maç devam ediyor", reportTitle: "Courtside — Maç Raporu", statsTitle: "İstatistikler",
@@ -2144,7 +2261,7 @@
       h2hTitle: "Head to head", tied: "tied", ahead: "{name} leads",
       playerTotals: "Player totals (finished + unfinished matches)",
       thPlayer: "Player", thMatches: "Played", thWL: "W–L", thSets: "Sets", thAce: "Aces", thWin: "Win", thErr: "UE",
-      back: "← Back", matchArchive: "Match archive", importBtn: "Import",
+      back: "← Back", matchArchive: "Matches and players", importBtn: "Import", plOthers: "Other names in your matches", plOthersSub: "Names from your matches that aren't on your list. Tap to open a profile.", plMine: "My players",
       lede: "Track the match point by point as you watch: log how each point was won and the rally, and get the score and stats automatically.",
       phA: "e.g. Emma", phB: "e.g. Leo",
       matchFormat: "Match format", fmtStandard: "Standard",
@@ -2193,8 +2310,8 @@
       resetQ: "Delete the current match?", resetYes: "Yes, new match", newMatch: "Start new match",
       hubTag: "Track tennis point by point and run your tournaments.",
       hubMatchT: "Match tracking", hubMatchS: "Follow one match point by point; score and stats are automatic.",
-      hubTourT: "Tournament mode", hubTourS: "Schedules, courts and live score sharing.",
-      hubArcT: "Past matches", hubArcS: "{n} matches · player stats", hubArcS0: "Finished matches collect here.",
+      hubTourT: "Run a tournament", hubTourS: "Your own tournament: schedule, courts and live scores.",
+      hubArcT: "Matches and players", hubArcS: "{n} matches · {p} players · profiles and reports", hubArcS0: "Your players and finished matches collect here.",
       hubPlayersT: "My players", hubPlayersS: "Player profiles, match and tournament history, reports.",
       plTitle: "My players", plAdd: "+ Add", plAddPh: "First and last name", plAddThis: "☆ Add to my players",
       plEmpty: "No players yet. Add the players you coach by full name; every match entered with that name in match tracking or tournaments collects in their profile.",
@@ -2212,7 +2329,7 @@
       repBtnT: "📊 Results report", repGroupBtn: "📄 Report", repModalTitle: "Results report", repPreparing: "Preparing report…",
       repImg: "🖼 Image", repPdf: "📄 PDF", repSaved: "Downloaded ✓", repNone: "No matches to report.",
       repMyPlayers: "My players", repAllPlayers: "All players", repChampion: "🏆 Champion", repFinalist: "Finalist",
-      repOngoing: "in progress", repMatchN: "Match {n}", repFooter: "Made with Courtside · {date}",
+      repOngoing: "in progress", repMatchN: "Match {n}", repFooter: "Made with Courtside · {date} · free on the App Store",
       spQ: "Status", spNormal: "Normal", spBye: "Bye", spWO: "Walkover (W.O.)", spRet: "Retired (ret.)", spWinner: "Winner",
       spNeedWinner: "Pick the winner.", spByeHint: "Only enter the player who got the bye. A bye doesn't count as a win or a match.",
       spRetHint: "Enter the score when the opponent retired: 6-3 2-1", byeName: "Bye", byeShort: "B", byePassed: "Advanced with a bye",
@@ -2223,7 +2340,7 @@
       newConfirmKeep: "Keep playing",
       modeQ: "Tracking mode", modeSimple: "Simple", modeSimpleSub: "Point and score tracking.",
       modeDetailed: "Coach", modeDetailedSub: "Detailed statistics.",
-      whoWonPoint: "Who won the point?", tookPoint: "won the point",
+      whoWonPoint: "Who won the point?", tookPoint: "won the point", hdrGames: "GAMES", hdrSets: "SETS", goLiveShort: "📡 Go live",
       lastPoint: "Last point: won by <b>{name}</b>", howOptional: "How did it end? Optional — tag it if you like.",
       chipErr: "Error by {name}", chipDf: "Double fault by {name}", oError: "✕ Error", sErrors: "Errors", newConfirmGo: "New match",
       stillPlaying: "Match in progress", reportTitle: "Courtside — Match Report", statsTitle: "Statistics",
@@ -2272,7 +2389,7 @@
   }
   // ---------- Turnuva modu metinleri ----------
   Object.assign(I18N.tr, {
-    evEntry: "🏆 Turnuva modu", evEntryOpen: "🏆 Turnuvalar · {n} aktif",
+    evEntry: "🏆 Turnuva yönet", evEntryOpen: "🏆 Turnuvalar · {n} aktif",
     evListTitle: "Turnuvalar", evNewT: "+ Yeni turnuva", evOpenT: "Aç", evNMatches: "{n} maç",
     evCreateTitle: "Yeni turnuva", evRulesTitle: "Turnuva kuralları", evTName: "Turnuva adı", evTNamePh: "ör. Kulüp Kupası 2026",
     evCreate: "Turnuvayı oluştur", evSaveRules: "Kuralları kaydet", evNeedTName: "Turnuvaya bir ad ver.",
@@ -2303,12 +2420,12 @@
     evFinishYes: "Turnuvayı bitir",
     evViewerBy: "Turnuva · canlı skorlar", evViewerEnded: "Turnuva sona erdi · son skorlar",
     evFollow: "Takip et", evUnfollow: "Takibi bırak",
-    evArchTag: "Sadece skor", evScoreOnlyNote: "Bu maç Turnuva modunda oyun oyun girildi; puan istatistiği yok.",
+    evArchTag: "Sadece skor", evScoreOnlyNote: "Bu maç Turnuva yönet ekranında oyun oyun girildi; puan istatistiği yok.",
     evNoMatches: "Henüz maç eklenmedi.", evNoMatchesDay: "Bu gün için maç yok.",
     rStandard: "Standart", rSets: "{n} set", rFinalSTB: "son set süper TB", rNoAd: "karar puanı", rAd: "avantajlı"
   });
   Object.assign(I18N.en, {
-    evEntry: "🏆 Tournament mode", evEntryOpen: "🏆 Tournaments · {n} active",
+    evEntry: "🏆 Run a tournament", evEntryOpen: "🏆 Tournaments · {n} active",
     evListTitle: "Tournaments", evNewT: "+ New tournament", evOpenT: "Open", evNMatches: "{n} matches",
     evCreateTitle: "New tournament", evRulesTitle: "Tournament rules", evTName: "Tournament name", evTNamePh: "e.g. Club Cup 2026",
     evCreate: "Create tournament", evSaveRules: "Save rules", evNeedTName: "Give the tournament a name.",
@@ -2339,7 +2456,7 @@
     evFinishYes: "End tournament",
     evViewerBy: "Tournament · live scores", evViewerEnded: "Tournament over · final scores",
     evFollow: "Follow", evUnfollow: "Unfollow",
-    evArchTag: "Score only", evScoreOnlyNote: "This match was entered game by game in Tournament mode; there are no point stats.",
+    evArchTag: "Score only", evScoreOnlyNote: "This match was entered game by game in Run a tournament; there are no point stats.",
     evNoMatches: "No matches added yet.", evNoMatchesDay: "No matches on this day.",
     rStandard: "Standard", rSets: "{n} sets", rFinalSTB: "final set super TB", rNoAd: "deciding point", rAd: "advantage"
   });
@@ -2401,7 +2518,7 @@
   // ---------- Hesap ve bulut metinleri ----------
   Object.assign(I18N.tr, {
     acChipIn: "☁ Giriş yap", acChipOk: "Bulutta", acChipSync: "Eşitleniyor…", acChipOff: "Çevrimdışı",
-    acTitle: "Hesap", acHeadOut: "Kayıtların kaybolmasın",
+    acTitle: "Hesap", acHeadOut: "Kayıtların kaybolmasın", acApple: "Apple ile giriş yap", acOr: "ya da e-postayla", errAppleEmail: "Bu e-posta şifreyle kayıtlı. Aşağıdan e-posta ve şifrenle giriş yap.", errApple: "Apple ile giriş yapılamadı. Tekrar dene.",
     acWhy: "Giriş yaptığında maçların, arşivin, oyuncuların, turnuvaların ve yoklamaların buluta kaydedilir. Uygulama silinse ya da telefon değişse bile aynı e-postayla giriş yapınca hepsi geri gelir.",
     acEmail: "E-posta", acPass: "Şifre (en az 6 karakter)", acLogin: "Giriş yap", acSignup: "Yeni hesap oluştur", acForgot: "Şifremi unuttum",
     acNote: "Bu telefondaki mevcut kayıtların silinmez; ilk girişte hesabına eklenir.",
@@ -2422,7 +2539,7 @@
   });
   Object.assign(I18N.en, {
     acChipIn: "☁ Sign in", acChipOk: "Backed up", acChipSync: "Syncing…", acChipOff: "Offline",
-    acTitle: "Account", acHeadOut: "Keep your records safe",
+    acTitle: "Account", acHeadOut: "Keep your records safe", acApple: "Sign in with Apple", acOr: "or with email", errAppleEmail: "This email is registered with a password. Sign in with your email and password below.", errApple: "Couldn't sign in with Apple. Try again.",
     acWhy: "When you sign in, your matches, archive, players, tournaments and attendance are saved to the cloud. Even if the app is deleted or you change phones, signing in with the same email brings everything back.",
     acEmail: "Email", acPass: "Password (at least 6 characters)", acLogin: "Sign in", acSignup: "Create new account", acForgot: "Forgot password",
     acNote: "Records already on this phone are kept and added to your account the first time you sign in.",
@@ -2444,8 +2561,9 @@
   // ---------- Turnuva takvimi metinleri ----------
   Object.assign(I18N.tr, {
     hubCalT: "Turnuva takvimi", hubCalS: "TTF turnuvaları, yaş grubuna göre. Her gün güncellenir.",
+    pushT: "Bildirimler", pushOnS: "Seçtiğin yaş grupları ve şehirler için: yeni turnuvalar (her gün ~10:30) ve son kayıt günü sabahı hatırlatma. ★ ile takip ettiklerin her zaman.", pushOffS: "Yeni turnuva açılınca ve son kayıt günü gelince haber al.", pushDenied: "Bildirim izni kapalı. Ayarlar → Courtside → Bildirimler'den açabilirsin.", pushErr: "Bildirimler açılamadı. İnternetini kontrol edip tekrar dene.", pushWorking: "Açılıyor…",
     calTitle: "Turnuva takvimi", calAll: "Tümü", calU10: "10 yaş ve altı", calAge: "{n} yaş", calB: "Büyükler",
-    calM: "Masters", calYB: "Yeni başlayan", calAgeLbl: "Yaş grubu · birden fazla seçebilirsin", calCount: "{n} turnuva", calNow: "Devam eden",
+    calM: "Masters", calYB: "Yeni başlayan", calAgeLbl: "Yaş grubu · birden fazla seçebilirsin", calItfAges: "ITF Juniors · 14–18 yaş", calCount: "{n} turnuva", calNow: "Devam eden",
     calNone: "Bu filtrelerde yaklaşan turnuva yok.", calAllCities: "Tüm şehirler", calCitiesMore: "{a} +{n}", calClear: "Temizle", calDone: "Tamam", calEmpty: "Takvim henüz hazır değil. Biraz sonra tekrar dene.",
     calLoading: "Takvim yükleniyor…", calErr: "Takvim alınamadı. İnternet bağlantını kontrol et.",
     calOld: "İnternet yok; son kaydedilen takvim gösteriliyor.", calCancelled: "İPTAL", calAnn: "Duyuru mesajı", calAnnHint: "Göndermeden önce metni düzenleyebilirsin.", calAnnWa: "WhatsApp'ta gönder", calAnnCopy: "Kopyala", calAnnCopied: "Kopyalandı ✓", calAnnClose: "Kapat", calFavs: "★ Takip ettiklerim", calFollow: "Takip et", calUnfollow: "Takibi bırak",
@@ -2455,8 +2573,9 @@
   });
   Object.assign(I18N.en, {
     hubCalT: "Tournament calendar", hubCalS: "Turkish Tennis Federation events by age group. Updated daily.",
+    pushT: "Notifications", pushOnS: "For the age groups and cities you picked: new tournaments (daily ~10:30) and a reminder on the morning of the entry deadline. Always for the ones you follow with ★.", pushOffS: "Get notified when new tournaments open and when entries close.", pushDenied: "Notifications are turned off. Turn them on in Settings → Courtside → Notifications.", pushErr: "Couldn't turn on notifications. Check your connection and try again.", pushWorking: "Turning on…",
     calTitle: "Tournament calendar", calAll: "All", calU10: "10 & under", calAge: "{n}s", calB: "Seniors",
-    calM: "Masters", calYB: "Beginners", calAgeLbl: "Age group · pick as many as you like", calCount: "{n} tournaments", calNow: "In progress",
+    calM: "Masters", calYB: "Beginners", calAgeLbl: "Age group · pick as many as you like", calItfAges: "ITF Juniors · ages 14–18", calCount: "{n} tournaments", calNow: "In progress",
     calNone: "No upcoming tournaments for these filters.", calAllCities: "All cities", calCitiesMore: "{a} +{n}", calClear: "Clear", calDone: "Done", calEmpty: "The calendar isn't ready yet. Try again a little later.",
     calLoading: "Loading calendar…", calErr: "Couldn't load the calendar. Check your internet connection.",
     calOld: "Offline; showing the last saved calendar.", calCancelled: "CANCELLED", calAnn: "Announcement", calAnnHint: "You can edit the text before sending.", calAnnWa: "Send on WhatsApp", calAnnCopy: "Copy", calAnnCopied: "Copied ✓", calAnnClose: "Close", calFavs: "★ Following", calFollow: "Follow", calUnfollow: "Unfollow",
@@ -2471,11 +2590,11 @@
     clubCode: "Kulüp kodu", clubCodePh: "ör. ABCD-2345", clubJoin: "Kulübe katıl", clubNeedCode: "Kulüp kodunu yaz.",
     clubNotFound: "Bu kod bulunamadı. Kodu kulüp yöneticine tekrar sor.",
     clubIn: "Bağlı olduğun kulüp: {name}",
-    clubInNote: "Kulüp yöneticisi yoklamalarını (gruplar, öğrenci adları, devam) görebilir. Maçların, oyuncuların ve turnuvaların paylaşılmaz. İstediğin zaman ayrılabilirsin.",
+    clubInNote: "Kulüp yöneticisi yoklamalarını (gruplar, öğrenci adları, devam) görebilir. Kulüpteki antrenörler de gruplarını görüp yoklama alabilir ama öğrenci ekleyip çıkaramaz. Maçların, oyuncuların, özel derslerin ve turnuvaların paylaşılmaz. İstediğin zaman ayrılabilirsin.",
     clubLeave: "Kulüpten ayrıl", clubLeaveSure: "Emin misin? Kulüp yoklamalarını artık göremez",
     clubJoined: "Kulübe katıldın ✓", clubLeft: "Kulüpten ayrıldın.",
     clubLoading: "Kulüp bilgisi yükleniyor…", clubLoadErr: "Kulüp bilgisi alınamadı.", clubRetry: "Tekrar dene",
-    ykClubOn: "Yoklamaların {name} ile paylaşılıyor.",
+    ykClubOn: "Yoklamaların {name} ile paylaşılıyor.", ykPeerSec: "Kulübün diğer grupları", ykPeerLoading: "Kulübün grupları yükleniyor…", ykPeerErr: "Kulübün grupları alınamadı.", ykPeerNone: "Kulüpteki diğer antrenörlerin henüz grubu yok.", ykPeerOf: "Antrenör: {name}", ykPeerRo: "Grubun antrenörü <b>{name}</b>. Burada sadece yoklama alabilirsin; öğrenci eklemek, çıkarmak ve isim değiştirmek grubun antrenörüne ait.", ykPeerSaveErr: "Kaydedilemedi, internet bağlantını kontrol et.", ykExtBy: "Bu günün yoklamasını işaretleyenlerden biri: {name}", ykExtMerged: "Gruplarına {n} yoklama işlendi ({name}).", ykCoachDefault: "Antrenör",
     clubRemoved: "{name} seni kulüpten çıkardı. Yoklamaların artık kulüple paylaşılmıyor."
   });
   Object.assign(I18N.en, {
@@ -2484,12 +2603,64 @@
     clubCode: "Club code", clubCodePh: "e.g. ABCD-2345", clubJoin: "Join club", clubNeedCode: "Enter the club code.",
     clubNotFound: "That code wasn't found. Ask your club manager for it again.",
     clubIn: "Your club: {name}",
-    clubInNote: "The club manager can see your attendance (groups, student names, sessions). Your matches, players and tournaments are not shared. You can leave any time.",
+    clubInNote: "The club manager can see your attendance (groups, student names, sessions). Coaches in your club can also see your groups and take attendance, but can't add or remove students. Your matches, players, private lessons and tournaments are not shared. You can leave any time.",
     clubLeave: "Leave club", clubLeaveSure: "Sure? The club will no longer see your attendance",
     clubJoined: "You joined the club ✓", clubLeft: "You left the club.",
     clubLoading: "Loading club…", clubLoadErr: "Couldn't load club details.", clubRetry: "Try again",
-    ykClubOn: "Your attendance is shared with {name}.",
+    ykClubOn: "Your attendance is shared with {name}.", ykPeerSec: "Other club groups", ykPeerLoading: "Loading club groups…", ykPeerErr: "Couldn't load club groups.", ykPeerNone: "Other coaches in your club have no groups yet.", ykPeerOf: "Coach: {name}", ykPeerRo: "This group's coach is <b>{name}</b>. You can only take attendance here; adding, removing and renaming students is up to the group's coach.", ykPeerSaveErr: "Couldn't save. Check your connection.", ykExtBy: "{name} also marked attendance for this day.", ykExtMerged: "{name} marked {n} attendance entries in your groups.", ykCoachDefault: "Coach",
     clubRemoved: "{name} removed you from the club. Your attendance is no longer shared."
+  });
+  Object.assign(I18N.tr, {
+    hubLsT: "Özel dersler", hubLsS: "Birebir öğrencilerin ve verdiğin dersler.", hubLsBadge: "Bu ay {n}",
+    lsTitle: "Özel dersler", lsAskToday: "Bugün kimlerle özel ders yaptın?", lsAskYest: "Dün kimlerle özel ders yaptın?", lsAskDay: "{d} kimlerle özel ders yaptın?", lsPickDate: "Tarih seç", lsAddedOn: "{name} · {day} {d}",
+    lsTapHint: "İsimlere dokunarak seç. Yanlış seçersen tekrar dokun.", lsDayDone: "{n} öğrenci, {l} ders. Aynı öğrenciyle bir ders daha yaptıysan + ile ekle; geri almak için isme dokun.", lsMore: "{name} için bir ders daha", lsAddedNth: "{name} · {day} {k}. ders", lsRemovedOne: "{name} · {day} {k} ders kaldı", lsWordToday: "bugün", lsWordYest: "dün", lsDayCount: "{n} ders",
+    lsNewShort: "Yeni öğrenci", lsNewStudent: "+ Yeni öğrenci ekle", lsNewStudentT: "Yeni özel ders öğrencisi", lsEditStudentT: "Öğrenciyi düzenle",
+    lsSName: "Ad soyad", lsSNamePh: "ör. Elif Kaya", lsSPhone: "Telefonu (isteğe bağlı)", lsSNote: "Not (isteğe bağlı)", lsSNotePh: "ör. Salı 18:00 · orta seviye",
+    lsSAdd: "Öğrenciyi ekle", lsEdit: "Düzenle", lsDelStudent: "Öğrenciyi sil", lsDelStudentSure: "Emin misin? Bütün dersleriyle silinir",
+    lsAddLesson: "+ Ders ekle", lsAddLessonFor: "{name} · ders ekle", lsEditLesson: "Dersi düzenle",
+    lsDay: "Gün", lsToday: "Bugün", lsYesterday: "Dün", lsOther: "Başka gün", lsLen: "Süre", lsNote: "Not (isteğe bağlı)", lsNotePh: "ör. servis çalıştık",
+    lsSave: "Kaydet", lsDelLesson: "Dersi sil", lsDelSure: "Emin misin? Sil",
+    lsMin: "{n} dk", lsHour: "{n} saat", lsHourMin: "{h} sa {m} dk", lsNLessons: "ders", lsNKids: "öğrenci", lsTotalTime: "toplam",
+    lsCardMonth: "Bu ay {n} ders · {d}", lsCardLast: "Bu ay ders yok · son ders {d}", lsCardNone: "Henüz ders yok",
+    lsAllTime: "Toplam {n} ders · {d}", lsNoneMonth: "Bu ay ders yok.",
+    lsEmpty: "Özel ders verdiğin öğrencileri bir kez ekle. Sonra her gün tek soru: \"Bugün kimlerle ders yaptın?\" İsimlere dokun, gerisini Courtside saysın.",
+    lsAddedToday: "{name} · bugün {d}", lsAddedYest: "{name} · dün {d}", lsAdded: "{name} · {d} eklendi", lsRemoved: "{name} kaldırıldı",
+    lsSaved: "Kaydedildi", lsDeleted: "Ders silindi", lsStudentAdded: "{name} eklendi", lsStudentDeleted: "Öğrenci silindi",
+    lsNeedName: "Öğrencinin adını yaz.", lsNameTaken: "Bu isimde bir öğrenci zaten var.",
+    lsSend: "Aylık özeti gönder", lsWaTo: "WhatsApp'tan gönder", lsCopy: "Kopyala", lsCopied: "Kopyalandı ✓",
+    lsPrev: "Önceki ay", lsNext: "Sonraki ay", lsRepTitle: "özel dersler", lsRepTotal: "Toplam {n} ders ({d})", lsRepCoach: "Antrenör: {name}",
+    lsPrivate: "Özel dersler sadece sende ve hesabında durur; kulüp panelinde görünmez."
+  });
+  Object.assign(I18N.en, {
+    hubLsT: "Private lessons", hubLsS: "Your one-to-one students and lessons.", hubLsBadge: "{n} this month",
+    lsTitle: "Private lessons", lsAskToday: "Who did you coach privately today?", lsAskYest: "Who did you coach privately yesterday?", lsAskDay: "Who did you coach privately on {d}?", lsPickDate: "Pick a date", lsAddedOn: "{name} · {day} {d}",
+    lsTapHint: "Tap names to pick. Tap again to undo.", lsDayDone: "{n} students, {l} lessons. Did another lesson with the same student? Add it with +; tap the name to undo.", lsMore: "One more lesson for {name}", lsAddedNth: "{name} · {day} lesson {k}", lsRemovedOne: "{name} · {day} {k} left", lsWordToday: "today", lsWordYest: "yesterday", lsDayCount: "{n} lessons",
+    lsNewShort: "New student", lsNewStudent: "+ Add new student", lsNewStudentT: "New private student", lsEditStudentT: "Edit student",
+    lsSName: "Full name", lsSNamePh: "e.g. Emma Smith", lsSPhone: "Phone (optional)", lsSNote: "Note (optional)", lsSNotePh: "e.g. Tue 6pm · intermediate",
+    lsSAdd: "Add student", lsEdit: "Edit", lsDelStudent: "Delete student", lsDelStudentSure: "Sure? Deletes all their lessons",
+    lsAddLesson: "+ Add lesson", lsAddLessonFor: "{name} · add lesson", lsEditLesson: "Edit lesson",
+    lsDay: "Day", lsToday: "Today", lsYesterday: "Yesterday", lsOther: "Other day", lsLen: "Length", lsNote: "Note (optional)", lsNotePh: "e.g. worked on serve",
+    lsSave: "Save", lsDelLesson: "Delete lesson", lsDelSure: "Sure? Delete",
+    lsMin: "{n} min", lsHour: "{n} h", lsHourMin: "{h} h {m} min", lsNLessons: "lessons", lsNKids: "students", lsTotalTime: "total",
+    lsCardMonth: "{n} lessons this month · {d}", lsCardLast: "None this month · last {d}", lsCardNone: "No lessons yet",
+    lsAllTime: "{n} lessons in total · {d}", lsNoneMonth: "No lessons this month.",
+    lsEmpty: "Add your private students once. Then one question a day: \"Who did you coach today?\" Tap the names and Courtside does the counting.",
+    lsAddedToday: "{name} · today {d}", lsAddedYest: "{name} · yesterday {d}", lsAdded: "{name} · {d} added", lsRemoved: "{name} removed",
+    lsSaved: "Saved", lsDeleted: "Lesson deleted", lsStudentAdded: "{name} added", lsStudentDeleted: "Student deleted",
+    lsNeedName: "Enter the student's name.", lsNameTaken: "A student with this name already exists.",
+    lsSend: "Send monthly summary", lsWaTo: "Send on WhatsApp", lsCopy: "Copy", lsCopied: "Copied ✓",
+    lsPrev: "Previous month", lsNext: "Next month", lsRepTitle: "private lessons", lsRepTotal: "{n} lessons in total ({d})", lsRepCoach: "Coach: {name}",
+    lsPrivate: "Private lessons stay with you and your account; they are not shown in the club panel."
+  });
+  Object.assign(I18N.tr, {
+    shareSig: "📲 Courtside ile hazırlandı · {url}",
+    ctaT: "Sen de maçları böyle takip et", ctaS: "Courtside: skor, istatistik ve canlı yayın", ctaBtn: "İndir",
+    ctaPdf: "Courtside ile hazırlandı · App Store'da ücretsiz: {url}"
+  });
+  Object.assign(I18N.en, {
+    shareSig: "📲 Made with Courtside · {url}",
+    ctaT: "Follow matches like this yourself", ctaS: "Courtside: scores, stats and live streaming", ctaBtn: "Get",
+    ctaPdf: "Made with Courtside · free on the App Store: {url}"
   });
   var LANG = detectLang();
   function t(key, params) {
@@ -3981,11 +4152,8 @@
   function renderLiveRow(m) {
     if (viewingArchived) return "";
     if (!state.live) {
-      var busy = liveStatus === "starting";
-      return '<div class="live-row" id="liveRow">' +
-        '<button class="live-go" id="liveGo" type="button"' + (busy ? " disabled" : "") + '>' + (busy ? t("liveStarting") : t("goLive")) + '</button>' +
-        (liveStatus === "error" ? '<div class="live-note">' + escapeHtml(t("liveErr")) + '</div>' : '') +
-      '</div>';
+      // Yayın düğmesi üst çubukta (sol üst); burada sadece hata notu kalır.
+      return liveStatus === "error" ? '<div class="live-row" id="liveRow"><div class="live-note">' + escapeHtml(t("liveErr")) + '</div></div>' : '';
     }
     // Yayındayken burada düğme yok: yayın üst çubuktaki CANLI işaretinden yönetilir.
     return liveStatus === "offline"
@@ -4577,6 +4745,7 @@
     if (acctOpen) return "account";
     if (calOpen) return "cal";
     if (ykOpen) return ykKid ? "ykkid" : (ykGroupId ? "ykgroup" : "yklist");
+    if (lsOpen) return lsSid ? "lsstudent" : "lessons";
     if (eventOpen) return evRulesForm ? "tform" : (eventState ? "tscreen" : "tlist");
     if (archiveOpen) return "archive";
     if (playersOpen && !viewingArchived) return playerView ? "player" : "players";
@@ -4605,6 +4774,7 @@
     app.classList.toggle("cal-screen", !!(calOpen && !liveView));
     if (calOpen && !liveView) { app.innerHTML = renderCalendar(); bindCalendar(); return; }
     if (ykOpen && !liveView) { app.innerHTML = renderYkScreens(); bindYkScreens(); return; }
+    if (lsOpen && !liveView) { app.innerHTML = renderLessons(); bindLessons(); return; }
     if (eventOpen && !liveView) { app.innerHTML = renderTournamentScreens(); bindTournamentScreens(); return; }
     if (playersOpen && !viewingArchived && !archiveOpen && !liveView) { app.innerHTML = renderPlayersScreens(); bindPlayersScreens(); return; }
     if (liveView && !liveView.hasData) { app.innerHTML = renderLiveWaiting(); bindLiveEvents(); return; }
@@ -4639,7 +4809,7 @@
     if (newMatchConfirm) html += renderNewMatchConfirm();
     html += renderShareOverlays();
     html += renderLiveModal();
-    if (liveView) html += '<div class="live-foot">' + escapeHtml(t("liveBy")) + ' · Courtside</div>';
+    if (liveView) html += (IS_NATIVE ? '' : '<a class="cs-cta" href="' + APP_STORE_URL + '" target="_blank" rel="noopener"><span class="cs-ball" aria-hidden="true"></span><span class="cs-t"><b>' + escapeHtml(t("ctaT")) + '</b>' + escapeHtml(t("ctaS")) + '</span><span class="cs-btn">' + escapeHtml(t("ctaBtn")) + '</span></a>') + '<div class="live-foot">' + escapeHtml(t("liveBy")) + ' · Courtside</div>';
     app.innerHTML = html;
     bindEvents();
     bindShareEvents();
@@ -4720,10 +4890,12 @@
     var arr = loadArchive();
     var tabsHtml = '<nav class="tabs">' +
       '<button data-arctab="matches" class="' + (archiveTab === "matches" ? "active" : "") + '">' + t("tabMatches") + (arr.length ? " (" + arr.length + ")" : "") + '</button>' +
-      '<button data-arctab="players" class="' + (archiveTab === "players" ? "active" : "") + '">' + t("tabPlayers") + '</button>' +
+      '<button data-arctab="players" class="' + (archiveTab === "players" ? "active" : "") + '">' + t("tabPlayers") + (loadPlayers().length ? " (" + loadPlayers().length + ")" : "") + '</button>' +
       '</nav>';
     var body;
-    if (!arr.length) {
+    if (archiveTab === "players") {
+      body = renderArcPlayers(arr);
+    } else if (!arr.length) {
       body = '<div class="empty-state">' + t("archiveEmpty") + '</div>';
     } else if (archiveTab === "matches") {
       body = arr.map(function (r) {
@@ -4780,6 +4952,36 @@
       tabsHtml + '<main>' + body + '</main>';
   }
 
+  // "Maçlar ve oyuncular" ekranının Oyuncular sekmesi: önce kayıtlı oyuncular (profil kartları),
+  // altında maçlarda geçen diğer isimler ve karşılıklı geçmiş.
+  function renderArcPlayers(arr) {
+    var players = loadPlayers(), mine = {};
+    players.forEach(function (p) { mine[nameKey(p.name)] = 1; });
+    var html = '<div class="pl-addrow"><input id="plNewName" type="text" maxlength="32" autocomplete="off" placeholder="' + escapeAttr(t("plAddPh")) + '">' +
+      '<button class="btn-primary" id="plAddBtn" type="button">' + t("plAdd") + '</button></div>';
+    if (!players.length) html += '<p class="empty-state" style="padding-top:18px">' + escapeHtml(t("plEmpty")) + '</p>';
+    else html += '<div class="pl-cards">' + plCardsHtml(players) + '</div>';
+    var others = computePlayerTotals(arr).filter(function (p) { return !mine[nameKey(p.name)]; });
+    if (others.length) {
+      html += '<p class="section-label" style="margin-top:22px;">' + t("plOthers") + '</p><p class="yk-note" style="margin:-4px 0 8px">' + escapeHtml(t("plOthersSub")) + '</p>' +
+        '<div class="pl-group" style="padding:2px 14px">' + others.map(function (p) {
+          return '<button class="pl-other" type="button" data-plopen="' + escapeAttr(p.name) + '">' +
+            '<span class="pl-av">' + escapeHtml(initials(p.name)) + '</span>' +
+            '<span class="pl-name">' + escapeHtml(p.name) + '</span>' +
+            '<span class="pl-sub">' + escapeHtml(t("plCardSub", { n: p.matches, w: p.wins, l: p.losses })) + '</span>' +
+            '<span class="ht-chev" aria-hidden="true">›</span></button>';
+        }).join("") + '</div>';
+    }
+    var h2h = computeHeadToHead(arr);
+    if (h2h.length) html += '<p class="section-label" style="margin-top:22px;">' + t("h2hTitle") + '</p>' +
+      h2h.map(function (p) {
+        var lead = p.w1 === p.w2 ? t("tied") : t("ahead", { name: escapeHtml(p.w1 > p.w2 ? p.p1 : p.p2) });
+        return '<div class="h2h-row"><span class="h2h-names">' + escapeHtml(p.p1) + ' — ' + escapeHtml(p.p2) + '</span>' +
+          '<span class="h2h-score scorefont">' + p.w1 + '–' + p.w2 + '</span>' +
+          '<span class="h2h-lead">' + lead + '</span></div>';
+      }).join("");
+    return html;
+  }
   function resumeScoreText(m) {
     var parts = (m.sets || []).map(function (s) { return s.superTB ? "[" + s.a + "-" + s.b + "]" : s.a + "-" + s.b; });
     if (!m.matchOver) parts.push(m.tiebreak ? "TB " + m.tb.a + "-" + m.tb.b : m.games.a + "-" + m.games.b + (m.points.a || m.points.b ? " (" + localScore(scoreLabel(m)) + ")" : ""));
@@ -4825,6 +5027,16 @@
     '<circle cx="45" cy="44" r="13" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/>' +
     '<circle cx="41" cy="42" r="1.7" fill="#1C2A33"/><circle cx="49" cy="42" r="1.7" fill="#1C2A33"/><circle cx="41.5" cy="41.4" r=".55" fill="#fff"/><circle cx="49.5" cy="41.4" r=".55" fill="#fff"/>' +
     '<path d="M42 47 Q45 49.5 48 47" fill="none" stroke="#1C2A33" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  // Topçuk raketle (özel ders).
+  TOPCUK.ls = '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballL"><circle cx="24" cy="38" r="16"/></clipPath><clipPath id="tpRk"><ellipse cx="45" cy="22" rx="11" ry="13.5"/></clipPath></defs>' +
+    '<g transform="rotate(28 45 30)"><rect x="43" y="34" width="4.4" height="20" rx="2" fill="#8A7350"/><rect x="42.4" y="44" width="5.6" height="10" rx="2.2" fill="#C06B57"/>' +
+    '<ellipse cx="45" cy="22" rx="11" ry="13.5" fill="#fff"/><g clip-path="url(#tpRk)" stroke="#AEBAC2" stroke-width=".9"><path d="M36 14h18M34 18h22M34 22h22M34 26h22M36 30h18M39 9v26M43 9v26M47 9v26M51 9v26"/></g>' +
+    '<ellipse cx="45" cy="22" rx="11" ry="13.5" fill="none" stroke="#1C2A33" stroke-width="2.4"/></g>' +
+    '<circle cx="24" cy="38" r="16" fill="#D4E32A"/><g clip-path="url(#tpballL)" fill="none" stroke="#F8FBE0" stroke-width="2.2"><path d="M13 23 Q19 38 13 53"/><path d="M35 23 Q29 38 35 53"/></g>' +
+    '<circle cx="24" cy="38" r="16" fill="none" stroke="#1C2A33" stroke-opacity=".15" stroke-width="1.2"/>' +
+    '<circle cx="19" cy="36" r="1.9" fill="#1C2A33"/><circle cx="29" cy="36" r="1.9" fill="#1C2A33"/><circle cx="19.6" cy="35.4" r=".6" fill="#fff"/><circle cx="29.6" cy="35.4" r=".6" fill="#fff"/>' +
+    '<circle cx="15.5" cy="41" r="2.1" fill="#E57A6B" fill-opacity=".4"/><circle cx="32.5" cy="41" r="2.1" fill="#E57A6B" fill-opacity=".4"/>' +
+    '<path d="M20.5 41.5 Q24 44.8 27.5 41.5" fill="none" stroke="#1C2A33" stroke-width="1.7" stroke-linecap="round"/></svg>';
   // Topçuk yoklama panosuyla.
   TOPCUK.yk = '<svg viewBox="0 0 64 64" aria-hidden="true"><defs><clipPath id="tpballY"><circle cx="23" cy="36" r="16"/></clipPath></defs>' +
     '<g transform="rotate(7 46 36)"><rect x="33" y="16" width="25" height="34" rx="3" fill="#fff" stroke="#8A7350" stroke-width="1.6"/><rect x="40.5" y="13" width="10" height="5.5" rx="1.6" fill="#8A7350"/>' +
@@ -4866,9 +5078,9 @@
         hubTile("openEventBtn", "tour", t("hubTourT"), t("hubTourS"),
           activeTournaments().length ? (anyLiveT ? '<span class="dot"></span>' : '') + escapeHtml(t("hubActive", { n: activeTournaments().length })) : "", anyLiveT ? "live" : "", off + 1) +
         hubTile("hubCal", "cal", t("hubCalT"), t("hubCalS"), "", "", off + 2) +
-        hubTile("hubPlayers", "coach", t("hubPlayersT"), t("hubPlayersS"), loadPlayers().length ? escapeHtml(String(loadPlayers().length)) : "", "", off + 3) +
-        hubTile("hubYk", "yk", t("hubYkT"), t("hubYkS"), ykHubBadge(), "", off + 4) +
-        hubTile("openArchiveSetup", "arc", t("hubArcT"), arcN ? t("hubArcS", { n: arcN }) : t("hubArcS0"), "", "", off + 5) +
+        hubTile("hubYk", "yk", t("hubYkT"), t("hubYkS"), ykHubBadge(), "", off + 3) +
+        hubTile("hubLs", "ls", t("hubLsT"), t("hubLsS"), lsMonthCount() ? escapeHtml(t("hubLsBadge", { n: lsMonthCount() })) : "", "", off + 4) +
+        hubTile("openArchiveSetup", "coach", t("hubArcT"), (arcN || loadPlayers().length) ? t("hubArcS", { n: arcN, p: loadPlayers().length }) : t("hubArcS0"), "", "", off + 5) +
       '</div>' +
     '</div>';
   }
@@ -4877,8 +5089,8 @@
     if ((el = document.getElementById("hubMatch"))) el.onclick = function () { homeView = "setup"; render(); };
     if ((el = document.getElementById("openEventBtn"))) el.onclick = function () { openEventScreen(); };
     if ((el = document.getElementById("openArchiveSetup"))) el.onclick = function () { openArchive(); };
-    if ((el = document.getElementById("hubPlayers"))) el.onclick = function () { openPlayersScreen(); };
     if ((el = document.getElementById("hubYk"))) el.onclick = function () { openYkScreen(); };
+    if ((el = document.getElementById("hubLs"))) el.onclick = function () { openLessons(); };
     if ((el = document.getElementById("hubCal"))) el.onclick = function () { openCalendar(); };
     if ((el = document.getElementById("acctChip"))) el.onclick = function () { openAccount(); };
     if ((el = document.getElementById("resumeBtn"))) el.onclick = function () { homeOpen = false; homeView = "hub"; activeTab = state.matchOver ? "stats" : "live"; render(); };
@@ -5149,14 +5361,16 @@
     var gameCountHtml = function (k) {
       if (!showGames) return "";
       var lead = m.games[k] > m.games[otherKey(k)];
-      return '<span class="game-count' + (lead ? " lead" : "") + '">' + m.games[k] + '</span>';
+      return '<span class="game-count' + (lead ? " lead" : "") + '">' + m.games[k] + '<small>' + t("hdrGames") + '</small></span>';
     };
     return (
       '<header class="matchbar"><div class="matchbar-inner">' +
         '<div class="matchbar-top">' +
           (state.live && !viewingArchived && !m.matchOver
             ? '<span class="mb-left"><button class="live-pill mb-live' + (liveStatus === "offline" ? " off" : "") + '" id="liveHeaderBtn" type="button"><span class="dot"></span>' + t("liveOn") + '</button></span>'
-            : '<span class="mb-left"></span>') + // yayın yokken sol üst boş kalır
+            : (!viewingArchived && !m.matchOver
+                ? '<span class="mb-left"><button class="live-go mb-golive" id="liveGo" type="button"' + (liveStatus === "starting" ? " disabled" : "") + '>' + (liveStatus === "starting" ? t("liveStarting") : t("goLiveShort")) + '</button></span>'
+                : '<span class="mb-left"></span>')) +
           '<span class="mb-info">' + (formatLabel(m) ? formatLabel(m) + " · " : "") + (m.noAd ? t("ruleNoAdShort") : t("ruleAdShort")) + ' · ' + t("nSets", { n: m.setsToPlay }) + (m.finalSetSuperTB ? t("finalSTBShort") : "") + ' · ' + t("pointsLogged", { n: m.log.length }) + '</span>' +
           '<span class="mb-right">' + (viewingArchived ? '' : '<button class="new-match-btn" id="goHomeBtn" type="button">' + t("goHome") + '</button>') + '</span>' +
         '</div>' +
@@ -5173,7 +5387,7 @@
           '<div class="bd-games">' + gameCountHtml("b") + '</div>' +
           ((m.sets.length && !m.matchOver) || bp ?
             '<div class="bd-sets">' + (m.sets.length && !m.matchOver ? setsRowA : '') + '</div>' +
-            '<div class="bd-mid">' + (bp ? '<span class="bp-badge">BREAK POINT</span>' : '') + '</div>' +
+            '<div class="bd-mid">' + (bp ? '<span class="bp-badge">BREAK POINT</span>' : (m.sets.length && !m.matchOver ? '<span class="bd-setlbl">' + t("hdrSets") + '</span>' : '')) + '</div>' +
             '<div class="bd-sets">' + (m.sets.length && !m.matchOver ? setsRowB : '') + '</div>'
           : '') +
         '</div>' +
@@ -5220,23 +5434,9 @@
         '<span class="nm">' + escapeHtml(m.names[k]) + '</span>' +
         '<span class="sub">' + t("tookPoint") + '</span></button>';
     };
+    // Son puan ince bir satırda: yanlış dokunuş hemen fark edilsin. "Nasıl bitti?" sorulmaz.
     var last = m.log[0];
-    var lastHtml = "";
-    if (last) {
-      var W = last.pointWinner, L = otherKey(W);
-      var opts = W === last.server ? ["ace", "winner", "error"] : ["winner", "error", "double_fault"];
-      var lbl = {
-        ace: "Ace", winner: "Winner",
-        error: t("chipErr", { name: shortName(m, L) }),
-        double_fault: t("chipDf", { name: shortName(m, L) })
-      };
-      lastHtml = '<div class="last-pt">' +
-        '<div class="lp-head">' + t("lastPoint", { name: escapeHtml(shortName(m, W)) }) + '</div>' +
-        '<div class="lp-sub">' + t("howOptional") + '</div>' +
-        '<div class="chips">' + opts.map(function (o) {
-          return '<button data-lastout="' + o + '" aria-pressed="' + (last.outcome === o) + '" type="button">' + escapeHtml(lbl[o]) + '</button>';
-        }).join("") + '</div></div>';
-    }
+    var lastHtml = last ? '<p class="last-line">' + t("lastPoint", { name: escapeHtml(shortName(m, last.pointWinner)) }) + '</p>' : '';
     return renderLiveRow(m) + '<p class="simple-q">' + t("whoWonPoint") + '</p>' +
       '<div class="simple-pick">' + btn("a") + btn("b") + '</div>' +
       lastHtml +
@@ -5415,14 +5615,15 @@
     var bpc = computeBreakChances(m, logArr);
     if (m.mode === "simple") {
       // Basit modda servis/vuruş/bölge verisi yok; sıfır gösterip yanıltmamak için o satırlar çıkar.
-      return [
-        [t("sPoints"), sa.pointsWon, sb.pointsWon],
+      // Ace, çift hata, winner ve hata satırları yalnızca eski maçlarda işaretlenmişse görünür.
+      var opt = [
         [t("sAce"), sa.aces, sb.aces],
         [t("sDouble"), sa.doubleFaults, sb.doubleFaults],
         [t("sWinners"), sa.winners, sb.winners],
-        [t("sErrors"), sa.errors || 0, sb.errors || 0],
-        [t("sBPChances"), bpc.a.won + "/" + bpc.a.chances, bpc.b.won + "/" + bpc.b.chances]
-      ];
+        [t("sErrors"), sa.errors || 0, sb.errors || 0]
+      ].filter(function (r) { return r[1] || r[2]; });
+      return [[t("sPoints"), sa.pointsWon, sb.pointsWon]].concat(opt,
+        [[t("sBPChances"), bpc.a.won + "/" + bpc.a.chances, bpc.b.won + "/" + bpc.b.chances]]);
     }
     return [
       [t("sPoints"), sa.pointsWon, sb.pointsWon],
@@ -5912,7 +6113,7 @@
         '</tbody>' +
       '</table>' +
       chartHtml +
-      '<div class="pr-footer">' + t("reportFooter") + '</div>' +
+      '<div class="pr-footer">' + escapeHtml(t("ctaPdf", { url: APP_STORE_URL.replace(/^https:\/\//, "") })) + '</div>' +
       '<div class="pr-hint">' + escapeHtml(t("reportHint")) + '</div>' +
       '<script>window.onload=function(){ setTimeout(function(){ try{ window.print(); }catch(e){} }, 250); };<\/script>' +
       '</body></html>'
@@ -5989,6 +6190,23 @@
       arcTabs[at].onclick = function () {
         archiveTab = this.getAttribute("data-arctab");
         render();
+      };
+    }
+    // Oyuncular sekmesi: ekle ve profili aç (profilden geri gelince yine bu sekme).
+    if (archiveOpen && archiveTab === "players") {
+      var plAddArc = function () {
+        var inp = document.getElementById("plNewName"), v = inp ? inp.value.trim() : "";
+        if (!v) { if (inp) inp.focus(); return; }
+        if (findSavedPlayer(v) < 0) toggleSavedPlayer(v);
+        render();
+        var n2 = document.getElementById("plNewName"); if (n2) n2.focus();
+      };
+      var pab = document.getElementById("plAddBtn"); if (pab) pab.onclick = plAddArc;
+      var pin = document.getElementById("plNewName"); if (pin) pin.onkeydown = function (e) { if (e.key === "Enter") plAddArc(); };
+      var plOpens = app.querySelectorAll("[data-plopen]");
+      for (var po = 0; po < plOpens.length; po++) plOpens[po].onclick = function () {
+        playerView = this.getAttribute("data-plopen"); plDelArm = false; plFromArchive = true;
+        playersOpen = true; archiveOpen = false; render(); try { window.scrollTo(0, 0); } catch (e) {}
       };
     }
     var arcBack = document.getElementById("archiveBack");
@@ -6625,6 +6843,7 @@
   var playerView = null;        // açık profilin adı (null: liste)
   var plDelArm = false;         // "listeden çıkar" onayı
   var archReturn = null;        // arşivden açılan maçtan geri dönülecek yer ("player")
+  var plFromArchive = false;    // profil "Maçlar ve oyuncular" ekranından açıldı
 
   function nameKey(n) { return String(n || "").trim().toLocaleLowerCase("tr"); }
   function sideOf(r, name) {
@@ -6683,7 +6902,11 @@
       '<div class="pl-addrow"><input id="plNewName" type="text" maxlength="32" autocomplete="off" placeholder="' + escapeAttr(t("plAddPh")) + '">' +
       '<button class="btn-primary" id="plAddBtn" type="button">' + t("plAdd") + '</button></div>';
     if (!players.length) html += '<p class="empty-state">' + escapeHtml(t("plEmpty")) + '</p>';
-    html += players.map(function (p, i) {
+    html += plCardsHtml(players);
+    return html + '</main>';
+  }
+  function plCardsHtml(players) {
+    return players.map(function (p, i) {
       var list = playerMatches(p.name), s = playerSummary(list);
       return '<button class="pl-card" data-plopen="' + escapeAttr(p.name) + '" type="button" style="--i:' + i + '">' +
         '<span class="pl-av">' + escapeHtml(initials(p.name)) + '</span>' +
@@ -6692,13 +6915,12 @@
         (s.n ? formDots(list, 5) : '') +
         '<span class="ht-chev" aria-hidden="true">›</span></button>';
     }).join("");
-    return html + '</main>';
   }
 
   // --- Profil ---
   function renderPlayerProfile(name) {
     var list = playerMatches(name), s = playerSummary(list);
-    var html = navBarHtml("plBack", "", "", t("plTitle")) + '<main class="ev-main pl-main">';
+    var html = navBarHtml("plBack", "", "", plFromArchive ? t("tabPlayers") : t("plTitle")) + '<main class="ev-main pl-main">';
     html += '<div class="pl-head"><span class="pl-av big">' + escapeHtml(initials(name)) + '</span><div>' +
       '<h1 class="ev-h1" style="margin:0">' + escapeHtml(name) + '</h1>' +
       '<div class="pl-sub">' + escapeHtml(t("plHeadSub", { n: s.n, tn: s.tourCount })) + '</div></div></div>';
@@ -6821,6 +7043,10 @@
   function bindPlayersScreens() {
     var el, i, list;
     if ((el = document.getElementById("plBack"))) el.onclick = function () {
+      if (plFromArchive) {
+        playerView = null; plDelArm = false; playersOpen = false; plFromArchive = false;
+        archiveOpen = true; archiveTab = "players"; render(); return;
+      }
       if (playerView) { playerView = null; plDelArm = false; } else playersOpen = false;
       render();
     };
@@ -6846,7 +7072,7 @@
       toggleSavedPlayer(playerView); plDelArm = false; playerView = null; render();
     };
   }
-  function openPlayersScreen() { playersOpen = true; playerView = null; plDelArm = false; render(); }
+  function openPlayersScreen() { playersOpen = true; playerView = null; plDelArm = false; plFromArchive = false; render(); }
   // Arşivden açılan maçtan oyuncu profiline dön.
   function returnToPlayer() {
     viewingArchived = false;
@@ -6863,7 +7089,9 @@
   // Yaş etiketleri: "8".."18" gençler, "B" büyükler, "YB" yeni başlayan, "M30"… masters.
   var CAL_URL = "https://raw.githubusercontent.com/ogiterzi/Kort-Kenari/main/data/takvim.json";
   var CAL_CACHE_KEY = "courtside-cal-cache-v1", CAL_FILTER_KEY = "courtside-cal-age-v1", CAL_CITY_KEY = "courtside-cal-city-v1";
-  var CAL_FILTERS = ["all", "u10", "12", "14", "16", "18", "B", "M"];
+  var CAL_FILTERS = ["all", "u10", "12", "14", "16", "18", "B", "M", "itf"];
+  // ITF Juniors turnuvalarına 14 yaşından itibaren girilebilir: 14/16/18 seçiliyken de listede çıkar.
+  var CAL_ITF_AGES = ["14", "16", "18"];
   var calOpen = false, calData = null, calLoading = false, calErr = false, calStale = false;
   // Seçili yaş grupları (birden çok olabilir); boş liste = "Tümü".
   var calFilter = (function () {
@@ -6882,6 +7110,7 @@
     var k = calFavs.indexOf(id);
     if (k === -1) calFavs.push(id); else calFavs.splice(k, 1);
     try { localStorage.setItem(CAL_FAV_KEY, JSON.stringify(calFavs)); } catch (e) {}
+    pushSyncSoon();
   }
   var calCities = [], calCityOpen = false, calAnnId = null;
   // Duyuru (📣) yalnızca izinli hesaplarda görünür. E-posta açık yazılmaz: küçük harfli
@@ -6952,7 +7181,7 @@
     calCities = calCities.map(calCityName).filter(function (c, i, a) { return c && a.indexOf(c) === i; });
   } catch (e) { calCities = []; }
   function calCityName(c) { c = String(c || "").trim(); return /^İSTANBUL/.test(c) ? "İSTANBUL" : c; }
-  function calSaveCities() { try { localStorage.setItem(CAL_CITY_KEY, JSON.stringify(calCities)); } catch (e) {} }
+  function calSaveCities() { try { localStorage.setItem(CAL_CITY_KEY, JSON.stringify(calCities)); } catch (e) {} pushSyncSoon(); }
   try { calData = JSON.parse(localStorage.getItem(CAL_CACHE_KEY) || "null"); } catch (e) { calData = null; }
 
   function calLoad() {
@@ -6975,6 +7204,7 @@
     if (f === "u10") return t("calU10");
     if (f === "B") return t("calB");
     if (f === "M") return t("calM");
+    if (f === "itf") return "ITF";
     return t("calAge", { n: f });
   }
   function calAgeLabel(a) {
@@ -6999,6 +7229,7 @@
   }
   function calMatches(tr, fs) {
     if (!fs || !fs.length) return true;
+    if (tr.source === "itf") return fs.some(function (f) { return f === "itf" || CAL_ITF_AGES.indexOf(f) !== -1; });
     return (tr.ages || []).some(function (a) { return calAgeInFilter(a, fs); });
   }
   function calDate(iso) { var p = String(iso || "").split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
@@ -7029,30 +7260,37 @@
   var CAL_KEEP = ["TTF", "ITF", "TE", "TED", "ODTÜ", "ODTU", "İTÜ", "ITU", "BJK", "GS", "FB", "TK", "SK", "GSK", "TC", "ATP", "WTA", "WTT", "MTA", "AKM", "TOBB", "TEV", "U"];
   // İngilizce kelimeler Türkçe kuralla küçültülmesin ("POINT" -> "Point", "Poınt" değil)
   var CAL_EN = ["POINT", "INTERNATIONAL", "JUNIOR", "JUNIORS", "SERIES", "CHALLENGE", "TENNIS", "CLUB", "WINTER", "SPRING", "SUMMER", "AUTUMN", "INDOOR", "TIE", "BREAK", "KIDS", "MINI", "CITY", "FINAL", "FINALS", "TOUR", "WORLD"];
-  function calNice(v) {
+  function calNice(v, en) {
     v = String(v || "").replace(/\s+/g, " ").trim();
+    // Türkçe harf (İ, Ş, Ğ, Ç, Ö, Ü) hiç yoksa ve "I" varsa metin İngilizce/ASCII yazılmıştır:
+    // o zaman İngilizce kuralla küçült ("EMIN" -> "Emin", "Emın" değil).
+    if (!en && /I/.test(v) && !/[İŞĞÇÖÜ]/.test(v)) en = true;
     var letters = v.replace(/[^A-Za-zÇĞİÖŞÜçğıöşü]/g, "");
     var upper = letters.replace(/[^A-ZÇĞİÖŞÜ]/g, "").length;
     if (!letters.length || upper / letters.length < 0.7) return v; // zaten normal yazılmış
     return v.split(" ").map(function (w) {
       var core = w.replace(/[^A-Za-zÇĞİÖŞÜçğıöşü0-9]/g, "");
       if (/\d/.test(core) || CAL_KEEP.indexOf(core.toLocaleUpperCase("tr-TR")) !== -1) return w;
-      if (core.length >= 2 && core.length <= 4 && !/[AEIİOÖUÜaeıioöuü]/.test(core)) return w; // MK, DR, SK gibi
-      if (CAL_EN.indexOf(core) !== -1) { var en = w.toLowerCase(); return en.charAt(0).toUpperCase() + en.slice(1); }
-      var low = w.toLocaleLowerCase("tr-TR");
+      if (core === "DR") return w.replace("DR", "Dr");
+      if (core.length >= 2 && core.length <= 4 && !/[AEIİOÖUÜaeıioöuü]/.test(core)) return w; // MK, SK gibi
+      if (CAL_EN.indexOf(core) !== -1) { var el = w.toLowerCase(); return el.charAt(0).toUpperCase() + el.slice(1); }
+      var low = en ? w.toLowerCase() : w.toLocaleLowerCase("tr-TR");
       if (["ve", "ile", "of", "and"].indexOf(low) !== -1) return low;
-      return low.replace(/(^|[-(\/.'’])([a-zçğıöşü])/g, function (all, pre, c) { return pre + c.toLocaleUpperCase("tr-TR"); });
+      return low.replace(/(^|[-(\/.'’])([a-zçğıöşü])/g, function (all, pre, c) { return pre + (en ? c.toUpperCase() : c.toLocaleUpperCase("tr-TR")); });
     }).join(" ");
   }
   function calSurface(v) { return calNice(String(v || "").replace(/\s*Zemin\s*$/i, "")); }
   function calCard(tr) {
     var d = calDate(tr.start), e = calDate(tr.end || tr.start), fav = calIsFav(tr.id);
-    var city = calNice(tr.city), club = calNice(tr.club);
+    var itf = tr.source === "itf";
+    var city = calNice(tr.city), club = calNice(tr.club, itf);
     var mon = function (x) { return x.toLocaleDateString(locale(), { month: "short" }).replace(".", ""); };
     var longMon = function (x) { return x.toLocaleDateString(locale(), { month: "long" }); };
     var range = (!tr.end || tr.end === tr.start) ? d.getDate() + " " + longMon(d)
       : (e.getMonth() === d.getMonth() ? d.getDate() + "–" + e.getDate() + " " + longMon(e) : d.getDate() + " " + longMon(d) + " – " + e.getDate() + " " + longMon(e));
-    var ages = (tr.ages || []).map(function (a) {
+    var ages = tr.source === "itf"
+      ? '<span class="cal-age' + (calFilter.some(function (f) { return f === "itf" || CAL_ITF_AGES.indexOf(f) !== -1; }) ? ' hit' : '') + '">' + escapeHtml(t("calItfAges")) + '</span>'
+      : (tr.ages || []).map(function (a) {
       return '<span class="cal-age' + (calAgeInFilter(a, calFilter) ? ' hit' : '') + '">' + escapeHtml(calAgeLabel(a)) + '</span>';
     }).join("");
     var url = /^https:\/\/www\.(ikort\.com\.tr|itftennis\.com)\//.test(tr.url || "") ? tr.url
@@ -7062,7 +7300,7 @@
       '<a class="cal-link" href="' + escapeAttr(url) + '" target="_blank" rel="noopener">' +
       '<span class="cal-date"><span class="cal-day">' + d.getDate() + '</span><span class="cal-mon">' + escapeHtml(mon(d)) + '</span></span>' +
       '<span class="cal-body">' +
-        '<span class="cal-name">' + (tr.cancelled ? '<span class="cal-tag">' + escapeHtml(t("calCancelled")) + '</span>' : '') + escapeHtml(calNice(tr.name)) + '</span>' +
+        '<span class="cal-name">' + (tr.cancelled ? '<span class="cal-tag">' + escapeHtml(t("calCancelled")) + '</span>' : '') + escapeHtml(calNice(tr.name, itf)) + '</span>' +
         '<span class="cal-place"><b>' + escapeHtml(range) + '</b>' + (city ? ' · ' + escapeHtml(city) : '') + '</span>' +
         (club && club.toLocaleLowerCase("tr-TR") !== city.toLocaleLowerCase("tr-TR") ? '<span class="cal-club">' + escapeHtml(club) + '</span>' : '') +
         '<span class="cal-ages">' + ages + (surf ? '<span class="cal-surf">' + escapeHtml(surf) + '</span>' : '') + '</span>' +
@@ -7075,6 +7313,7 @@
   }
   function renderCalendar() {
     var html = navBarHtml("calBack", t("calTitle")) + '<main class="ev-main">';
+    html += renderPushToggle();
     html += '<p class="cal-flbl">' + escapeHtml(t("calAgeLbl")) + '</p>';
     html += '<div class="cal-chips" role="group" aria-label="' + escapeAttr(t("calAgeLbl")) + '">' + CAL_FILTERS.map(function (f) {
       var on = f === "all" ? !calFilter.length : calFilter.indexOf(f) !== -1;
@@ -7151,6 +7390,7 @@
     }
     if ((el = document.getElementById("calBack"))) el.onclick = function () { calOpen = false; calCityOpen = false; calAnnId = null; render(); };
     if ((el = document.getElementById("calRefresh"))) el.onclick = function () { calLoad(); render(); };
+    if ((el = document.getElementById("pushTgl"))) el.onclick = function () { pushToggle(); };
     if ((el = document.getElementById("calCityBtn"))) el.onclick = function () { calCityOpen = !calCityOpen; render(); };
     if ((el = document.getElementById("calCityDone"))) el.onclick = function () { calCityOpen = false; render(); };
     if ((el = document.getElementById("calCityClear"))) el.onclick = function () { calCities = []; calSaveCities(); render(); };
@@ -7194,12 +7434,92 @@
         calFilter.sort(function (a, b) { return CAL_FILTERS.indexOf(a) - CAL_FILTERS.indexOf(b); });
       }
       try { localStorage.setItem(CAL_FILTER_KEY, JSON.stringify(calFilter)); } catch (e) {}
+      pushSyncSoon();
       var sx = this.parentNode ? this.parentNode.scrollLeft : 0, y = window.scrollY;
       render();
       var ch = app.querySelector(".cal-chips"); if (ch) ch.scrollLeft = sx;
       try { window.scrollTo(0, y); } catch (e) {}
     };
   }
+
+  // ================= Turnuva bildirimleri (yalnızca iOS uygulaması) =================
+  // Cihaz Apple'dan bir push belirteci alır ve takvimdeki seçimleriyle birlikte Firebase'e yazar:
+  //   /bildirim/{belirteç} = {ages:[...], cities:[...], favs:[...], lang, uid, t}
+  // scripts/bildirim_gonder.py (GitHub Actions) her sabah takvime bakıp eşleşen cihazlara gönderir.
+  // Eklenti: @capacitor/push-notifications (bkz. scripts/BILDIRIM_KURULUM.md). Eklenti yoksa
+  // (web sürümü) anahtar hiç görünmez.
+  var PUSH_KEY = "courtside-push-v1";
+  var pushSt = (function () { try { return JSON.parse(localStorage.getItem(PUSH_KEY) || "null") || {}; } catch (e) { return {}; } })();
+  var pushBusy = false, pushMsg = "", pushTimer = null, pushListening = false;
+  function pushSave() { try { localStorage.setItem(PUSH_KEY, JSON.stringify(pushSt)); } catch (e) {} }
+  function pushAvailable() { return !!nativePlugin("PushNotifications"); }
+  function pushRecord() {
+    var a = loadAuth() || {};
+    return { ages: calFilter.slice(), cities: calCities.slice(), favs: calFavs.slice(0, 200), lang: LANG, uid: a.uid || "", t: { ".sv": "timestamp" } };
+  }
+  function pushWrite() {
+    if (!pushSt.on || !pushSt.token) return Promise.resolve();
+    return getIdToken().then(function (a) { return dbReq("PUT", "bildirim/" + pushSt.token, a.idToken, pushRecord()); });
+  }
+  function pushSyncSoon() {
+    if (!pushSt.on) return;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(function () { pushWrite().catch(function () {}); }, 1500);
+  }
+  // Apple'dan belirteci alır (her açılışta da çağrılır: belirteç değişebilir).
+  function pushRegister() {
+    var P = nativePlugin("PushNotifications");
+    if (!P) return Promise.reject(new Error("noplugin"));
+    if (!pushListening) {
+      pushListening = true;
+      P.addListener("pushNotificationActionPerformed", function () { calOpen = true; render(); calLoad(); });
+    }
+    return new Promise(function (resolve, reject) {
+      var h1, h2, done = false;
+      var finish = function (fn, v) { if (done) return; done = true; try { h1 && h1.remove && h1.remove(); h2 && h2.remove && h2.remove(); } catch (e) {} fn(v); };
+      Promise.resolve(P.addListener("registration", function (tk) { finish(resolve, tk && tk.value); })).then(function (h) { h1 = h; });
+      Promise.resolve(P.addListener("registrationError", function (e) { finish(reject, new Error("reg")); })).then(function (h) { h2 = h; });
+      P.register().catch(function (e) { finish(reject, e); });
+      setTimeout(function () { finish(reject, new Error("timeout")); }, 20000);
+    }).then(function (token) {
+      if (!token) throw new Error("notoken");
+      var old = pushSt.token;
+      pushSt.token = String(token); pushSave();
+      if (old && old !== pushSt.token) getIdToken().then(function (a) { return dbReq("DELETE", "bildirim/" + old, a.idToken); }).catch(function () {});
+      return pushWrite();
+    });
+  }
+  function pushToggle() {
+    var P = nativePlugin("PushNotifications");
+    if (!P || pushBusy) return;
+    pushMsg = "";
+    if (pushSt.on) {
+      var tok = pushSt.token;
+      pushSt.on = false; pushSave(); render();
+      if (tok) getIdToken().then(function (a) { return dbReq("DELETE", "bildirim/" + tok, a.idToken); }).catch(function () {});
+      return;
+    }
+    pushBusy = true; render();
+    P.requestPermissions().then(function (r) {
+      if (!r || r.receive !== "granted") throw new Error("denied");
+      pushSt.on = true; pushSave();
+      return pushRegister();
+    }).then(function () { pushBusy = false; render(); }, function (err) {
+      pushBusy = false;
+      if (String(err && err.message) === "denied") { pushSt.on = false; pushSave(); pushMsg = t("pushDenied"); }
+      else { pushMsg = t("pushErr"); }
+      render();
+    });
+  }
+  function renderPushToggle() {
+    if (!pushAvailable()) return "";
+    var on = !!pushSt.on;
+    return '<div class="push-card"><div class="push-txt"><b>🔔 ' + escapeHtml(t("pushT")) + '</b><span>' + escapeHtml(t(on ? "pushOnS" : "pushOffS")) + '</span>' +
+      (pushMsg ? '<span class="push-err">' + escapeHtml(pushMsg) + '</span>' : '') + '</div>' +
+      '<button type="button" class="push-sw" id="pushTgl" role="switch" aria-checked="' + on + '" aria-label="' + escapeAttr(t("pushT")) + '"' + (pushBusy ? ' disabled' : '') + '><span></span></button></div>';
+  }
+  // Açılışta: bildirim açıksa belirteci ve seçimleri tazele.
+  if (pushSt.on && pushAvailable()) setTimeout(function () { pushRegister().catch(function () {}); }, 2500);
 
   // ================= Turnuva modu: birden çok maçı oyun oyun takip et =================
   // Yönetici turnuvayı adı ve kurallarıyla kurar, günlere maç programı girer (ileri tarih
@@ -8194,7 +8514,7 @@
     if (g.live.length) html += '<p class="section-label ev-sec">' + t("evLive") + ' · ' + g.live.length + '</p>' + g.live.map(card).join("");
     if (g.next.length) html += '<p class="section-label ev-sec">' + t("evNext") + '</p>' + g.next.map(card).join("");
     if (g.done.length) html += '<p class="section-label ev-sec">' + t("evDone") + '</p>' + g.done.map(card).join("");
-    html += '</main><div class="live-foot">Courtside</div>';
+    html += '</main>' + (IS_NATIVE ? '' : '<a class="cs-cta" href="' + APP_STORE_URL + '" target="_blank" rel="noopener"><span class="cs-ball" aria-hidden="true"></span><span class="cs-t"><b>' + escapeHtml(t("ctaT")) + '</b>' + escapeHtml(t("ctaS")) + '</span><span class="cs-btn">' + escapeHtml(t("ctaBtn")) + '</span></a>') + '<div class="live-foot">Courtside</div>';
     return html;
   }
   function bindEventViewer() {
@@ -8296,17 +8616,129 @@
   }
 
   function ykGroup() {
-    for (var i = 0; i < yk.groups.length; i++) if (String(yk.groups[i].id) === String(ykGroupId)) return yk.groups[i];
+    var gs = yk.groups;
+    if (ykPeerUid) { var p = ykPeerOf(ykPeerUid); gs = p ? p.data.groups : []; }
+    for (var i = 0; i < gs.length; i++) if (String(gs[i].id) === String(ykGroupId)) return gs[i];
     return null;
   }
+
+  // ---------- Kulüpteki diğer antrenörlerin grupları ----------
+  // Aynı kulübe bağlı antrenörler birbirinin gruplarını görür ve yoklama alır; öğrenci listesine
+  // dokunamaz. Başkasının aldığı yoklama doğrudan grubun sahibine yazılamaz (o kayıt sahibine ait),
+  // bu yüzden önce /clubAtt/{kulüp}/{sahip}/{grup}/{gün}/{öğrenciAnahtarı} = {v, n, by, bn, t}
+  // olarak bekler. Herkes bunu sahibin kaydının üstüne bindirerek görür; sahibin uygulaması
+  // eşitlemede bunları kendi yoklamasına işler ve bekleyen kaydı siler. Listede olmayan isimler
+  // yok sayılır, yani başka antrenör öğrenci ekleyemez. Firebase kuralları da bunu zorlar.
+  var ykPeers;            // undefined: yüklenmedi, "load", "err", ya da [{uid, name, data:{groups, att}}]
+  var ykPeerUid = null;   // açık grup başka antrenörün ise onun uid'si
+  function ykPeerOf(uid) { return Array.isArray(ykPeers) ? ykPeers.filter(function (p) { return p.uid === uid; })[0] || null : null; }
+  function ykKeyOf(n) { return encodeURIComponent(String(n)).replace(/\./g, "%2E"); }
+  // Bekleyen işaretleri bir yoklama kaydının üstüne uygular (yalnızca listede olan öğrenciler).
+  function ykApplyPending(data, pend, onEach) {
+    Object.keys(pend || {}).forEach(function (gid) {
+      var g = (data.groups || []).filter(function (x) { return String(x.id) === gid; })[0];
+      Object.keys(pend[gid] || {}).forEach(function (day) {
+        Object.keys(pend[gid][day] || {}).forEach(function (k) {
+          var e = pend[gid][day][k];
+          var ok = g && e && /^\d{4}-\d{2}-\d{2}$/.test(day) && (g.kids || []).indexOf(e.n) !== -1;
+          if (ok) ykSetIn(data.att, gid, day, e.n, e.v === 2 ? 2 : (e.v === 1 ? 1 : 0));
+          if (onEach) onEach(gid, day, k, e, ok);
+        });
+      });
+    });
+  }
+  function ykParseRec(rec) {
+    var d = null;
+    try { d = rec && typeof rec.v === "string" ? JSON.parse(rec.v) : null; } catch (e) { d = null; }
+    d = d && typeof d === "object" ? d : {};
+    var groups = Array.isArray(d.groups) ? d.groups.filter(function (g) { return g && g.id && typeof g.name === "string"; }) : [];
+    groups.forEach(function (g) { if (!Array.isArray(g.kids)) g.kids = []; });
+    return { groups: groups, att: d.att && typeof d.att === "object" ? d.att : {} };
+  }
+  function ykLoadPeers() {
+    if (!cloudUser() || !clubInfo || !clubInfo.id) { ykPeers = undefined; return Promise.resolve(); }
+    var club = clubInfo.id;
+    if (!Array.isArray(ykPeers)) ykPeers = "load";
+    return getIdToken().then(function (a) {
+      return dbReq("GET", "clubs/" + club + "/members", a.idToken).then(function (mem) {
+        var uids = Object.keys(mem || {}).filter(function (u) { return u !== a.uid; });
+        return Promise.all(uids.map(function (uid) {
+          var m = mem[uid] || {};
+          var peer = { uid: uid, name: String(m.name || m.email || t("ykCoachDefault")), data: { groups: [], att: {} } };
+          return dbReq("GET", "users/" + uid + "/data/courtside-attendance-v1", a.idToken).then(function (rec) {
+            peer.data = ykParseRec(rec);
+            return dbReq("GET", "clubAtt/" + club + "/" + uid, a.idToken).then(function (pend) { ykApplyPending(peer.data, pend); }, function () {});
+          }, function () {}).then(function () { return peer; });
+        }));
+      });
+    }).then(function (list) {
+      ykPeers = list.filter(function (p) { return p.data.groups.length; })
+        .sort(function (x, y) { return x.name.localeCompare(y.name, "tr"); });
+    }, function () { ykPeers = "err"; });
+  }
+  // Başka antrenörün grubunda yoklama: hemen ekranda göster, bekleyen kayıt olarak gönder.
+  function ykPeerSet(uid, gid, day, name, v) {
+    var p = ykPeerOf(uid); if (!p || !clubInfo || !clubInfo.id) return;
+    var before = ((p.data.att[gid] || {})[day] || {})[name] || 0;
+    ykSetIn(p.data.att, gid, day, name, v);
+    var club = clubInfo.id, me = cloudUser() || {};
+    getIdToken().then(function (a) {
+      return dbReq("PUT", "clubAtt/" + club + "/" + uid + "/" + gid + "/" + day + "/" + ykKeyOf(name), a.idToken,
+        { v: v, n: name, by: a.uid, bn: String(me.name || me.email || "").slice(0, 60), t: { ".sv": "timestamp" } });
+    }).catch(function () {
+      ykSetIn(p.data.att, gid, day, name, before);
+      ykLast = null; ykShowToast(t("ykPeerSaveErr"));
+      if (ykOpen) render();
+    });
+  }
+  // Diğer antrenörlerin benim gruplarıma aldığı yoklamaları kendi kaydıma işler.
+  var ykMerging = false;
+  function ykMergeMine() {
+    if (ykMerging || !cloudUser()) return Promise.resolve();
+    ykMerging = true;
+    var ready = clubInfo === undefined ? loadClubInfo() : Promise.resolve();
+    return ready.then(function () {
+      if (!clubInfo || !clubInfo.id) return;
+      var club = clubInfo.id;
+      return getIdToken().then(function (a) {
+        return dbReq("GET", "clubAtt/" + club + "/" + a.uid, a.idToken).then(function (pend) {
+          if (!pend) return;
+          var del = {}, applied = 0, who = {};
+          var ext = yk.ext && typeof yk.ext === "object" ? yk.ext : (yk.ext = {});
+          ykApplyPending(yk, pend, function (gid, day, k, e, ok) {
+            del[gid + "/" + day + "/" + k] = null;
+            if (!ok) return;
+            applied++;
+            var nm = String((e && e.bn) || t("ykCoachDefault"));
+            who[nm] = (who[nm] || 0) + 1;
+            (ext[gid] || (ext[gid] = {}))[day] = nm;
+          });
+          if (applied) {
+            saveYk();
+            var names = Object.keys(who);
+            ykShowToast(t("ykExtMerged", { name: names.join(", "), n: applied }));
+            if (ykOpen) render();
+          }
+          return dbReq("PATCH", "clubAtt/" + club + "/" + a.uid, a.idToken, del);
+        });
+      });
+    }).catch(function () {}).then(function () { ykMerging = false; });
+  }
   function ykKids(g) { return g.kids.slice().sort(function (x, y) { return x.localeCompare(y, "tr"); }); }
-  function ykDayMap(gid, day) { var a = yk.att[gid]; return (a && a[day]) || {}; }
+  // Açık grup başka antrenörünse (ykPeerUid) onun yoklaması okunur/yazılır.
+  function ykAttAll() { var p = ykPeerUid ? ykPeerOf(ykPeerUid) : null; return ykPeerUid ? ((p && p.data.att) || {}) : yk.att; }
+  function ykDayMap(gid, day) { var a = ykAttAll()[gid]; return (a && a[day]) || {}; }
   function ykVal(gid, day, name) { var v = ykDayMap(gid, day)[name]; return v === 2 ? 2 : (v === 1 ? 1 : 0); }
-  function ykSetVal(gid, day, name, v) {
-    var a = yk.att[gid] || (yk.att[gid] = {});
+  function ykSetIn(att, gid, day, name, v) {
+    var a = att[gid] || (att[gid] = {});
     var m = a[day] || (a[day] = {});
     if (v) m[name] = v; else delete m[name];
     if (!Object.keys(m).length) delete a[day];
+    if (!Object.keys(a).length) delete att[gid];
+  }
+  function ykSetVal(gid, day, name, v) {
+    if (ykPeerUid) { ykPeerSet(ykPeerUid, gid, day, name, v); return; }
+    ykSetIn(yk.att, gid, day, name, v);
     saveYk();
   }
   // O günün özeti: kaç öğrenci geldi ve kaç antrenman yapıldı (en çok gelinen sayı).
@@ -8321,7 +8753,7 @@
     return out;
   }
   function ykMonthSessions(g, ym) {
-    var a = yk.att[g.id] || {}, tot = 0;
+    var a = ykAttAll()[g.id] || {}, tot = 0;
     Object.keys(a).forEach(function (day) {
       if (day.slice(0, 7) !== ym) return;
       var s = 0, m = a[day];
@@ -8332,7 +8764,7 @@
   }
   // Öğrencinin o ayki kayıtları: [[gün, 1|2], ...]
   function ykKidMonth(g, name, ym) {
-    var a = yk.att[g.id] || {};
+    var a = ykAttAll()[g.id] || {};
     return Object.keys(a).filter(function (d) { return d.slice(0, 7) === ym && a[d][name]; }).sort()
       .map(function (d) { return [d, a[d][name] === 2 ? 2 : 1]; });
   }
@@ -8381,6 +8813,23 @@
     } else {
       html += '<button class="btn-primary ev-add" id="ykNew" type="button">' + t("ykNewGroup") + '</button>';
     }
+    if (cloudUser() && clubInfo && clubInfo.id) {
+      html += '<div class="yk-peerhead"><p class="section-label">' + escapeHtml(t("ykPeerSec")) + '</p><span class="yk-coach">🏟 ' + escapeHtml(clubInfo.name || "") + '</span></div>';
+      if (ykPeers === "err") html += '<p class="yk-note">' + escapeHtml(t("ykPeerErr")) + ' <button class="hub-link" id="ykPeerRetry" type="button" style="margin:0">' + t("clubRetry") + '</button></p>';
+      else if (!Array.isArray(ykPeers)) html += '<p class="yk-note">' + escapeHtml(t("ykPeerLoading")) + '</p>';
+      else if (!ykPeers.length) html += '<p class="yk-note">' + escapeHtml(t("ykPeerNone")) + '</p>';
+      else ykPeers.forEach(function (p) {
+        p.data.groups.forEach(function (g) {
+          var m = (p.data.att[g.id] || {})[today] || {}, came = 0;
+          g.kids.forEach(function (n) { if (m[n]) came++; });
+          html += '<button class="yk-card yk-peercard" data-ykpeer="' + escapeAttr(p.uid) + '" data-ykpgid="' + escapeAttr(String(g.id)) + '" type="button">' +
+            '<span class="yk-cmain"><span class="yk-coach">' + escapeHtml(p.name) + '</span><span class="yk-cname">' + escapeHtml(g.name) + '</span>' +
+            '<span class="yk-csub">' + escapeHtml([g.time, t("ykNKids", { n: g.kids.length })].filter(Boolean).join(" · ")) + '</span></span>' +
+            (came ? '<span class="yk-today">' + escapeHtml(t("ykTodayN", { n: came, t: g.kids.length })) + '</span>' : '') +
+            '<span class="ht-chev" aria-hidden="true">›</span></button>';
+        });
+      });
+    }
     html += '<p class="yk-note" style="text-align:center">' + escapeHtml(t(cloudUser() ? "ykCloudOn" : "ykCloudOff")) + '</p>' +
       (cloudUser() && clubInfo && clubInfo.id ? '<p class="yk-note" style="text-align:center">🏟 ' + escapeHtml(t("ykClubOn", { name: clubInfo.name || "—" })) + '</p>' : '') +
       (cloudUser() ? '' : '<button class="acct-chip out" id="ykAcct" type="button" style="align-self:center">' + t("acChipIn") + '</button>');
@@ -8389,10 +8838,15 @@
 
   // --- Grup: yoklama / ay özeti / öğrenciler ---
   function renderYkGroup(g) {
-    var tabs = [["day", "ykTabDay"], ["month", "ykTabMonth"], ["kids", "ykTabKids"]];
+    var peer = ykPeerUid ? ykPeerOf(ykPeerUid) : null;
+    var tabs = [["day", "ykTabDay"], ["month", "ykTabMonth"]];
+    if (!peer) tabs.push(["kids", "ykTabKids"]);
+    if (peer && ykTab === "kids") ykTab = "day";
     var html = navBarHtml("ykBack", "", "", t("ykGroups")) + '<main class="ev-main yk-main">' +
-      '<div><h1 class="ev-h1" style="margin:0">' + escapeHtml(g.name) + '</h1>' +
+      '<div>' + (peer ? '<span class="yk-coach">' + escapeHtml(t("ykPeerOf", { name: peer.name })) + '</span>' : '') +
+      '<h1 class="ev-h1" style="margin:0">' + escapeHtml(g.name) + '</h1>' +
       (g.time ? '<div class="pl-sub">' + escapeHtml(g.time) + '</div>' : '') + '</div>' +
+      (peer ? '<div class="yk-ro"><span aria-hidden="true">🔒</span><span>' + t("ykPeerRo", { name: escapeHtml(peer.name) }) + '</span></div>' : '') +
       '<div class="yk-seg" role="tablist">' + tabs.map(function (x) {
         return '<button type="button" role="tab" data-yktab="' + x[0] + '" aria-selected="' + (ykTab === x[0]) + '">' + t(x[1]) + '</button>';
       }).join("") + '</div>';
@@ -8416,7 +8870,8 @@
     }).join("") + '</div>';
     html += '<div class="yk-legend"><span><i class="yk-sw"></i>' + escapeHtml(t("ykL0")) + '</span><span><i class="yk-sw c1"></i>' + escapeHtml(t("ykL1")) + '</span><span><i class="yk-sw c2"></i>' + escapeHtml(t("ykL2")) + '</span></div>' +
       '<p class="yk-note">' + escapeHtml(t("ykHint")) + '</p>' +
-      '<button class="hub-link" id="ykGoNames" type="button" style="align-self:center;margin-top:0">' + t("ykEditNames") + '</button>';
+      (!ykPeerUid && yk.ext && yk.ext[g.id] && yk.ext[g.id][ykDay] ? '<p class="yk-ext">👥 ' + escapeHtml(t("ykExtBy", { name: yk.ext[g.id][ykDay] })) + '</p>' : '') +
+      (ykPeerUid ? '' : '<button class="hub-link" id="ykGoNames" type="button" style="align-self:center;margin-top:0">' + t("ykEditNames") + '</button>');
     if (ykToast) html += '<div class="yk-toast" id="ykToast" role="status"><span>' + escapeHtml(ykToast) + '</span>' +
       (ykLast ? '<button type="button" id="ykUndo">' + t("ykUndo") + '</button>' : '') + '</div>';
     return html;
@@ -8476,7 +8931,7 @@
     var html = navBarHtml("ykBack", "", "", g.name) + '<main class="ev-main yk-main">' +
       '<div class="pl-head" style="margin:0"><span class="pl-av big">' + escapeHtml(initials(name)) + '</span><div>' +
         '<h1 class="ev-h1" style="margin:0">' + escapeHtml(name) + '</h1><div class="pl-sub">' + escapeHtml(g.name) + '</div>' +
-        (ykEditing === name ? '' : '<button class="ev-more" data-ykedit="' + escapeAttr(name) + '" type="button" style="margin-top:6px">' + t("ykRename") + '</button>') + '</div></div>' +
+        (ykEditing === name || ykPeerUid ? '' : '<button class="ev-more" data-ykedit="' + escapeAttr(name) + '" type="button" style="margin-top:6px">' + t("ykRename") + '</button>') + '</div></div>' +
       (ykEditing === name ? ykEditForm(name) : '') +
       '<div class="yk-bar"><button type="button" data-ykmonth="-1" aria-label="‹">‹</button>' +
         '<span class="yk-d" style="text-transform:capitalize">' + escapeHtml(ykMonthName(ykMonth)) + '</span>' +
@@ -8501,15 +8956,396 @@
         return '<div><span>' + escapeHtml(ykShortDay(x[0])) + '</span><span>' + escapeHtml(x[1] === 2 ? t("ykTwo") : t("ykOne")) + '</span></div>';
       }).join("") : '<div><span style="color:var(--text-dim)">' + escapeHtml(t("ykNone")) + '</span></div>') + '</div>' +
       (ykStatus ? '<div class="share-status">' + escapeHtml(ykStatus) + '</div>' : '') +
-      '<button class="btn-primary" id="ykShare" type="button">' + t("ykShareSum") + '</button>' +
-      '<div class="share-status" id="ykShareStatus"></div>';
+      (ykPeerUid ? '' : '<button class="btn-primary" id="ykShare" type="button">' + t("ykShareSum") + '</button>' +
+      '<div class="share-status" id="ykShareStatus"></div>');
     return html + '</main>';
   }
   function ykSummaryText(g, name) {
     var d = ykKidMonth(g, name, ykMonth), tot = d.reduce(function (s, x) { return s + x[1]; }, 0);
     return name + " · " + g.name + " · " + ykMonthName(ykMonth) + "\n" + t("ykSumLine", { n: tot, d: d.length }) + "\n\n" +
-      d.map(function (x) { return ykShortDay(x[0]) + (x[1] === 2 ? " (" + t("ykTwoShort") + ")" : ""); }).join("\n") + "\n\nCourtside";
+      d.map(function (x) { return ykShortDay(x[0]) + (x[1] === 2 ? " (" + t("ykTwoShort") + ")" : ""); }).join("\n") + "\n\n" + t("shareSig", { url: APP_STORE_URL });
   }
+
+  // ================= Özel dersler =================
+  // Antrenörün birebir öğrencileri ve onlara verdiği dersler (not defteri yerine).
+  // Önce öğrenci kaydedilir; ders, öğrencinin kartındaki + ile tek dokunuşta eklenir.
+  // Hesapla buluta eşitlenir; kulüp paneliyle PAYLAŞILMAZ (kulüp sadece yoklamayı okur).
+  var LS_KEY = "courtside-lessons-v1";
+  var LS_DUR = [30, 45, 60, 90, 120];
+  function lsId(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function loadLs() {
+    var d = null;
+    try { d = JSON.parse(localStorage.getItem(LS_KEY) || "null"); } catch (e) { d = null; }
+    if (!d || typeof d !== "object") d = {};
+    if (!Array.isArray(d.students)) d.students = [];
+    if (!Array.isArray(d.lessons)) d.lessons = [];
+    d.students = d.students.filter(function (s) { return s && s.id && String(s.name || "").trim(); });
+    d.lessons = d.lessons.filter(function (l) { return l && l.id && /^\d{4}-\d{2}-\d{2}$/.test(l.d || ""); });
+    // Öğrencisi olmayan eski kayıtlar: adından öğrenci oluştur.
+    d.lessons.forEach(function (l) {
+      if (l.s && d.students.some(function (s) { return s.id === l.s; })) return;
+      var nm = String(l.n || "").trim(); if (!nm) return;
+      var st = d.students.filter(function (s) { return nameKey(s.name) === nameKey(nm); })[0];
+      if (!st) { st = { id: lsId("s"), name: nm, t: l.t || Date.now() }; d.students.push(st); }
+      l.s = st.id;
+    });
+    d.lessons = d.lessons.filter(function (l) { return l.s; });
+    if (LS_DUR.indexOf(d.dur) === -1) d.dur = 60;
+    return d;
+  }
+  var ls = loadLs();
+  function saveLs() { try { localStorage.setItem(LS_KEY, JSON.stringify(ls)); } catch (e) {} }
+
+  var lsOpen = false, lsSid = null, lsMonth = todayStr().slice(0, 7);
+  var lsForm = null;    // ders formu: {id?, sid, d, m, note}
+  var lsSForm = null;   // öğrenci formu: {id?, name, phone, note, err}
+  var lsToast = null, lsToastTimer = null, lsLast = null;
+  var lsArm = null;     // silme onayı: "lesson" | "student"
+  var lsPickDay = 0;    // "kimlerle ders yaptın" sorusundaki gün: 0 bugün, -1 dün
+
+  function lsStudent(id) { return ls.students.filter(function (s) { return s.id === id; })[0] || null; }
+  function lsShift(iso, days) { var p = iso.split("-"); return ymd(new Date(+p[0], +p[1] - 1, +p[2] + days)); }
+  function lsMonthLabel(ym) { var p = ym.split("-"); return new Date(+p[0], +p[1] - 1, 1).toLocaleDateString(locale(), { month: "long", year: "numeric" }); }
+  function lsLongDay(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString(locale(), { day: "numeric", month: "long", weekday: "long" }); }
+  function lsShortDay(iso) { var p = iso.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]).toLocaleDateString(locale(), { day: "numeric", month: "short" }).replace(".", ""); }
+  function lsDayLabel(iso) {
+    if (iso === todayStr()) return t("lsToday");
+    if (iso === lsShift(todayStr(), -1)) return t("lsYesterday");
+    return lsLongDay(iso);
+  }
+  function lsDayWord(iso) {
+    if (iso === todayStr()) return t("lsWordToday");
+    if (iso === lsShift(todayStr(), -1)) return t("lsWordYest");
+    return lsShortDay(iso);
+  }
+  function lsDur(m) {
+    m = Math.round(m || 0);
+    if (m < 60) return t("lsMin", { n: m });
+    if (m === 90) return t("lsHour", { n: LANG === "tr" ? "1,5" : "1.5" });
+    var h = Math.floor(m / 60), r = m % 60;
+    return r ? t("lsHourMin", { h: h, m: r }) : t("lsHour", { n: h });
+  }
+  function lsOf(sid, ym) {
+    return ls.lessons.filter(function (l) { return (!sid || l.s === sid) && (!ym || l.d.slice(0, 7) === ym); })
+      .sort(function (a, b) { return b.d.localeCompare(a.d) || (b.t || 0) - (a.t || 0); });
+  }
+  function lsSum(list) { return list.reduce(function (s, l) { return s + (l.m || 0); }, 0); }
+  function lsMonthCount() { return lsOf(null, todayStr().slice(0, 7)).length; }
+  function lsAddLesson(sid, day, m, note) {
+    var l = { id: lsId("l"), s: sid, d: day, m: m, t: Date.now() };
+    if (note) l.note = note;
+    ls.lessons.push(l); ls.dur = m; saveLs();
+    return l;
+  }
+  function lsPhoneDigits(p) {
+    var d = String(p || "").replace(/\D/g, "");
+    if (!d) return "";
+    if (d.length === 10 && d.charAt(0) === "5") d = "90" + d;
+    else if (d.length === 11 && d.charAt(0) === "0") d = "90" + d.slice(1);
+    return d;
+  }
+  function lsShowToast(msg, undoId) {
+    lsToast = msg; lsLast = undoId || null;
+    clearTimeout(lsToastTimer);
+    lsToastTimer = setTimeout(function () {
+      lsToast = null; lsLast = null;
+      var el = document.getElementById("lsToast"); if (el) el.parentNode.removeChild(el);
+    }, 4000);
+  }
+  function lsKeep() { var y = window.scrollY; render(); try { window.scrollTo(0, y); } catch (e) {} }
+  function lsMonthNav() {
+    var cur = todayStr().slice(0, 7);
+    return '<div class="ls-mnav"><button type="button" id="lsPrev" aria-label="' + escapeAttr(t("lsPrev")) + '">‹</button>' +
+      '<span>' + escapeHtml(lsMonthLabel(lsMonth)) + '</span>' +
+      '<button type="button" id="lsNext" aria-label="' + escapeAttr(t("lsNext")) + '"' + (lsMonth >= cur ? ' disabled' : '') + '>›</button></div>';
+  }
+  function lsSuggestNames() {
+    var seen = {}, out = [];
+    ls.students.forEach(function (s) { seen[nameKey(s.name)] = 1; });
+    var add = function (n) { n = String(n || "").trim(); var k = nameKey(n); if (n && !seen[k]) { seen[k] = 1; out.push(n); } };
+    try { loadPlayers().forEach(function (p) { add(p.name); }); } catch (e) {}
+    (yk.groups || []).forEach(function (g) { (g.kids || []).forEach(add); });
+    return out;
+  }
+
+  // --- Öğrenci listesi ---
+  function renderLsList() {
+    var month = lsOf(null, lsMonth), cnt = {}, mins = {}, last = {};
+    month.forEach(function (l) { cnt[l.s] = (cnt[l.s] || 0) + 1; mins[l.s] = (mins[l.s] || 0) + l.m; });
+    ls.lessons.forEach(function (l) { if (!last[l.s] || l.d > last[l.s]) last[l.s] = l.d; });
+    var studs = ls.students.slice().sort(function (a, b) { return (cnt[b.id] || 0) - (cnt[a.id] || 0) || String(a.name).localeCompare(String(b.name), "tr"); });
+    var html = navBarHtml("lsBack", t("lsTitle")) + '<main class="ev-main ls-main">';
+    if (!studs.length) {
+      html += '<div class="ls-intro">' + (TOPCUK.ls || '') + '<p>' + escapeHtml(t("lsEmpty")) + '</p></div>' +
+        '<button class="btn-primary ev-add" id="lsNewStudent" type="button">' + t("lsNewStudent") + '</button>';
+    } else {
+      var pday = lsShift(todayStr(), lsPickDay), onDay = {};
+      ls.lessons.forEach(function (l) { if (l.d === pday) onDay[l.s] = (onDay[l.s] || 0) + 1; });
+      var picks = ls.students.slice().sort(function (a, b) { return (last[b.id] || "").localeCompare(last[a.id] || "") || String(a.name).localeCompare(String(b.name), "tr"); });
+      var nDay = Object.keys(onDay).length, lDay = 0;
+      Object.keys(onDay).forEach(function (k) { lDay += onDay[k]; });
+      html += '<section class="ls-ask">' +
+        '<div class="ls-q">' + escapeHtml(lsPickDay === 0 ? t("lsAskToday") : (lsPickDay === -1 ? t("lsAskYest") : t("lsAskDay", { d: lsLongDay(pday) }))) + '</div>' +
+        '<div class="ls-dayseg" role="group"><button type="button" data-lspday="0" aria-pressed="' + (lsPickDay === 0) + '">' + t("lsToday") + '</button>' +
+          '<button type="button" data-lspday="-1" aria-pressed="' + (lsPickDay === -1) + '">' + t("lsYesterday") + '</button>' +
+          '<label class="ls-calbtn" aria-pressed="' + (lsPickDay < -1) + '"><span aria-hidden="true">📅</span><span>' + escapeHtml(lsPickDay < -1 ? lsShortDay(pday) : t("lsPickDate")) + '</span>' +
+            '<input type="date" id="lsPickDate" max="' + todayStr() + '" value="' + pday + '" aria-label="' + escapeAttr(t("lsPickDate")) + '"></label></div>' +
+        '<div class="ls-picks">' + picks.map(function (s) {
+          var c = onDay[s.id] || 0;
+          var chip = '<button type="button" class="ls-pick" data-lspick="' + escapeAttr(s.id) + '" aria-pressed="' + (c > 0) + '"' + (c > 1 ? ' aria-label="' + escapeAttr(s.name + " · " + t("lsDayCount", { n: c })) + '"' : '') + '>' +
+            '<span class="ls-pav">' + (c ? '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>' : escapeHtml(initials(s.name))) + '</span><span class="ls-pn">' + escapeHtml(s.name) + '</span>' +
+            (c > 1 ? '<span class="ls-px">×' + c + '</span>' : '') + '</button>';
+          // Seçili öğrencide yanında "+": aynı gün bir ders daha.
+          return c ? '<span class="ls-pgrp">' + chip + '<button type="button" class="ls-pmore" data-lsmore="' + escapeAttr(s.id) + '" aria-label="' + escapeAttr(t("lsMore", { name: s.name })) + '">+</button></span>' : chip;
+        }).join("") + '<button type="button" class="ls-pick ls-pnew" id="lsNewStudent2"><span class="ls-pav">+</span><span class="ls-pn">' + escapeHtml(t("lsNewShort")) + '</span></button></div>' +
+        '<div class="ls-durline"><span>' + escapeHtml(t("lsLen")) + '</span>' + LS_DUR.map(function (m) {
+          return '<button type="button" data-lsdefdur="' + m + '" aria-pressed="' + (ls.dur === m) + '">' + escapeHtml(lsDur(m)) + '</button>';
+        }).join("") + '</div>' +
+        '<p class="ls-done">' + escapeHtml(nDay ? t("lsDayDone", { n: nDay, l: lDay }) : t("lsTapHint")) + '</p>' +
+      '</section>';
+      html += lsMonthNav() +
+        '<div class="ls-sum"><div><b>' + month.length + '</b><span>' + escapeHtml(t("lsNLessons")) + '</span></div>' +
+        '<div><b>' + escapeHtml(lsDur(lsSum(month))) + '</b><span>' + escapeHtml(t("lsTotalTime")) + '</span></div>' +
+        '<div><b>' + Object.keys(cnt).length + '</b><span>' + escapeHtml(t("lsNKids")) + '</span></div></div>' +
+        '<div class="ls-studs">' + studs.map(function (s) {
+          var c = cnt[s.id] || 0;
+          var sub = c ? t("lsCardMonth", { n: c, d: lsDur(mins[s.id]) }) : (last[s.id] ? t("lsCardLast", { d: lsShortDay(last[s.id]) }) : t("lsCardNone"));
+          return '<div class="ls-stud"><button class="ls-sopen" type="button" data-lsopen="' + escapeAttr(s.id) + '">' +
+              '<span class="ls-av">' + escapeHtml(initials(s.name)) + '</span>' +
+              '<span class="ls-st"><span class="ls-sn">' + escapeHtml(s.name) + '</span><span class="ls-ss">' + escapeHtml(sub) + '</span>' +
+              (s.note ? '<span class="ls-snote">' + escapeHtml(s.note) + '</span>' : '') + '</span>' +
+              (c ? '<span class="ls-cnt">' + c + '</span>' : '') + '<span class="ht-chev" aria-hidden="true">›</span></button></div>';
+        }).join("") + '</div>' +
+        '<button class="ls-addstud" id="lsNewStudent" type="button">' + t("lsNewStudent") + '</button>';
+    }
+    html += '<p class="yk-note" style="text-align:center">' + escapeHtml(t("lsPrivate")) + '</p></main>';
+    return html;
+  }
+  // --- Öğrenci sayfası ---
+  function renderLsStudent(s) {
+    var mine = lsOf(s.id, lsMonth), sum = lsSum(mine), all = lsOf(s.id);
+    var html = navBarHtml("lsBack", s.name, '<button class="live-go" id="lsEditStudent" type="button">' + t("lsEdit") + '</button>', t("lsTitle")) +
+      '<main class="ev-main ls-main">' +
+      '<div class="ls-head"><span class="ls-av big">' + escapeHtml(initials(s.name)) + '</span><div class="ls-ht">' +
+        '<div class="ls-hn">' + escapeHtml(s.name) + '</div>' +
+        (s.note ? '<div class="ls-ss">' + escapeHtml(s.note) + '</div>' : '') +
+        (s.phone ? '<a class="ls-phone" href="tel:' + escapeAttr(String(s.phone).replace(/[^\d+]/g, "")) + '">📞 ' + escapeHtml(s.phone) + '</a>' : '') +
+        '<div class="ls-ss">' + escapeHtml(t("lsAllTime", { n: all.length, d: lsDur(lsSum(all)) })) + '</div>' +
+      '</div></div>' +
+      '<button class="btn-primary ev-add" id="lsAddLesson" type="button">' + t("lsAddLesson") + '</button>' +
+      lsMonthNav() +
+      '<div class="ls-tot"><b>' + mine.length + '</b> ' + escapeHtml(t("lsNLessons")) + ' · <b>' + escapeHtml(lsDur(sum)) + '</b></div>';
+    html += mine.length ? '<div class="ls-list">' + mine.map(function (l) {
+        return '<button class="ls-row" type="button" data-lsedit="' + escapeAttr(l.id) + '">' +
+          '<span class="ls-rmain"><span class="ls-rname">' + escapeHtml(lsDayLabel(l.d)) + '</span>' +
+          (l.note ? '<span class="ls-rnote">' + escapeHtml(l.note) + '</span>' : '') + '</span>' +
+          '<span class="ls-rdur">' + escapeHtml(lsDur(l.m)) + '</span></button>';
+      }).join("") + '</div>'
+      : '<p class="empty-state ev-empty-sm">' + escapeHtml(t("lsNoneMonth")) + '</p>';
+    if (mine.length) {
+      var txt = lsReportText(s, mine), ph = lsPhoneDigits(s.phone);
+      html += '<p class="section-label" style="margin-top:4px">' + escapeHtml(t("lsSend")) + '</p>' +
+        '<div class="ls-share"><a class="ls-wa" href="https://wa.me/' + ph + '?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">' +
+          escapeHtml(ph ? t("lsWaTo") : "WhatsApp") + '</a>' +
+        '<button type="button" id="lsCopy">' + t("lsCopy") + '</button></div>';
+    }
+    return html + '</main>';
+  }
+  function lsReportText(s, list) {
+    var u = (typeof cloudUser === "function" && cloudUser()) || null;
+    var lines = [s.name + " · " + lsMonthLabel(lsMonth) + " " + t("lsRepTitle"), t("lsRepTotal", { n: list.length, d: lsDur(lsSum(list)) }), ""];
+    // Aynı gün birden fazla ders tek satırda: "• 3 Kasım Salı · 2 ders · 2 saat".
+    var byDay = {}, days = [];
+    list.forEach(function (l) { if (!byDay[l.d]) { byDay[l.d] = []; days.push(l.d); } byDay[l.d].push(l); });
+    days.sort().forEach(function (d) {
+      var ds = byDay[d], notes = ds.map(function (l) { return l.note; }).filter(Boolean);
+      lines.push("• " + lsLongDay(d) + " · " + (ds.length > 1 ? t("lsDayCount", { n: ds.length }) + " · " : "") + lsDur(lsSum(ds)) + (notes.length ? " (" + notes.join(", ") + ")" : ""));
+    });
+    if (u && u.name) lines.push("", t("lsRepCoach", { name: u.name }));
+    lines.push("", t("shareSig", { url: APP_STORE_URL }));
+    return lines.join("\n");
+  }
+  // --- Formlar ---
+  function renderLsLessonForm() {
+    var f = lsForm, s = lsStudent(f.sid) || { name: "" }, today = todayStr(), yest = lsShift(today, -1);
+    return '<div class="zone-modal" id="lsModal"><div class="zone-card ls-card">' +
+      '<div class="zone-title">' + escapeHtml(t(f.id ? "lsEditLesson" : "lsAddLessonFor", { name: s.name })) + '</div>' +
+      '<div class="field"><label>' + t("lsDay") + '</label><div class="server-pick ls-days">' +
+        '<button type="button" data-lsday="' + today + '" aria-pressed="' + (f.d === today) + '">' + t("lsToday") + '</button>' +
+        '<button type="button" data-lsday="' + yest + '" aria-pressed="' + (f.d === yest) + '">' + t("lsYesterday") + '</button>' +
+        '<input type="date" id="lsDate" max="' + today + '" value="' + escapeAttr(f.d) + '" aria-label="' + escapeAttr(t("lsOther")) + '"' + (f.d !== today && f.d !== yest ? ' class="on"' : '') + '>' +
+      '</div></div>' +
+      '<div class="field"><label>' + t("lsLen") + '</label><div class="server-pick ls-durs">' + LS_DUR.map(function (m) {
+        return '<button type="button" data-lsdur="' + m + '" aria-pressed="' + (f.m === m) + '">' + escapeHtml(lsDur(m)) + '</button>';
+      }).join("") + '</div></div>' +
+      '<div class="field"><label for="lsNote">' + t("lsNote") + '</label><input id="lsNote" type="text" maxlength="80" autocomplete="off" placeholder="' + escapeAttr(t("lsNotePh")) + '" value="' + escapeAttr(f.note || "") + '"></div>' +
+      '<div class="zone-actions"><button type="button" id="lsCancel">' + t("cancel") + '</button><button type="button" class="primary" id="lsSave">' + t("lsSave") + '</button></div>' +
+      (f.id ? '<button type="button" class="ls-del' + (lsArm === "lesson" ? ' armed' : '') + '" id="lsDelLesson">' + t(lsArm === "lesson" ? "lsDelSure" : "lsDelLesson") + '</button>' : '') +
+    '</div></div>';
+  }
+  function renderLsStudentForm() {
+    var f = lsSForm, sugg = f.id ? [] : lsSuggestNames();
+    return '<div class="zone-modal" id="lsModal"><div class="zone-card ls-card">' +
+      '<div class="zone-title">' + escapeHtml(t(f.id ? "lsEditStudentT" : "lsNewStudentT")) + '</div>' +
+      '<div class="field"><label for="lsSName">' + t("lsSName") + '</label><input id="lsSName" type="text" maxlength="40" autocomplete="off" autocapitalize="words" placeholder="' + escapeAttr(t("lsSNamePh")) + '" value="' + escapeAttr(f.name || "") + '"' + (sugg.length ? ' list="lsSugg"' : '') + '>' +
+        (sugg.length ? '<datalist id="lsSugg">' + sugg.map(function (n) { return '<option value="' + escapeAttr(n) + '"></option>'; }).join("") + '</datalist>' : '') + '</div>' +
+      '<div class="field"><label for="lsSPhone">' + t("lsSPhone") + '</label><input id="lsSPhone" type="tel" inputmode="tel" maxlength="20" autocomplete="off" placeholder="05xx xxx xx xx" value="' + escapeAttr(f.phone || "") + '"></div>' +
+      '<div class="field"><label for="lsSNote">' + t("lsSNote") + '</label><input id="lsSNote" type="text" maxlength="60" autocomplete="off" placeholder="' + escapeAttr(t("lsSNotePh")) + '" value="' + escapeAttr(f.note || "") + '"></div>' +
+      (f.err ? '<div class="share-status err">' + escapeHtml(f.err) + '</div>' : '') +
+      '<div class="zone-actions"><button type="button" id="lsSCancel">' + t("cancel") + '</button><button type="button" class="primary" id="lsSSave">' + t(f.id ? "lsSave" : "lsSAdd") + '</button></div>' +
+      (f.id ? '<button type="button" class="ls-del' + (lsArm === "student" ? ' armed' : '') + '" id="lsDelStudent">' + t(lsArm === "student" ? "lsDelStudentSure" : "lsDelStudent") + '</button>' : '') +
+    '</div></div>';
+  }
+  function renderLessons() {
+    var s = lsSid ? lsStudent(lsSid) : null;
+    if (lsSid && !s) lsSid = null;
+    var html = s ? renderLsStudent(s) : renderLsList();
+    if (lsForm) html += renderLsLessonForm();
+    else if (lsSForm) html += renderLsStudentForm();
+    if (lsToast) html += '<div class="yk-toast" id="lsToast" role="status"><span>' + escapeHtml(lsToast) + '</span>' +
+      (lsLast ? '<button type="button" id="lsUndo">' + t("ykUndo") + '</button>' : '') + '</div>';
+    return html;
+  }
+  function lsOpenLessonForm(pre) { lsArm = null; lsForm = pre; lsKeep(); }
+  function lsOpenStudentForm(pre) {
+    lsArm = null; lsSForm = pre || { name: "", phone: "", note: "" }; lsKeep();
+    var n = document.getElementById("lsSName"); if (n && !lsSForm.name) n.focus();
+  }
+  function bindLessons() {
+    var el, i, list;
+    if ((el = document.getElementById("lsBack"))) el.onclick = function () {
+      lsForm = null; lsSForm = null; lsToast = null; lsLast = null; lsArm = null;
+      if (lsSid) lsSid = null; else lsOpen = false;
+      render();
+    };
+    if ((el = document.getElementById("lsPrev"))) el.onclick = function () { var p = lsMonth.split("-"); lsMonth = ymd(new Date(+p[0], +p[1] - 2, 1)).slice(0, 7); lsKeep(); };
+    if ((el = document.getElementById("lsNext"))) el.onclick = function () { var p = lsMonth.split("-"); lsMonth = ymd(new Date(+p[0], +p[1], 1)).slice(0, 7); lsKeep(); };
+    if ((el = document.getElementById("lsNewStudent"))) el.onclick = function () { lsOpenStudentForm(); };
+    list = app.querySelectorAll("[data-lsopen]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { lsSid = this.getAttribute("data-lsopen"); render(); };
+    if ((el = document.getElementById("lsNewStudent2"))) el.onclick = function () { lsOpenStudentForm(); };
+    // "Bugün kimlerle ders yaptın?": isme dokun = o güne ders ekle; tekrar dokun = geri al.
+    list = app.querySelectorAll("[data-lspick]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var s = lsStudent(this.getAttribute("data-lspick")); if (!s) return;
+      var day = lsShift(todayStr(), lsPickDay);
+      var mine = ls.lessons.filter(function (x) { return x.s === s.id && x.d === day; }).sort(function (a, b) { return (b.t || 0) - (a.t || 0); });
+      if (mine.length) {
+        // Birden fazla ders varsa en son ekleneni kaldır (×3 → ×2); tek dersse tamamen kalkar.
+        var rid = mine[0].id; ls.lessons = ls.lessons.filter(function (x) { return x.id !== rid; }); saveLs();
+        lsShowToast(mine.length > 1 ? t("lsRemovedOne", { name: s.name, day: lsDayWord(day), k: mine.length - 1 }) : t("lsRemoved", { name: s.name }));
+      } else {
+        lsAddLesson(s.id, day, ls.dur);
+        lsShowToast(lsPickDay === 0 ? t("lsAddedToday", { name: s.name, d: lsDur(ls.dur) }) : (lsPickDay === -1 ? t("lsAddedYest", { name: s.name, d: lsDur(ls.dur) }) : t("lsAddedOn", { name: s.name, day: lsShortDay(day), d: lsDur(ls.dur) })));
+      }
+      lsMonth = day.slice(0, 7); lsKeep();
+    };
+    list = app.querySelectorAll("[data-lsmore]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var s = lsStudent(this.getAttribute("data-lsmore")); if (!s) return;
+      var day = lsShift(todayStr(), lsPickDay);
+      var l = lsAddLesson(s.id, day, ls.dur);
+      var k = ls.lessons.filter(function (x) { return x.s === s.id && x.d === day; }).length;
+      lsShowToast(t("lsAddedNth", { name: s.name, day: lsDayWord(day), k: k }), l.id);
+      lsMonth = day.slice(0, 7); lsKeep();
+    };
+    if ((el = document.getElementById("lsPickDate"))) el.onchange = function () {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(this.value)) return;
+      var a = this.value.split("-"), b = todayStr().split("-");
+      var diff = Math.round((new Date(+a[0], +a[1] - 1, +a[2]) - new Date(+b[0], +b[1] - 1, +b[2])) / 86400000);
+      lsPickDay = Math.min(0, diff); lsKeep();
+    };
+    list = app.querySelectorAll("[data-lspday]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { lsPickDay = +this.getAttribute("data-lspday"); lsKeep(); };
+    list = app.querySelectorAll("[data-lsdefdur]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () { ls.dur = +this.getAttribute("data-lsdefdur"); saveLs(); lsKeep(); };
+    if ((el = document.getElementById("lsAddLesson"))) el.onclick = function () {
+      lsOpenLessonForm({ sid: lsSid, d: lsMonth === todayStr().slice(0, 7) ? todayStr() : lsMonth + "-01", m: ls.dur, note: "" });
+    };
+    if ((el = document.getElementById("lsEditStudent"))) el.onclick = function () {
+      var s = lsStudent(lsSid); if (s) lsOpenStudentForm({ id: s.id, name: s.name, phone: s.phone || "", note: s.note || "" });
+    };
+    list = app.querySelectorAll("[data-lsedit]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      var id = this.getAttribute("data-lsedit"), l = ls.lessons.filter(function (x) { return x.id === id; })[0];
+      if (l) lsOpenLessonForm({ id: l.id, sid: l.s, d: l.d, m: l.m, note: l.note || "" });
+    };
+    if ((el = document.getElementById("lsUndo"))) el.onclick = function () {
+      var id = lsLast; ls.lessons = ls.lessons.filter(function (x) { return x.id !== id; }); saveLs();
+      lsToast = null; lsLast = null; clearTimeout(lsToastTimer); lsKeep();
+    };
+    if ((el = document.getElementById("lsCopy"))) el.onclick = function () {
+      var b = this, s = lsStudent(lsSid); if (!s) return;
+      if (navigator.clipboard) navigator.clipboard.writeText(lsReportText(s, lsOf(s.id, lsMonth))).then(function () { b.textContent = t("lsCopied"); }, function () {});
+    };
+    var closeModal = function () { lsForm = null; lsSForm = null; lsArm = null; lsKeep(); };
+    if ((el = document.getElementById("lsModal"))) el.onclick = function (e) { if (e.target === this) closeModal(); };
+    // Ders formu
+    if (lsForm) {
+      var keepL = function () { var no = document.getElementById("lsNote"); if (no) lsForm.note = no.value; };
+      list = app.querySelectorAll("[data-lsday]");
+      for (i = 0; i < list.length; i++) list[i].onclick = function () { keepL(); lsForm.d = this.getAttribute("data-lsday"); lsKeep(); };
+      if ((el = document.getElementById("lsDate"))) el.onchange = function () { keepL(); if (/^\d{4}-\d{2}-\d{2}$/.test(this.value)) lsForm.d = this.value; lsKeep(); };
+      list = app.querySelectorAll("[data-lsdur]");
+      for (i = 0; i < list.length; i++) list[i].onclick = function () { keepL(); lsForm.m = +this.getAttribute("data-lsdur"); lsKeep(); };
+      if ((el = document.getElementById("lsCancel"))) el.onclick = closeModal;
+      var saveL = function () {
+        keepL();
+        var note = String(lsForm.note || "").trim().slice(0, 80), s = lsStudent(lsForm.sid);
+        if (lsForm.id) {
+          ls.lessons.forEach(function (x) { if (x.id === lsForm.id) { x.d = lsForm.d; x.m = lsForm.m; if (note) x.note = note; else delete x.note; } });
+          ls.dur = lsForm.m; saveLs(); lsShowToast(t("lsSaved"));
+        } else {
+          var l = lsAddLesson(lsForm.sid, lsForm.d, lsForm.m, note);
+          lsShowToast(t("lsAdded", { name: s ? s.name : "", d: lsDur(l.m) }), l.id);
+        }
+        lsMonth = lsForm.d.slice(0, 7); lsForm = null; lsKeep();
+      };
+      if ((el = document.getElementById("lsSave"))) el.onclick = saveL;
+      if ((el = document.getElementById("lsNote"))) el.onkeydown = function (e) { if (e.key === "Enter") saveL(); };
+      if ((el = document.getElementById("lsDelLesson"))) el.onclick = function () {
+        if (lsArm !== "lesson") { keepL(); lsArm = "lesson"; lsKeep(); return; }
+        var id = lsForm.id; ls.lessons = ls.lessons.filter(function (x) { return x.id !== id; }); saveLs();
+        lsForm = null; lsArm = null; lsShowToast(t("lsDeleted")); lsKeep();
+      };
+    }
+    // Öğrenci formu
+    if (lsSForm) {
+      var keepS = function () {
+        ["Name", "Phone", "Note"].forEach(function (k) { var e2 = document.getElementById("lsS" + k); if (e2) lsSForm[k.toLowerCase()] = e2.value; });
+      };
+      if ((el = document.getElementById("lsSCancel"))) el.onclick = closeModal;
+      var saveS = function () {
+        keepS();
+        var name = String(lsSForm.name || "").replace(/\s+/g, " ").trim().slice(0, 40);
+        if (!name) { lsSForm.err = t("lsNeedName"); lsKeep(); return; }
+        var clash = ls.students.some(function (s) { return s.id !== lsSForm.id && nameKey(s.name) === nameKey(name); });
+        if (clash) { lsSForm.err = t("lsNameTaken"); lsKeep(); return; }
+        var phone = String(lsSForm.phone || "").trim().slice(0, 20), note = String(lsSForm.note || "").trim().slice(0, 60);
+        if (lsSForm.id) {
+          var s = lsStudent(lsSForm.id);
+          if (s) { s.name = name; if (phone) s.phone = phone; else delete s.phone; if (note) s.note = note; else delete s.note; }
+          saveLs(); lsSForm = null; lsShowToast(t("lsSaved"));
+        } else {
+          var ns = { id: lsId("s"), name: name, t: Date.now() };
+          if (phone) ns.phone = phone; if (note) ns.note = note;
+          ls.students.push(ns); saveLs(); lsSForm = null;
+          lsShowToast(t("lsStudentAdded", { name: name }));
+        }
+        lsKeep();
+      };
+      if ((el = document.getElementById("lsSSave"))) el.onclick = saveS;
+      ["lsSName", "lsSPhone", "lsSNote"].forEach(function (id) { var e3 = document.getElementById(id); if (e3) e3.onkeydown = function (e) { if (e.key === "Enter") saveS(); }; });
+      if ((el = document.getElementById("lsDelStudent"))) el.onclick = function () {
+        if (lsArm !== "student") { keepS(); lsArm = "student"; lsKeep(); return; }
+        var id = lsSForm.id;
+        ls.students = ls.students.filter(function (x) { return x.id !== id; });
+        ls.lessons = ls.lessons.filter(function (x) { return x.s !== id; });
+        saveLs(); lsSForm = null; lsArm = null; lsSid = null; lsShowToast(t("lsStudentDeleted")); lsKeep();
+      };
+    }
+  }
+  function openLessons() { lsOpen = true; lsSid = null; lsPickDay = 0; lsForm = null; lsSForm = null; lsMonth = todayStr().slice(0, 7); render(); }
 
   function renderYkScreens() {
     var g = ykGroup();
@@ -8531,7 +9367,7 @@
     if ((el = document.getElementById("ykBack"))) el.onclick = function () {
       ykArm = null; ykStatus = ""; ykToast = null; ykLast = null; ykEditing = null; ykEditErr = "";
       if (ykKid) ykKid = null;
-      else if (ykGroupId) ykGroupId = null;
+      else if (ykGroupId) { ykGroupId = null; ykPeerUid = null; }
       else { ykOpen = false; ykForm = null; }
       render();
     };
@@ -8556,8 +9392,17 @@
     if ((el = document.getElementById("ykfSave"))) el.onclick = createGroup;
     if ((el = document.getElementById("ykfName"))) el.onkeydown = function (e) { if (e.key === "Enter") { var tm = document.getElementById("ykfTime"); if (tm) tm.focus(); } };
     if ((el = document.getElementById("ykfTime"))) el.onkeydown = function (e) { if (e.key === "Enter") createGroup(); };
+    list = app.querySelectorAll("[data-ykpeer]");
+    for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      ykPeerUid = this.getAttribute("data-ykpeer"); ykGroupId = this.getAttribute("data-ykpgid");
+      ykKid = null; ykArm = null; ykStatus = ""; ykToast = null; ykLast = null;
+      ykDay = todayStr(); ykMonth = todayStr().slice(0, 7); ykTab = "day";
+      render();
+    };
+    if ((el = document.getElementById("ykPeerRetry"))) el.onclick = function () { ykPeers = "load"; render(); ykLoadPeers().then(function () { if (ykOpen) render(); }); };
     list = app.querySelectorAll("[data-ykopen]");
     for (i = 0; i < list.length; i++) list[i].onclick = function () {
+      ykPeerUid = null;
       ykGroupId = this.getAttribute("data-ykopen"); ykKid = null; ykArm = null; ykStatus = "";
       ykDay = todayStr(); ykMonth = todayStr().slice(0, 7);
       var gg = ykGroup(); ykTab = gg && gg.kids.length ? "day" : "kids";
@@ -8604,6 +9449,7 @@
       if (p) { p.catch(function (err) { if (!isShareCancel(err)) copyText(text).then(function () { if (st) st.textContent = t("ykCopied"); }, function () {}); }); return; }
       copyText(text).then(function () { if (st) st.textContent = t("ykCopied"); }, function () { if (st) st.textContent = t("copyFail"); });
     };
+    if (ykPeerUid) return;
     // Öğrenciler
     var addKid = function () {
       var inp = document.getElementById("ykKidName"), v = inp ? inp.value.replace(/\s+/g, " ").trim().slice(0, 32) : "";
@@ -8660,8 +9506,14 @@
     };
   }
   function openYkScreen() {
-    ykOpen = true; ykGroupId = null; ykKid = null; ykForm = null; ykArm = null; render();
-    if (cloudUser() && clubInfo === undefined) loadClubInfo().then(function () { if (ykOpen && !ykGroupId) render(); });
+    ykOpen = true; ykGroupId = null; ykPeerUid = null; ykKid = null; ykForm = null; ykArm = null; render();
+    if (!cloudUser()) return;
+    (clubInfo === undefined ? loadClubInfo() : Promise.resolve()).then(function () {
+      if (ykOpen && !ykGroupId) render();
+      if (!clubInfo || !clubInfo.id) return;
+      ykMergeMine();
+      return ykLoadPeers().then(function () { if (ykOpen && !ykGroupId) render(); });
+    });
   }
 
   // ================= Hesap ve bulut eşitleme =================
@@ -8739,6 +9591,9 @@
       out = union(R.concat(L), function (x) { return String(x); });
     } else if (k === "courtside-tournaments-v1" && Array.isArray(L) && Array.isArray(R)) {
       out = union(R.concat(L), function (x) { return String(x.id); });
+    } else if (k === "courtside-lessons-v1" && L && R) {
+      out = { students: union((R.students || []).concat(L.students || []), function (x) { return String(x.id); }),
+        lessons: union((R.lessons || []).concat(L.lessons || []), function (x) { return String(x.id); }), dur: L.dur || R.dur || 60 };
     } else if (k === "courtside-attendance-v1" && L && R) {
       out = { groups: union((R.groups || []).concat(L.groups || []), function (g) { return String(g.id); }), att: {} };
       [R.att || {}, L.att || {}].forEach(function (src) {
@@ -8809,7 +9664,7 @@
     try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
     location.reload();
   }
-  function cloudSync() { return cloudPull().then(function (changed) { if (changed) cloudReload(); return changed; }); }
+  function cloudSync() { return cloudPull().then(function (changed) { if (changed) cloudReload(); else ykMergeMine(); return changed; }); }
 
   // --- Giriş işlemleri (Firebase Auth REST) ---
   function authCall(method, body) {
@@ -8831,6 +9686,8 @@
   }
   function authErrorText(err) {
     var m = String((err && err.message) || "");
+    if (m.indexOf("APPLE_EMAIL_EXISTS") !== -1) return t("errAppleEmail");
+    if (m.indexOf("APPLE_FAIL") !== -1) return t("errApple");
     if (m.indexOf("EMAIL_EXISTS") !== -1) return t("errEmailExists");
     if (m.indexOf("INVALID_EMAIL") !== -1 || m.indexOf("MISSING_EMAIL") !== -1) return t("errInvalidEmail");
     if (m.indexOf("WEAK_PASSWORD") !== -1 || m.indexOf("MISSING_PASSWORD") !== -1) return t("errWeakPass");
@@ -8862,6 +9719,57 @@
       return na;
     });
   }
+  // --- Apple ile giriş (yalnızca iOS uygulamasında; @capacitor-community/apple-sign-in eklentisi) ---
+  // Apple'ın kimlik belirteci Firebase'e REST ile verilir (signInWithIdp). Telefonun anonim hesabı
+  // varsa ona bağlanır; böylece uid ve açık canlı yayınlar aynı kalır. Apple'a nonce'un SHA-256'sı,
+  // Firebase'e ham hâli gider (Firebase ikisini karşılaştırır).
+  function appleAvailable() { return !!nativePlugin("SignInWithApple"); }
+  function sha256Hex(str) {
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
+    });
+  }
+  function cloudAppleSignIn() {
+    var plug = nativePlugin("SignInWithApple");
+    if (!plug) return Promise.reject(new Error("APPLE_FAIL"));
+    var rnd = new Uint8Array(24); crypto.getRandomValues(rnd);
+    var raw = Array.prototype.map.call(rnd, function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
+    var given = "";
+    return sha256Hex(raw).then(function (hashed) {
+      return plug.authorize({ clientId: "courtside", redirectURI: FB.db, scopes: "email name", state: "cs", nonce: hashed });
+    }).then(function (res) {
+      var r = (res && res.response) || {};
+      if (!r.identityToken) throw new Error("APPLE_FAIL");
+      given = cleanPersonName([r.givenName, r.familyName].filter(Boolean).join(" "));
+      var body = { postBody: "id_token=" + encodeURIComponent(r.identityToken) + "&providerId=apple.com&nonce=" + encodeURIComponent(raw),
+        requestUri: "http://localhost", returnIdpCredential: true, returnSecureToken: true };
+      var call = function (b) {
+        return authCall("signInWithIdp", b).then(function (j) {
+          if (j.needConfirmation || /EMAIL_EXISTS/.test(j.errorMessage || "")) throw new Error("APPLE_EMAIL_EXISTS");
+          if (j.errorMessage || !j.idToken) throw new Error(j.errorMessage || "APPLE_FAIL");
+          return j;
+        });
+      };
+      var a = loadAuth();
+      if (a && a.refreshToken && !a.email) {
+        // Önce anonim hesaba bağla; bu Apple kimliği zaten başka hesaptaysa o hesaba giriş yap.
+        return getIdToken().then(function (cur) {
+          return call(Object.assign({ idToken: cur.idToken }, body));
+        }).catch(function (err) {
+          if (/APPLE_EMAIL_EXISTS/.test(String(err && err.message))) throw err;
+          return call(body);
+        });
+      }
+      return call(body);
+    }).then(function (j) {
+      var name = j.displayName || given || j.fullName || null;
+      var na = storeAuthFrom(j, j.email || "Apple ID", name);
+      // Apple adı yalnızca ilk girişte verir: profile yazılır ki sonraki girişlerde de görünsün.
+      if (given && j.displayName !== given) return cloudSetName(given).catch(function () {}).then(function () { return na; });
+      return na;
+    });
+  }
+  function isAppleCancel(err) { var m = String((err && (err.code || err.message)) || ""); return /1001|cancel/i.test(m); }
   function cloudSignIn(email, pass) {
     return authCall("signInWithPassword", { email: email, password: pass, returnSecureToken: true })
       .then(function (j) { storeAuthFrom(j, email, j.displayName || null); });
@@ -8876,7 +9784,7 @@
   function cloudSignOut() {
     clearTimeout(cloudPushTimer);
     try { localStorage.removeItem("courtside-auth-v1"); } catch (e) {}
-    cloudStatus = null;
+    cloudStatus = null; ykPeers = undefined; ykPeerUid = null;
   }
   // ---------- Kulüp bağlantısı ----------
   // Antrenör kulübün verdiği kodla katılır. Kayıtlar:
@@ -8919,7 +9827,7 @@
       return dbReq("DELETE", "clubs/" + id + "/members/" + a.uid, a.idToken).then(function () {
         return dbReq("DELETE", "users/" + a.uid + "/club", a.idToken);
       });
-    }).then(function () { clubInfo = null; });
+    }).then(function () { clubInfo = null; ykPeers = undefined; });
   }
   function clubJoin(code) {
     return getIdToken().then(function (a) {
@@ -8933,7 +9841,7 @@
         }).then(function () {
           return dbReq("PUT", "users/" + a.uid + "/club", a.idToken, { id: c.club, name: c.name || "", t: { ".sv": "timestamp" } });
         }).then(function () {
-          clubInfo = { id: String(c.club), name: String(c.name || "") };
+          clubInfo = { id: String(c.club), name: String(c.name || "") }; ykPeers = undefined;
           // Yoklama bulutta yoksa hemen gönderilsin ki kulüp görebilsin.
           try { if (localStorage.getItem(YK_KEY)) { cloudMeta.dirty[YK_KEY] = 1; cloudMeta.t[YK_KEY] = cloudMeta.t[YK_KEY] || Date.now(); saveCloudMeta(); } } catch (e) {}
           cloudPush();
@@ -9060,11 +9968,17 @@
         '<p class="yk-note">' + escapeHtml(t("acNote")) + '</p>';
     } else if (!u) {
       html += '<div><h1 class="ev-h1" style="margin:0 0 6px">' + t("acHeadOut") + '</h1><p class="yk-note">' + escapeHtml(t("acWhy")) + '</p></div>' +
+        (appleAvailable()
+          ? '<button class="ac-apple" id="acApple" type="button"' + dis + '><svg viewBox="0 0 17 20" width="17" height="20" aria-hidden="true"><path fill="currentColor" d="M14.1 10.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.8 1.2 1.8 2.6 3.1 2.5 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-4.1zM11.6 3c.7-.8 1.1-1.9 1-3-1 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>' +
+              escapeHtml(acctBusy && acctMode === "apple" ? t("acWorking") : t("acApple")) + '</button>' +
+            (acctMode === "apple" ? status : '') +
+            '<div class="ac-or"><span>' + escapeHtml(t("acOr")) + '</span></div>'
+          : '') +
         '<div class="yk-form">' +
           '<div class="field"><label for="acEmail">' + t("acEmail") + '</label><input id="acEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120" value="' + escapeAttr(acctEmail) + '"></div>' +
           '<div class="field"><label for="acPass">' + t("acPassLogin") + '</label><input id="acPass" type="password" autocomplete="current-password" maxlength="128"></div>' +
-          '<button class="btn-primary" id="acLogin" type="button" style="margin-top:0"' + dis + '>' + (acctBusy ? t("acWorking") : t("acLogin")) + '</button>' +
-          status +
+          '<button class="btn-primary" id="acLogin" type="button" style="margin-top:0"' + dis + '>' + (acctBusy && acctMode !== "apple" ? t("acWorking") : t("acLogin")) + '</button>' +
+          (acctMode === "apple" ? '' : status) +
           '<button class="share-close" id="acReset" type="button" style="align-self:center">' + t("acForgot") + '</button>' +
         '</div>' +
         '<div class="ac-switch"><span>' + t("acNoAccount") + '</span><button class="csv-btn" id="acToSignup" type="button">' + t("acOpenNew") + '</button></div>';
@@ -9113,7 +10027,7 @@
       acctOpen = false; acctMsg = ""; acctDelArm = false; acctNameEdit = false; render();
     };
     var login = function () {
-      keep(); var pass = val("acPass");
+      acctMode = "login"; keep(); var pass = val("acPass");
       if (!acctEmail || !pass) { showErr(t("acNeedBoth")); return; }
       acctBusy = true; acctMsg = ""; render();
       cloudSignIn(acctEmail, pass).then(done, fail);
@@ -9126,6 +10040,13 @@
       cloudSignUp(acctEmail, pass, name).then(done, fail);
     };
     if ((el = document.getElementById("acLogin"))) el.onclick = login;
+    if ((el = document.getElementById("acApple"))) el.onclick = function () {
+      keep(); acctMode = "apple"; acctBusy = true; acctMsg = ""; acctErr = false; render();
+      cloudAppleSignIn().then(done, function (err) {
+        if (isAppleCancel(err)) { acctBusy = false; acctMsg = ""; render(); return; }
+        fail(err);
+      });
+    };
     if ((el = document.getElementById("acCreate"))) el.onclick = create;
     if ((el = document.getElementById("acToSignup"))) el.onclick = function () {
       keep(); acctMode = "signup"; acctMsg = ""; acctErr = false; render();

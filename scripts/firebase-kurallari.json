@@ -1,0 +1,86 @@
+{
+  "rules": {
+    "live": {
+      "$code": {
+        ".read": true,
+        ".write": "auth != null && (!data.exists() || data.child('owner').val() === auth.uid)"
+      }
+    },
+    "owners": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "data": {
+          "courtside-attendance-v1": {
+            ".read": "auth != null && root.child('users/' + $uid + '/club/id').exists() && root.child('clubs/' + root.child('users/' + $uid + '/club/id').val() + '/members/' + $uid).exists() && (root.child('clubs/' + root.child('users/' + $uid + '/club/id').val() + '/admins/' + auth.uid).exists() || root.child('clubs/' + root.child('users/' + $uid + '/club/id').val() + '/members/' + auth.uid).exists())"
+          }
+        }
+      }
+    },
+    "clubs": {
+      ".read": "auth != null && root.child('owners/' + auth.uid).val() === true",
+      "$club": {
+        ".read": "auth != null && data.child('admins/' + auth.uid).exists()",
+        ".write": "auth != null && root.child('owners/' + auth.uid).val() === true",
+        "members": {
+          ".read": "auth != null && data.child(auth.uid).exists()",
+          "$uid": {
+            ".read": "auth != null && auth.uid === $uid",
+            ".write": "auth != null && ((auth.uid === $uid && (!newData.exists() || root.child('clubCodes/' + newData.child('code').val() + '/club').val() === $club)) || (!newData.exists() && root.child('clubs/' + $club + '/admins/' + auth.uid).exists()))"
+          }
+        },
+        "admins": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && (!newData.exists() || (!data.exists() && root.child('adminCodes/' + newData.child('code').val() + '/club').val() === $club))"
+          }
+        }
+      }
+    },
+    "clubAtt": {
+      "$club": {
+        "$owner": {
+          ".read": "auth != null && (auth.uid === $owner || root.child('clubs/' + $club + '/members/' + auth.uid).exists() || root.child('clubs/' + $club + '/admins/' + auth.uid).exists())",
+          "$gid": {
+            "$day": {
+              "$kid": {
+                ".write": "auth != null && ((auth.uid === $owner && !newData.exists()) || (auth.uid !== $owner && root.child('clubs/' + $club + '/members/' + auth.uid).exists() && root.child('clubs/' + $club + '/members/' + $owner).exists() && root.child('users/' + $owner + '/club/id').val() === $club))",
+                ".validate": "!newData.exists() || ($day.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.hasChildren(['v', 'n', 'by', 't']) && newData.child('by').val() === auth.uid && (newData.child('v').val() === 0 || newData.child('v').val() === 1 || newData.child('v').val() === 2) && newData.child('n').isString() && newData.child('n').val().length <= 40 && (!newData.child('bn').exists() || (newData.child('bn').isString() && newData.child('bn').val().length <= 60)) && newData.child('t').isNumber())"
+              }
+            }
+          }
+        }
+      }
+    },
+    "bildirim": {
+      "$token": {
+        ".write": "auth != null",
+        ".validate": "!newData.exists() || ($token.matches(/^[0-9a-fA-F]{32,200}$/) && newData.child('uid').val() === auth.uid && newData.child('t').isNumber())"
+      }
+    },
+    "clubCodes": {
+      "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null && root.child('owners/' + auth.uid).val() === true"
+      }
+    },
+    "adminCodes": {
+      "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null && root.child('owners/' + auth.uid).val() === true"
+      }
+    },
+    "userClubs": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        "$club": {
+          ".write": "auth != null && auth.uid === $uid && (!newData.exists() || root.child('clubs/' + $club + '/admins/' + auth.uid).exists())"
+        }
+      }
+    }
+  }
+}

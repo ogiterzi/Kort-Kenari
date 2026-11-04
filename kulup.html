@@ -410,12 +410,30 @@
             } catch (e) { co.data = null; }
             co.syncedAt = rec.t || 0;
           }
-          return co;
+          // Başka antrenörlerin bu antrenörün gruplarına aldığı, henüz onun uygulamasına işlenmemiş yoklamalar.
+          if (!co.data) return co;
+          return db("GET", "clubAtt/" + id + "/" + uid).then(function (pend) { applyPending(co.data, pend); return co; }, function () { return co; });
         }, function () { co.error = true; return co; });
       }));
     }).then(function (coaches) {
       S.coaches = coaches.sort(function (x, y) { return coachName(x).localeCompare(coachName(y), "tr"); });
       if (S.fCoach && !S.coaches.some(function (c) { return c.uid === S.fCoach; })) { S.fCoach = ""; S.fGroup = ""; }
+    });
+  }
+  function applyPending(data, pend) {
+    Object.keys(pend || {}).forEach(function (gid) {
+      var g = (data.groups || []).filter(function (x) { return x && String(x.id) === gid; })[0];
+      if (!g) return;
+      Object.keys(pend[gid] || {}).forEach(function (day) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return;
+        Object.keys(pend[gid][day] || {}).forEach(function (k) {
+          var e = pend[gid][day][k];
+          if (!e || (g.kids || []).indexOf(e.n) === -1) return;
+          var a = data.att[gid] || (data.att[gid] = {}), m = a[day] || (a[day] = {});
+          if (e.v === 1 || e.v === 2) m[e.n] = e.v; else delete m[e.n];
+          if (!Object.keys(m).length) delete a[day];
+        });
+      });
     });
   }
   function coachName(c) { return c.name || c.email || "Antrenör"; }
