@@ -1,0 +1,72 @@
+# Turnuva bildirimleri: son kayıt günü sabahı ve yeni açıklanan turnuvalar.
+# Kurulum: scripts/BILDIRIM_KURULUM.md
+name: Turnuva bildirimleri
+
+on:
+  schedule:
+    - cron: "47 5 * * *"   # 08:47 (Türkiye saati): bugün son kayıt günü olanlar
+    - cron: "27 7 * * *"   # 10:27 (Türkiye saati): yeni açıklanan turnuvalar
+  workflow_dispatch:
+    inputs:
+      mod:
+        description: "yeni ya da sonkayit"
+        required: true
+        default: "yeni"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: takvim
+  cancel-in-progress: false
+
+jobs:
+  gonder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bağımlılıklar
+        run: pip install requests google-auth "httpx[http2]" "pyjwt[crypto]"
+
+      - name: Mod
+        id: mod
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mod=${{ github.event.inputs.mod }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "47 5 * * *" ]; then
+            echo "mod=sonkayit" >> "$GITHUB_OUTPUT"
+          else
+            echo "mod=yeni" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bildirimleri gönder
+        env:
+          FIREBASE_SA: ${{ secrets.FIREBASE_SA }}
+          APNS_KEY: ${{ secrets.APNS_KEY }}
+          APNS_KEY_ID: ${{ secrets.APNS_KEY_ID }}
+          APNS_TEAM_ID: ${{ secrets.APNS_TEAM_ID }}
+          APNS_TOPIC: ${{ secrets.APNS_TOPIC }}
+          APNS_SANDBOX: ${{ vars.APNS_SANDBOX }}
+        run: python scripts/bildirim_gonder.py --mod ${{ steps.mod.outputs.mod }}
+
+      - name: Durumu kaydet
+        run: |
+          git config user.name "courtside-bildirim"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/bildirim_durum.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok."
+          else
+            git commit -m "Bildirim durumu: $(date -u +%Y-%m-%d)"
+            for i in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              sleep 5
+            done
+            exit 1
+          fi
