@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-05T14:07+03:00",
+ "updated": "2026-11-06T14:03+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -354,22 +354,6 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5808"
   },
   {
-   "id": "5793",
-   "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
-   "start": "2026-11-16",
-   "end": "2026-11-20",
-   "club": "YENİGÜN TENİS SPOR KULÜBÜ",
-   "city": "BURSA",
-   "category": "Kategori 2",
-   "surface": "Toprak Zemin",
-   "deadline": "2026-11-03",
-   "ages": [
-    "12"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5793"
-  },
-  {
    "id": "5762",
    "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
    "start": "2026-11-16",
@@ -518,6 +502,22 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5779"
   },
   {
+   "id": "5793",
+   "name": "12 Yaş Sonbahar Kupası Türkiye Serisi-2",
+   "start": "2026-11-18",
+   "end": "2026-11-22",
+   "club": "YENİGÜN TENİS SPOR KULÜBÜ",
+   "city": "BURSA",
+   "category": "Kategori 2",
+   "surface": "Toprak Zemin",
+   "deadline": "2026-11-03",
+   "ages": [
+    "12"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5793"
+  },
+  {
    "id": "5682",
    "name": "YALOVA T400 30+,35+,40+ VE 45+ MASTERS TURNUVASI",
    "start": "2026-11-19",
@@ -574,8 +574,8 @@
    "name": "12 Yaş Haftasonu Turnuvası",
    "start": "2026-11-26",
    "end": "2026-11-29",
-   "club": "YALOVA TENİS VE DAĞCILIK SPOR KULÜBÜ",
-   "city": "YALOVA",
+   "club": "İZMİT TENİS KULÜBÜ",
+   "city": "KOCAELİ",
    "category": "Haftasonu-A",
    "surface": "Sert Zemin",
    "deadline": "2026-11-17",
@@ -657,7 +657,7 @@
    "club": "İZMİT TENİS KULÜBÜ",
    "city": "KOCAELİ",
    "category": "Haftasonu-A",
-   "surface": "Sert Zemin",
+   "surface": "Toprak Zemin",
    "deadline": "2026-11-17",
    "ages": [
     "14"
