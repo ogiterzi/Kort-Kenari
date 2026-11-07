@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-06T14:03+03:00",
+ "updated": "2026-11-07T13:24+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -25,54 +25,6 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5687"
-  },
-  {
-   "id": "5755",
-   "name": "Büyükler Sonbahar Kupası Türkiye Serisi-2",
-   "start": "2026-11-02",
-   "end": "2026-11-06",
-   "club": "ADANA ATLI SPOR KULÜBÜ",
-   "city": "ADANA",
-   "category": "Kategori 1",
-   "surface": "Toprak Zemin",
-   "deadline": "2026-10-20",
-   "ages": [
-    "B"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5755"
-  },
-  {
-   "id": "5757",
-   "name": "Büyükler Sonbahar Kupası Türkiye Serisi-2",
-   "start": "2026-11-02",
-   "end": "2026-11-06",
-   "club": "KUŞADASI BELEDİYE SPOR KULÜBÜ",
-   "city": "AYDIN",
-   "category": "Kategori 2",
-   "surface": "Sert Zemin",
-   "deadline": "2026-10-20",
-   "ages": [
-    "B"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5757"
-  },
-  {
-   "id": "5756",
-   "name": "Büyükler Sonbahar Kupası Türkiye Serisi-2",
-   "start": "2026-11-02",
-   "end": "2026-11-06",
-   "club": "BURSA BÜYÜKŞEHİR BELEDİYE SPOR KULÜBÜ",
-   "city": "BURSA",
-   "category": "Kategori 2",
-   "surface": "Sert Zemin",
-   "deadline": "2026-10-20",
-   "ages": [
-    "B"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5756"
   },
   {
    "id": "5753",
