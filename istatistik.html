@@ -103,13 +103,36 @@
 
   .urow td { vertical-align: middle; }
   .uname { min-width: 150px; }
+  .uname b { white-space: nowrap; }
+  .gt td:last-child { white-space: nowrap; }
   .uname b { font-weight: 600; }
-  .uname span { display: block; font-size: 11.5px; color: var(--dim); }
+  .uname > span { display: block; font-size: 11.5px; color: var(--dim); }
   .strip { display: flex; gap: 2px; }
   .strip i { width: 6px; height: 14px; border-radius: 2px; background: var(--panel-2); }
   .strip i.on { background: var(--c-ret); }
   .chips { display: flex; gap: 4px; flex-wrap: wrap; }
   .chip { font-size: 11px; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--dim); white-space: nowrap; }
+  tr.urow { cursor: pointer; }
+  tr.urow:hover td, tr.urow.open td { background: var(--panel-2); }
+  tr.urow:focus-visible { outline: 2px solid var(--brass); outline-offset: -2px; }
+  .chev { display: inline-block; width: 7px; height: 7px; border-right: 2px solid var(--dim); border-bottom: 2px solid var(--dim); transform: rotate(-45deg); margin: 0 9px 2px 1px; transition: transform .15s ease; }
+  tr.open .chev { transform: rotate(45deg); border-color: var(--brass); }
+  tr.drow > td { padding: 4px 0 18px; background: var(--panel-2); border-bottom: 1px solid var(--line); }
+  .det { position: sticky; left: 0; width: min(1000px, calc(100vw - 66px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; padding: 0 10px; }
+  .db { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-width: 0; }
+  .db h4 { margin: 0 0 10px; font-size: 13px; font-weight: 600; }
+  .sts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 8px; }
+  .st b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; line-height: 1.15; }
+  .st span { font-size: 11.5px; color: var(--dim); line-height: 1.3; display: block; }
+  .dl { font-size: 11.5px; color: var(--dim); margin: 12px 0 6px; }
+  .wd { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .wd div { text-align: center; }
+  .wd i { display: flex; align-items: center; justify-content: center; height: 24px; border-radius: 6px; font-style: normal; font-size: 11.5px; font-weight: 600; border: 1px solid var(--line); }
+  .wd span { font-size: 10.5px; color: var(--dim); }
+  .gt { font-size: 12.5px; }
+  .gt th { font-size: 11px; padding: 4px 6px; white-space: normal; }
+  .gt td { padding: 5px 6px; }
+  .gt .k, .det .k { color: var(--dim); font-size: 11px; }
   .empty { color: var(--dim); font-size: 14px; padding: 20px 0; }
   .spin { color: var(--dim); padding: 40px 0; text-align: center; }
   .foot { font-size: 12px; color: var(--dim); line-height: 1.6; margin-top: 8px; }
@@ -206,7 +229,7 @@
   }
 
   // ---------- Durum ----------
-  var S = { view: "login", msg: "", busy: false, loading: false, users: null, live: null, me: null, excludeMe: true, loadedAt: 0 };
+  var S = { view: "login", msg: "", busy: false, loading: false, users: null, live: null, me: null, excludeMe: true, loadedAt: 0, open: {} };
   try { S.excludeMe = localStorage.getItem("courtside-stats-me") !== "0"; } catch (e) {}
 
   function loadAll() {
@@ -241,37 +264,57 @@
       if (S.excludeMe && uid === S.me) return;
       var u = S.users[uid] || {}, data = u.data || {};
       var ev = {}, cnt = { mac: 0, yok: 0, ders: 0, turnuva: 0, canli: 0 }, extra = { grup: 0, ogr: 0, oyuncu: 0 };
+      // Ayrıntı: isim yok, sadece sayılar.
+      var det = { groups: [], mac: { done: 0, left: 0, last: null }, ders: { total: 0, d7: 0, d30: 0, stu30: 0, wd: [0, 0, 0, 0, 0, 0, 0], days: 0 }, turnuva: { n: 0, matches: 0 } };
       function add(day, kind) {
         if (!day || day > today) return;
         var e = ev[day] || (ev[day] = { mac: 0, yok: 0, ders: 0, turnuva: 0, canli: 0 });
         e[kind]++; cnt[kind]++;
       }
       var arch = pj(data[KEYS.archive]); var seen = {};
-      if (Array.isArray(arch)) arch.forEach(function (r) { if (!r) return; var st = r.startedAt || +r.archiveId; seen[st] = 1; add(dayOf(st), "mac"); });
+      if (Array.isArray(arch)) arch.forEach(function (r) {
+        if (!r) return; var st = r.startedAt || +r.archiveId, d = dayOf(st); seen[st] = 1; add(d, "mac");
+        if (r.abandoned) det.mac.left++; else det.mac.done++;
+        if (d && (!det.mac.last || d > det.mac.last)) det.mac.last = d;
+      });
       var cur = pj(data[KEYS.match]);
       if (cur && !cur.setup && Array.isArray(cur.log) && cur.log.length) {
         var st = cur.startedAt || (cur.log[cur.log.length - 1] || {}).t;
-        if (st && !seen[st]) add(dayOf(st), "mac");
+        if (st && !seen[st]) { add(dayOf(st), "mac"); det.mac.left++; }
       }
       var att = pj(data[KEYS.att]);
       if (att) {
         extra.grup = Array.isArray(att.groups) ? att.groups.length : 0;
-        Object.keys(att.att || {}).forEach(function (gid) {
-          var g = att.att[gid] || {};
+        var gl = Array.isArray(att.groups) ? att.groups.slice() : [];
+        Object.keys(att.att || {}).forEach(function (gid) { if (!gl.some(function (g) { return g && String(g.id) === gid; })) gl.push({ id: gid, kids: [], gone: true }); });
+        gl.forEach(function (gr, gi) {
+          if (!gr) return;
+          var g = (att.att || {})[gr.id] || {}, gd = { kids: Array.isArray(gr.kids) ? gr.kids.length : 0, time: gr.gone ? "" : String(gr.time || ""), gone: !!gr.gone, days: 0, present: 0, last: null, d30: 0, wd: [0, 0, 0, 0, 0, 0, 0] };
           Object.keys(g).forEach(function (day) {
-            if (!validDay(day)) return;
-            var any = Object.keys(g[day] || {}).some(function (n) { return (g[day][n] || 0) > 0; });
-            if (any) add(day, "yok");
+            if (!validDay(day) || day > today) return;
+            var n = Object.keys(g[day] || {}).filter(function (k) { return (g[day][k] || 0) > 0; }).length;
+            if (!n) return;
+            add(day, "yok"); gd.days++; gd.present += n; gd.wd[(parseDay(day).getDay() + 6) % 7]++;
+            if (day >= shift(today, -29)) gd.d30++;
+            if (!gd.last || day > gd.last) gd.last = day;
           });
+          det.groups.push(gd);
         });
       }
       var ls = pj(data[KEYS.lessons]);
       if (ls) {
         extra.ogr = Array.isArray(ls.students) ? ls.students.length : 0;
-        (ls.lessons || []).forEach(function (l) { if (l && validDay(l.d)) add(l.d, "ders"); });
+        var ldays = {}, stu = {};
+        (ls.lessons || []).forEach(function (l) {
+          if (!l || !validDay(l.d) || l.d > today) return;
+          add(l.d, "ders"); det.ders.total++; ldays[l.d] = 1; det.ders.wd[(parseDay(l.d).getDay() + 6) % 7]++;
+          if (l.d >= shift(today, -6)) det.ders.d7++;
+          if (l.d >= shift(today, -29)) { det.ders.d30++; stu[l.s || l.n] = 1; }
+        });
+        det.ders.days = Object.keys(ldays).length; det.ders.stu30 = Object.keys(stu).length;
       }
       var tr = pj(data[KEYS.tourn]);
-      if (Array.isArray(tr)) tr.forEach(function (x) { if (x) add(dayOf(x.createdAt || x.id), "turnuva"); });
+      if (Array.isArray(tr)) tr.forEach(function (x) { if (!x) return; add(dayOf(x.createdAt || x.id), "turnuva"); det.turnuva.n++; det.turnuva.matches += Array.isArray(x.matches) ? x.matches.length : 0; });
       var pl = pj(data[KEYS.players]); if (Array.isArray(pl)) extra.oyuncu = pl.length;
       (liveByOwner[uid] || []).forEach(function (d) { add(d, "canli"); });
       delete liveByOwner[uid];
@@ -281,7 +324,7 @@
       var days = Object.keys(ev).sort();
       users.push({
         uid: uid, club: (u.club && u.club.name) || "", ev: ev, days: days, cnt: cnt, extra: extra,
-        first: days[0] || null, last: days[days.length - 1] || null, lastSync: lastSync
+        first: days[0] || null, last: days[days.length - 1] || null, lastSync: lastSync, det: det
       });
     });
     // Giriş yapmadan (anonim oturumla) canlı yayın açanlar: hesabı yok ama uygulamayı kullanmışlar.
@@ -479,7 +522,7 @@
     }
     h += "</section>";
 
-    h += '<section class="card"><h2>Kullanıcılar</h2><p class="sub">Son aktif olana göre sıralı. Şerit son 28 günü gösterir, her kutu bir gün.</p><div class="scroll"><table><tr><th>Kullanıcı</th><th>Son 28 gün</th><th>Aktif gün (30g)</th><th>İlk / son</th><th>Kullandıkları</th></tr>';
+    h += '<section class="card"><h2>Kullanıcılar</h2><p class="sub">Son aktif olana göre sıralı. Şerit son 28 günü gösterir, her kutu bir gün. Ayrıntı için satıra dokun.</p><div class="scroll"><table><tr><th>Kullanıcı</th><th>Son 28 gün</th><th>Aktif gün (30g)</th><th>İlk / son</th><th>Kullandıkları</th></tr>';
     m.users.forEach(function (u, idx) {
       var strip = "";
       for (var i = 27; i >= 0; i--) { var d = shift(m.today, -i); strip += "<i" + (u.ev[d] ? ' class="on" title="' + longDay(d) + '"' : "") + "></i>"; }
@@ -488,14 +531,63 @@
       if (u.extra.grup) ex.push(u.extra.grup + " grup");
       if (u.extra.ogr) ex.push(u.extra.ogr + " özel ders öğrencisi");
       if (u.extra.oyuncu) ex.push(u.extra.oyuncu + " oyuncu");
-      h += '<tr class="urow"><td class="uname"><b>' + (u.club ? esc(u.club) : "Kullanıcı") + " · " + esc(u.uid.slice(0, 5)) + "</b><span>" + (ex.join(" · ") || "&nbsp;") + "</span></td>" +
+      var isOpen = !!S.open[u.uid];
+      h += '<tr class="urow' + (isOpen ? " open" : "") + '" data-uid="' + esc(u.uid) + '" tabindex="0" aria-expanded="' + isOpen + '"><td class="uname"><b><span class="chev"></span>' + (u.club ? esc(u.club) : "Kullanıcı") + " · " + esc(u.uid.slice(0, 5)) + "</b><span>" + (ex.join(" · ") || "&nbsp;") + "</span></td>" +
         '<td><div class="strip">' + strip + "</div></td><td>" + u.a30 + "</td>" +
         '<td style="white-space:nowrap">' + (u.first ? short(u.first) + " → " + short(u.last) : '<span style="color:var(--dim)">Kayıt yok' + (u.lastSync ? " · giriş " + short(dayOf(u.lastSync) || m.today) : "") + "</span>") + "</td>" +
-        '<td><div class="chips">' + (chips || '<span style="color:var(--dim);font-size:12px">—</span>') + "</div></td></tr>";
+        '<td><div class="chips">' + (chips || '<span style="color:var(--dim);font-size:12px">—</span>') + "</div></td></tr>" + (isOpen ? detailRow(u, m) : "");
     });
     h += "</table></div></section>";
     return h + footNote(m);
   }
+  var WD = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"];
+  function wdCells(arr) {
+    var mx = Math.max.apply(null, arr.concat([1]));
+    return '<div class="wd">' + arr.map(function (v, i) {
+      return '<div><i style="background:rgba(var(--heat),' + (v ? (0.18 + 0.62 * v / mx).toFixed(2) : 0) + ')">' + (v || "") + "</i><span>" + WD[i] + "</span></div>";
+    }).join("") + "</div>";
+  }
+  function stat(n, l) { return '<div class="st"><b>' + n + "</b><span>" + l + "</span></div>"; }
+  function sinceTxt(d, today) {
+    if (!d) return "—";
+    var n = Math.round((parseDay(today) - parseDay(d)) / 864e5);
+    return n === 0 ? "bugün" : n === 1 ? "dün" : n + " gün önce";
+  }
+  function detailRow(u, m) {
+    var d = u.det, wdAll = [0, 0, 0, 0, 0, 0, 0], boxes = [];
+    u.days.forEach(function (x) { wdAll[(parseDay(x).getDay() + 6) % 7]++; });
+    var span = u.first ? Math.round((parseDay(m.today) - parseDay(u.first)) / 864e5) + 1 : 0;
+    boxes.push('<div class="db"><h4>Genel</h4><div class="sts">' +
+      stat(u.days.length, "aktif gün") + stat(span ? span + " gün" : "—", "ilk kayıttan beri") + stat(sinceTxt(u.last, m.today), "son kayıt") +
+      "</div>" + (u.days.length ? '<p class="dl">Aktif olduğu günler</p>' + wdCells(wdAll) : "") +
+      '<p class="dl">Son eşitleme: ' + (u.lastSync ? new Date(u.lastSync).toLocaleString("tr-TR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "—") + "</p></div>");
+    if (d.groups.length) {
+      var gwd = [0, 0, 0, 0, 0, 0, 0];
+      d.groups.forEach(function (g) { g.wd.forEach(function (v, i) { gwd[i] += v; }); });
+      boxes.push('<div class="db"><h4>Yoklama · ' + d.groups.length + " grup</h4>" +
+        '<table class="gt"><tr><th></th><th>Öğrenci</th><th>Yoklama günü</th><th>Ort. gelen</th><th>Son</th></tr>' +
+        d.groups.map(function (g, i) {
+          return "<tr><td>Grup " + (i + 1) + (g.time ? ' <span class="k">' + esc(g.time) + "</span>" : "") + (g.gone ? ' <span class="k">(silinmiş)</span>' : "") + "</td><td>" + g.kids + "</td><td>" + g.days +
+            (g.d30 !== g.days ? ' <span class="k">(30g: ' + g.d30 + ")</span>" : "") + "</td><td>" + (g.days ? (g.present / g.days).toFixed(1) : "—") + "</td><td>" + (g.last ? short(g.last) : "—") + "</td></tr>";
+        }).join("") + "</table>" + (gwd.some(Boolean) ? '<p class="dl">Yoklama alınan günler</p>' + wdCells(gwd) : "") + "</div>");
+    }
+    if (u.extra.ogr || d.ders.total) {
+      boxes.push('<div class="db"><h4>Özel ders</h4><div class="sts">' +
+        stat(u.extra.ogr, "kayıtlı öğrenci") + stat(d.ders.total, "toplam ders") + stat(d.ders.d7, "son 7 gün") + stat(d.ders.d30, "son 30 gün") +
+        stat(d.ders.stu30, "farklı öğrenci (30g)") + stat(d.ders.days ? (d.ders.total / d.ders.days).toFixed(1) : "—", "ders / ders günü") +
+        "</div>" + (d.ders.total ? '<p class="dl">Ders işaretlenen günler</p>' + wdCells(d.ders.wd) : '<p class="dl">Öğrenci eklenmiş ama henüz ders işaretlenmemiş.</p>') + "</div>");
+    }
+    if (u.cnt.mac || d.turnuva.n || u.cnt.canli) {
+      boxes.push('<div class="db"><h4>Maç ve turnuva</h4><div class="sts">' +
+        stat(d.mac.done, "biten maç") + stat(d.mac.left, "yarım kalan") + stat(u.cnt.canli, "canlı yayın") +
+        (d.turnuva.n ? stat(d.turnuva.n, "turnuva") + stat(d.turnuva.matches, "turnuva maçı") : "") +
+        "</div>" + (d.mac.last ? '<p class="dl">Son maç: ' + longDay(d.mac.last) + "</p>" : "") + "</div>");
+    }
+    if (u.extra.oyuncu) boxes.push('<div class="db"><h4>Oyuncular</h4><div class="sts">' + stat(u.extra.oyuncu, "kayıtlı oyuncu") + "</div></div>");
+    if (!u.days.length && !u.extra.ogr && !u.extra.oyuncu && !d.groups.length) boxes.push('<div class="db"><h4>Henüz bir şey yok</h4><p class="dl">Hesap açılmış ama grup, öğrenci, maç gibi hiçbir kayıt yapılmamış.</p></div>');
+    return '<tr class="drow"><td colspan="5"><div class="det">' + boxes.join("") + "</div></td></tr>";
+  }
+
   function footNote() {
     return '<p class="foot">Sadece Courtside\'a <b>hesapla giriş yapmış</b> kullanıcılar görünür; giriş yapmadan kullananların verisi telefonlarında kalır ve buraya gelmez. ' +
       "\"Aktif\" = o gün en az bir kayıt yapmış olmak (uygulamayı sadece açıp bakmak sayılmaz). Kişisel isimler gösterilmez; kullanıcılar kulüp adı ve hesap kimliğinin ilk 5 karakteriyle listelenir.</p>";
@@ -519,6 +611,11 @@
     if ((el = $("logout"))) el.onclick = function () { try { localStorage.removeItem(AUTH_KEY); } catch (e) {} S.view = "login"; S.users = null; S.msg = ""; render(); };
     if ((el = $("refresh"))) el.onclick = loadAll;
     if ((el = $("retry"))) el.onclick = loadAll;
+    Array.prototype.forEach.call(document.querySelectorAll("tr.urow"), function (tr) {
+      var tog = function () { var id = tr.getAttribute("data-uid"); S.open[id] = !S.open[id]; var y = window.scrollY; render(); window.scrollTo(0, y); };
+      tr.onclick = tog;
+      tr.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tog(); } };
+    });
     if ((el = $("excl"))) el.onchange = function () { S.excludeMe = this.checked; try { localStorage.setItem("courtside-stats-me", S.excludeMe ? "1" : "0"); } catch (e) {} render(); };
     if (S.view === "main" && S.users && !S.loading) {
       var mm = analyze();
