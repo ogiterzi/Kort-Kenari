@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Courtside Kullanım</title>
+<meta name="theme-color" content="#14212B">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brass: #C79A54; --clay: #C06B57; --radius: 14px;
+  }
+  :root:not([data-theme="light"]) {
+    --bg: #14212B; --panel: #1C2C38; --panel-2: #253A48; --text: #F4F1E8; --dim: #AEBAC2; --mute: #7F8E98; --line: #34495A; --grid: #2B3E4C;
+    --c-ret: #3FA56A; --c-new: #6E8FE0; --heat: 63,165,106;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #EFEAE0; --panel: #FFFFFF; --panel-2: #F6F2E8; --text: #1C2A33; --dim: #5C6A72; --mute: #85919A; --line: #DAD2C0; --grid: #ECE6DA;
+      --c-ret: #23824D; --c-new: #4A6FD0; --heat: 35,130,77;
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="dark"] { --bg: #14212B; --panel: #1C2C38; --panel-2: #253A48; --text: #F4F1E8; --dim: #AEBAC2; --mute: #7F8E98; --line: #34495A; --grid: #2B3E4C; --c-ret: #3FA56A; --c-new: #6E8FE0; --heat: 63,165,106; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px 56px; }
+  button { font-family: inherit; cursor: pointer; }
+  button:disabled { opacity: .55; cursor: default; }
+
+  .top { display: flex; align-items: center; gap: 12px; padding: 18px 0 14px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+  .top svg { width: 40px; height: 40px; flex: none; }
+  .brand { flex: 1; min-width: 0; }
+  .brand b { display: block; font-family: 'Fraunces', Georgia, serif; font-size: 21px; font-weight: 700; line-height: 1.1; }
+  .brand span { font-size: 12.5px; color: var(--dim); }
+  .ghost { background: none; border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 7px 14px; font-size: 13px; }
+  .ghost:hover { border-color: var(--brass); }
+
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .auth { max-width: 420px; margin: 28px auto 0; display: flex; flex-direction: column; gap: 14px; }
+  h1 { font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 600; margin: 0 0 4px; line-height: 1.2; }
+  h2 { font-family: 'Fraunces', Georgia, serif; font-size: 19px; font-weight: 600; margin: 0 0 4px; }
+  .lede { color: var(--dim); font-size: 14.5px; line-height: 1.55; margin: 0; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 13px; color: var(--dim); }
+  input { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; font-size: 15px; color: var(--text); font-family: inherit; min-width: 0; }
+  input:focus { outline: 2px solid var(--brass); outline-offset: 1px; }
+  .primary { background: var(--brass); color: #1B140A; border: none; border-radius: 11px; padding: 12px 18px; font-size: 15px; font-weight: 600; }
+  .msg { font-size: 13.5px; min-height: 18px; color: var(--clay); line-height: 1.5; }
+  .note { font-size: 12.5px; color: var(--dim); line-height: 1.55; margin: 0; }
+
+  .head { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+  .head .t { flex: 1; min-width: 220px; }
+  .eyebrow { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); font-weight: 600; margin-bottom: 4px; }
+  .switch { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--dim); cursor: pointer; user-select: none; }
+  .switch input { width: 16px; height: 16px; accent-color: var(--brass); padding: 0; }
+
+  .tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 26px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .tile .n { font-family: 'Fraunces', Georgia, serif; font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .tile .l { font-size: 12.5px; color: var(--text); margin-top: 4px; font-weight: 500; }
+  .tile .s { font-size: 11.5px; color: var(--dim); margin-top: 2px; line-height: 1.4; }
+  @media (max-width: 820px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tiles .tile:first-child { grid-column: span 2; } }
+
+  section { margin-bottom: 26px; }
+  .sub { font-size: 13px; color: var(--dim); margin: 0 0 12px; line-height: 1.5; }
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart text { font-family: 'IBM Plex Sans', system-ui, sans-serif; fill: var(--mute); font-size: 11px; }
+  .chart .grid { stroke: var(--grid); stroke-width: 1; }
+  .chart .base { stroke: var(--line); stroke-width: 1; }
+  .chart .hit { fill: transparent; cursor: default; }
+  .chart .hit:hover + .hl, .chart .col:hover .hl { opacity: 1; }
+  .hl { fill: var(--text); opacity: 0; pointer-events: none; }
+  .tip { position: absolute; pointer-events: none; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 12.5px; line-height: 1.45; box-shadow: 0 6px 18px rgba(0,0,0,.18); white-space: nowrap; z-index: 5; display: none; }
+  .tip b { font-weight: 600; }
+  .tip .k { color: var(--dim); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--dim); margin-bottom: 10px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  details.tbl { margin-top: 8px; }
+  details.tbl summary { font-size: 12.5px; color: var(--dim); cursor: pointer; }
+  details.tbl table { margin-top: 8px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+  th { text-align: left; font-weight: 600; color: var(--dim); font-size: 12px; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--grid); }
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  .feat { display: grid; grid-template-columns: 120px 1fr 120px; gap: 10px; align-items: center; padding: 6px 0; font-size: 13.5px; }
+  .feat .bar { height: 10px; background: var(--panel-2); border-radius: 5px; overflow: hidden; }
+  .feat .bar i { display: block; height: 100%; background: var(--c-ret); border-radius: 0 5px 5px 0; }
+  .feat .v { text-align: right; color: var(--dim); font-size: 12.5px; }
+  .feat .v b { color: var(--text); font-weight: 600; }
+  @media (max-width: 560px) { .feat { grid-template-columns: 92px 1fr 88px; } }
+
+  .coh td.c { text-align: center; min-width: 46px; border: 2px solid var(--panel); border-radius: 6px; }
+  .coh td.na { color: transparent; }
+
+  .urow td { vertical-align: middle; }
+  .uname { min-width: 150px; }
+  .uname b { font-weight: 600; }
+  .uname span { display: block; font-size: 11.5px; color: var(--dim); }
+  .strip { display: flex; gap: 2px; }
+  .strip i { width: 6px; height: 14px; border-radius: 2px; background: var(--panel-2); }
+  .strip i.on { background: var(--c-ret); }
+  .chips { display: flex; gap: 4px; flex-wrap: wrap; }
+  .chip { font-size: 11px; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--dim); white-space: nowrap; }
+  .empty { color: var(--dim); font-size: 14px; padding: 20px 0; }
+  .spin { color: var(--dim); padding: 40px 0; text-align: center; }
+  .foot { font-size: 12px; color: var(--dim); line-height: 1.6; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <svg viewBox="0 0 512 512" aria-hidden="true"><defs><clipPath id="lc"><circle cx="256" cy="256" r="172"/></clipPath></defs><circle cx="256" cy="256" r="188.5" fill="none" stroke="#C79A54" stroke-width="12"/><circle cx="256" cy="256" r="172" fill="#CFE21B"/><g clip-path="url(#lc)" fill="none" stroke="#F7FBDC" stroke-width="20"><circle cx="43.4" cy="256" r="151.6"/><circle cx="468.6" cy="256" r="151.6"/></g></svg>
+    <div class="brand"><b>Courtside</b><span>Kullanım istatistikleri</span></div>
+    <div id="topRight"></div>
+  </div>
+  <div id="app"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  // Aynı Firebase projesi ve aynı giriş anahtarı: Kulüp Paneli'ne giriş yaptıysan burada da açık gelir.
+  var FB = {
+    apiKey: "AIzaSyCMSpN9EKOQxbkpdsodfLDAslNg9NNW-X8",
+    db: "https://courtside-62f8e-default-rtdb.europe-west1.firebasedatabase.app",
+    authBase: "https://identitytoolkit.googleapis.com",
+    tokenBase: "https://securetoken.googleapis.com"
+  };
+  var AUTH_KEY = "courtside-club-auth-v1";
+  var KEYS = {
+    match: "courtside-match-v1", archive: "courtside-archive-v1", players: "courtside-players-v1",
+    tourn: "courtside-tournaments-v1", att: "courtside-attendance-v1", lessons: "courtside-lessons-v1"
+  };
+  var FEATS = [
+    { k: "mac", label: "Maç takibi", unit: "maç" },
+    { k: "yok", label: "Yoklama", unit: "yoklama" },
+    { k: "ders", label: "Özel ders", unit: "ders" },
+    { k: "turnuva", label: "Turnuva", unit: "turnuva" },
+    { k: "canli", label: "Canlı yayın", unit: "yayın" }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function parseDay(s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  function shift(s, n) { var d = parseDay(s); d.setDate(d.getDate() + n); return ymd(d); }
+  function dayOf(ms) { ms = +ms; if (!ms || ms < 1.5e12 || ms > 4e12) return null; return ymd(new Date(ms)); }
+  function validDay(s) { return /^\d{4}-\d{2}-\d{2}$/.test(String(s || "")); }
+  function weekStart(s) { var d = parseDay(s); var w = (d.getDay() + 6) % 7; d.setDate(d.getDate() - w); return ymd(d); }
+  function short(s) { return parseDay(s).toLocaleDateString("tr-TR", { day: "numeric", month: "short" }).replace(".", ""); }
+  function longDay(s) { return parseDay(s).toLocaleDateString("tr-TR", { day: "numeric", month: "long", weekday: "short" }); }
+  function pj(rec) { if (!rec || typeof rec.v !== "string") return null; try { return JSON.parse(rec.v); } catch (e) { return null; } }
+
+  // ---------- Giriş ----------
+  function loadAuth() { try { return JSON.parse(localStorage.getItem(AUTH_KEY) || "null"); } catch (e) { return null; } }
+  function saveAuth(a) { try { localStorage.setItem(AUTH_KEY, JSON.stringify(a)); } catch (e) {} }
+  function authCall(method, body) {
+    return fetch(FB.authBase + "/v1/accounts:" + method + "?key=" + FB.apiKey, {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) throw new Error((j && j.error && j.error.message) || ("HTTP " + r.status));
+        return j;
+      });
+    });
+  }
+  function getToken() {
+    var a = loadAuth();
+    if (!a || !a.refreshToken) return Promise.reject(new Error("NO_AUTH"));
+    if (a.idToken && a.exp - Date.now() > 5 * 60 * 1000) return Promise.resolve(a);
+    return fetch(FB.tokenBase + "/v1/token?key=" + FB.apiKey, {
+      method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: "grant_type=refresh_token&refresh_token=" + encodeURIComponent(a.refreshToken)
+    }).then(function (r) { if (!r.ok) throw new Error("REFRESH"); return r.json(); })
+      .then(function (j) {
+        a.idToken = j.id_token; a.refreshToken = j.refresh_token; a.uid = j.user_id;
+        a.exp = Date.now() + Number(j.expires_in || 3600) * 1000;
+        saveAuth(a); return a;
+      });
+  }
+  function db(path) {
+    return getToken().then(function (a) {
+      return fetch(FB.db + "/" + path + ".json?auth=" + encodeURIComponent(a.idToken)).then(function (r) {
+        if (r.status === 401 || r.status === 403) throw new Error("DENIED");
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      });
+    });
+  }
+  function authErr(err) {
+    var m = String((err && err.message) || "");
+    if (/INVALID_EMAIL|MISSING_EMAIL/.test(m)) return "E-posta adresi geçersiz.";
+    if (/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND|USER_DISABLED|MISSING_PASSWORD/.test(m)) return "E-posta ya da şifre hatalı.";
+    if (m.indexOf("TOO_MANY_ATTEMPTS") !== -1) return "Çok fazla deneme yapıldı. Biraz bekleyip tekrar dene.";
+    return "Bağlantı kurulamadı. İnternetini kontrol edip tekrar dene.";
+  }
+
+  // ---------- Durum ----------
+  var S = { view: "login", msg: "", busy: false, loading: false, users: null, live: null, me: null, excludeMe: true, loadedAt: 0 };
+  try { S.excludeMe = localStorage.getItem("courtside-stats-me") !== "0"; } catch (e) {}
+
+  function loadAll() {
+    var a = loadAuth();
+    S.view = "main"; S.loading = true; S.msg = ""; S.me = a.uid; render();
+    db("owners/" + a.uid).then(function (v) {
+      if (v !== true) throw new Error("NOT_OWNER");
+      return Promise.all([db("users"), db("live").catch(function () { return null; })]);
+    }).then(function (r) {
+      S.users = r[0] || {}; S.live = r[1] || {}; S.loadedAt = Date.now(); S.loading = false; render();
+    }).catch(function (e) {
+      var m = String((e && e.message) || "");
+      S.loading = false; S.users = null;
+      if (m === "NOT_OWNER") S.msg = "Bu sayfa yalnızca Courtside sahibinin hesabına açık.";
+      else if (m === "DENIED") S.msg = "Firebase kullanıcı verisini okumana izin vermedi. Realtime Database kurallarına sahip okuma izni eklenmemiş olabilir (scripts/firebase-kurallari.json).";
+      else if (m === "NO_AUTH" || m === "REFRESH") { S.view = "login"; S.msg = "Oturumun sona ermiş, tekrar giriş yap."; }
+      else S.msg = "Veriler yüklenemedi. İnternetini kontrol edip yenile.";
+      render();
+    });
+  }
+
+  // ---------- Analiz ----------
+  // Bir kullanıcı o gün en az bir kayıt yaptıysa (maç, yoklama, özel ders, turnuva, canlı yayın) o gün "aktif" sayılır.
+  function analyze() {
+    var today = ymd(new Date());
+    var users = [], liveByOwner = {}, anonLive = 0, anonLiveRecent = 0;
+    Object.keys(S.live || {}).forEach(function (code) {
+      var l = S.live[code]; if (!l || !l.owner) return;
+      (liveByOwner[l.owner] = liveByOwner[l.owner] || []).push(dayOf(l.t));
+    });
+    Object.keys(S.users || {}).forEach(function (uid) {
+      if (S.excludeMe && uid === S.me) return;
+      var u = S.users[uid] || {}, data = u.data || {};
+      var ev = {}, cnt = { mac: 0, yok: 0, ders: 0, turnuva: 0, canli: 0 }, extra = { grup: 0, ogr: 0, oyuncu: 0 };
+      function add(day, kind) {
+        if (!day || day > today) return;
+        var e = ev[day] || (ev[day] = { mac: 0, yok: 0, ders: 0, turnuva: 0, canli: 0 });
+        e[kind]++; cnt[kind]++;
+      }
+      var arch = pj(data[KEYS.archive]); var seen = {};
+      if (Array.isArray(arch)) arch.forEach(function (r) { if (!r) return; var st = r.startedAt || +r.archiveId; seen[st] = 1; add(dayOf(st), "mac"); });
+      var cur = pj(data[KEYS.match]);
+      if (cur && !cur.setup && Array.isArray(cur.log) && cur.log.length) {
+        var st = cur.startedAt || (cur.log[cur.log.length - 1] || {}).t;
+        if (st && !seen[st]) add(dayOf(st), "mac");
+      }
+      var att = pj(data[KEYS.att]);
+      if (att) {
+        extra.grup = Array.isArray(att.groups) ? att.groups.length : 0;
+        Object.keys(att.att || {}).forEach(function (gid) {
+          var g = att.att[gid] || {};
+          Object.keys(g).forEach(function (day) {
+            if (!validDay(day)) return;
+            var any = Object.keys(g[day] || {}).some(function (n) { return (g[day][n] || 0) > 0; });
+            if (any) add(day, "yok");
+          });
+        });
+      }
+      var ls = pj(data[KEYS.lessons]);
+      if (ls) {
+        extra.ogr = Array.isArray(ls.students) ? ls.students.length : 0;
+        (ls.lessons || []).forEach(function (l) { if (l && validDay(l.d)) add(l.d, "ders"); });
+      }
+      var tr = pj(data[KEYS.tourn]);
+      if (Array.isArray(tr)) tr.forEach(function (x) { if (x) add(dayOf(x.createdAt || x.id), "turnuva"); });
+      var pl = pj(data[KEYS.players]); if (Array.isArray(pl)) extra.oyuncu = pl.length;
+      (liveByOwner[uid] || []).forEach(function (d) { add(d, "canli"); });
+      delete liveByOwner[uid];
+
+      var lastSync = 0;
+      Object.keys(data).forEach(function (k) { var t = data[k] && data[k].t; if (typeof t === "number" && t > lastSync) lastSync = t; });
+      var days = Object.keys(ev).sort();
+      users.push({
+        uid: uid, club: (u.club && u.club.name) || "", ev: ev, days: days, cnt: cnt, extra: extra,
+        first: days[0] || null, last: days[days.length - 1] || null, lastSync: lastSync
+      });
+    });
+    // Giriş yapmadan (anonim oturumla) canlı yayın açanlar: hesabı yok ama uygulamayı kullanmışlar.
+    Object.keys(liveByOwner).forEach(function (o) {
+      if (S.excludeMe && o === S.me) return;
+      anonLive++;
+      if (liveByOwner[o].some(function (d) { return d && d >= shift(today, -29); })) anonLiveRecent++;
+    });
+
+    function activeIn(u, from, to) { return u.days.some(function (d) { return d >= from && d <= to; }); }
+    var d7 = shift(today, -6), d30 = shift(today, -29);
+    var withData = users.filter(function (u) { return u.days.length; });
+    var m = {
+      today: today, users: users, total: users.length, withData: withData.length,
+      a7: users.filter(function (u) { return activeIn(u, d7, today); }).length,
+      a30: users.filter(function (u) { return activeIn(u, d30, today); }).length,
+      new7: users.filter(function (u) { return u.first && u.first >= d7; }).length,
+      anonLive: anonLive, anonLiveRecent: anonLiveRecent
+    };
+    // Alışkanlık: son 4 haftalık dilimin (7'şer gün) en az 3'ünde aktif.
+    m.habit = users.filter(function (u) {
+      var k = 0;
+      for (var w = 0; w < 4; w++) { var to = shift(today, -7 * w), from = shift(to, -6); if (activeIn(u, from, to)) k++; }
+      return k >= 3;
+    }).length;
+
+    // Günlük: son 42 gün
+    m.daily = [];
+    for (var i = 41; i >= 0; i--) {
+      var d = shift(today, -i), row = { d: d, n: 0, mac: 0, yok: 0, ders: 0, turnuva: 0, canli: 0 };
+      users.forEach(function (u) { var e = u.ev[d]; if (!e) return; row.n++; FEATS.forEach(function (f) { if (e[f.k]) row[f.k]++; }); });
+      m.daily.push(row);
+    }
+    // Haftalık: son 12 hafta (Pazartesi başlangıçlı), yeni / geri dönen
+    var thisW = weekStart(today);
+    m.weekly = [];
+    for (var w = 11; w >= 0; w--) {
+      var ws = shift(thisW, -7 * w), we = shift(ws, 6), nw = 0, ret = 0;
+      users.forEach(function (u) {
+        if (!activeIn(u, ws, we)) return;
+        if (u.first >= ws) nw++; else ret++;
+      });
+      m.weekly.push({ ws: ws, we: we, nw: nw, ret: ret, n: nw + ret, partial: w === 0 });
+    }
+    // Kohort: ilk aktif olduğu haftaya göre gruplar, sonraki haftalarda geri gelenlerin oranı
+    var coh = {};
+    withData.forEach(function (u) { var k = weekStart(u.first); (coh[k] = coh[k] || []).push(u); });
+    m.cohorts = Object.keys(coh).sort().slice(-8).map(function (ws) {
+      var list = coh[ws], cells = [];
+      for (var k = 0; k < 8; k++) {
+        var s = shift(ws, 7 * k), e = shift(s, 6);
+        if (s > today) { cells.push(null); continue; }
+        var n = list.filter(function (u) { return activeIn(u, s, e); }).length;
+        cells.push({ n: n, p: n / list.length, partial: e > today });
+      }
+      return { ws: ws, size: list.length, cells: cells };
+    });
+    // Özellik kullanımı
+    m.feats = FEATS.map(function (f) {
+      var us = users.filter(function (u) { return u.cnt[f.k] > 0; }).length;
+      var tot = users.reduce(function (s, u) { return s + u.cnt[f.k]; }, 0);
+      return { k: f.k, label: f.label, unit: f.unit, users: us, total: tot };
+    });
+    users.forEach(function (u) { u.a30 = u.days.filter(function (d) { return d >= d30; }).length; });
+    users.sort(function (x, y) { return (y.last || "").localeCompare(x.last || "") || y.a30 - x.a30 || y.lastSync - x.lastSync; });
+    return m;
+  }
+
+  // ---------- Grafikler ----------
+  function niceMax(v) { if (v <= 4) return 4; var p = Math.pow(10, Math.floor(Math.log10(v))), n = v / p; return (n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
+  function topRound(x, y, w, h, r) {
+    if (h <= 0) return "";
+    r = Math.min(r, w / 2, h);
+    return "M" + x + "," + (y + h) + "V" + (y + r) + "Q" + x + "," + y + " " + (x + r) + "," + y + "H" + (x + w - r) + "Q" + (x + w) + "," + y + " " + (x + w) + "," + (y + r) + "V" + (y + h) + "Z";
+  }
+  function axis(W, H, L, T, PH, max) {
+    var out = "", ticks = 4;
+    for (var i = 0; i <= ticks; i++) {
+      var v = max * i / ticks, y = T + PH - PH * i / ticks;
+      if (v % 1) continue;
+      out += '<line class="' + (i ? "grid" : "base") + '" x1="' + L + '" x2="' + (W - 4) + '" y1="' + y + '" y2="' + y + '"/>';
+      out += '<text x="' + (L - 8) + '" y="' + (y + 4) + '" text-anchor="end">' + v + "</text>";
+    }
+    return out;
+  }
+  // Telefonda yazılar okunur kalsın diye çizim genişliği ekrana göre seçilir.
+  function chartW() { var w = Math.min(1040, window.innerWidth) - 70; return Math.max(320, Math.min(720, w)); }
+  function dailyChart(m) {
+    var W = chartW(), H = 210, L = 30, T = 10, B = 26, PH = H - T - B, n = m.daily.length;
+    var max = niceMax(Math.max.apply(null, m.daily.map(function (r) { return r.n; }).concat([1])));
+    var slot = (W - 4 - L) / n, bw = Math.max(3, slot - (W < 600 ? 2 : 3));
+    var s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Son 42 günde günlük aktif kullanıcı">' + axis(W, H, L, T, PH, max);
+    m.daily.forEach(function (r, i) {
+      var x = L + i * slot + (slot - bw) / 2, h = PH * r.n / max, y = T + PH - h;
+      s += '<g class="col" data-i="' + i + '"><rect class="hit" x="' + (L + i * slot) + '" y="' + T + '" width="' + slot + '" height="' + PH + '"/>';
+      s += '<rect class="hl" x="' + (L + i * slot) + '" y="' + T + '" width="' + slot + '" height="' + PH + '" style="fill-opacity:.06"/>';
+      if (r.n) s += '<path d="' + topRound(x, y, bw, h, 3) + '" fill="var(--c-ret)"/>';
+      s += "</g>";
+      var dd = parseDay(r.d);
+      if ((dd.getDay() === 1 && (W >= 600 || i % 14 < 7 && i < n - 4)) || i === n - 1) s += '<text x="' + (L + i * slot + slot / 2) + '" y="' + (H - 8) + '" text-anchor="middle">' + (i === n - 1 ? "Bugün" : short(r.d)) + "</text>";
+    });
+    return s + "</svg>";
+  }
+  function weeklyChart(m) {
+    var W = chartW(), H = 220, L = 30, T = 18, B = 26, PH = H - T - B, n = m.weekly.length;
+    var max = niceMax(Math.max.apply(null, m.weekly.map(function (r) { return r.n; }).concat([1])));
+    var slot = (W - 4 - L) / n, bw = Math.min(38, slot - (W < 600 ? 6 : 14));
+    var s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Son 12 haftada haftalık aktif kullanıcı, yeni ve geri dönen">' + axis(W, H, L, T, PH, max);
+    m.weekly.forEach(function (r, i) {
+      var x = L + i * slot + (slot - bw) / 2, base = T + PH;
+      var hr = PH * r.ret / max, hn = PH * r.nw / max, gap = (r.ret && r.nw) ? 2 : 0;
+      s += '<g class="col" data-i="' + i + '"><rect class="hit" x="' + (L + i * slot) + '" y="' + T + '" width="' + slot + '" height="' + PH + '"/>';
+      s += '<rect class="hl" x="' + (L + i * slot) + '" y="' + T + '" width="' + slot + '" height="' + PH + '" style="fill-opacity:.06"/>';
+      if (r.ret) s += (r.nw ? '<rect x="' + x + '" y="' + (base - hr) + '" width="' + bw + '" height="' + hr + '" fill="var(--c-ret)"/>' : '<path d="' + topRound(x, base - hr, bw, hr, 4) + '" fill="var(--c-ret)"/>');
+      if (r.nw) s += '<path d="' + topRound(x, base - hr - hn - gap, bw, hn, 4) + '" fill="var(--c-new)"' + (r.partial ? ' fill-opacity=".75"' : "") + "/>";
+      if (r.n && i === n - 1) s += '<text x="' + (x + bw / 2) + '" y="' + (base - hr - hn - gap - 6) + '" text-anchor="middle" style="fill:var(--text);font-weight:600">' + r.n + "</text>";
+      s += "</g>";
+      if ((W >= 600 ? i % 2 === 1 : i % 4 === 3) && i < n - 1 || i === n - 1) s += '<text x="' + (L + i * slot + slot / 2) + '" y="' + (H - 8) + '" text-anchor="middle">' + (i === n - 1 ? "Bu hafta" : short(r.ws)) + "</text>";
+    });
+    return s + "</svg>";
+  }
+  function bindTips(id, rows, fmt) {
+    var box = $(id); if (!box) return;
+    var tip = box.querySelector(".tip");
+    function show(e, g) {
+      var i = +g.getAttribute("data-i"); tip.innerHTML = fmt(rows[i]); tip.style.display = "block";
+      var br = box.getBoundingClientRect(), cx = (e.touches ? e.touches[0].clientX : e.clientX) - br.left;
+      var tw = tip.offsetWidth, left = Math.max(0, Math.min(br.width - tw, cx - tw / 2));
+      tip.style.left = left + "px"; tip.style.top = "-6px"; tip.style.transform = "translateY(-100%)";
+    }
+    Array.prototype.forEach.call(box.querySelectorAll(".col"), function (g) {
+      g.addEventListener("mousemove", function (e) { show(e, g); });
+      g.addEventListener("touchstart", function (e) { show(e, g); }, { passive: true });
+      g.addEventListener("mouseleave", function () { tip.style.display = "none"; });
+    });
+  }
+
+  // ---------- Çizim ----------
+  function tile(n, l, s) { return '<div class="tile"><div class="n">' + n + '</div><div class="l">' + l + '</div><div class="s">' + s + "</div></div>"; }
+  function pct(a, b) { return b ? Math.round(100 * a / b) + "%" : "–"; }
+
+  function renderMain() {
+    if (S.loading) return '<div class="spin">Veriler yükleniyor…</div>';
+    if (!S.users) return '<div class="card"><p class="msg">' + esc(S.msg) + '</p><button class="ghost" id="retry">Tekrar dene</button></div>';
+    var m = analyze(), h = "";
+    var upd = new Date(S.loadedAt).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+    h += '<div class="head"><div class="t"><div class="eyebrow">Hesapla giriş yapan kullanıcılar</div><h1>Kim kullanıyor, kim geri geliyor?</h1></div>' +
+      '<label class="switch"><input type="checkbox" id="excl"' + (S.excludeMe ? " checked" : "") + '> Beni hariç tut</label>' +
+      '<button class="ghost" id="refresh">Yenile · ' + upd + "</button></div>";
+
+    h += '<div class="tiles">' +
+      tile(m.total, "Hesap", m.withData + " tanesi en az bir kayıt yaptı") +
+      tile(m.a7, "Son 7 günde aktif", pct(m.a7, m.total) + " · " + m.new7 + " yeni") +
+      tile(m.a30, "Son 30 günde aktif", pct(m.a30, m.total) + " hesap") +
+      tile(m.habit, "Alışkanlık edinen", "Son 4 haftanın en az 3'ünde aktif") +
+      tile(m.anonLive, "Girişsiz canlı yayın", "Hesap açmadan yayın yapan cihaz") +
+      "</div>";
+
+    if (!m.total) {
+      h += '<div class="card empty">Henüz hesapla giriş yapmış kullanıcı yok' + (S.excludeMe ? " (sen hariç)" : "") + ".</div>";
+      return h + footNote();
+    }
+
+    h += '<section class="card"><h2>Haftalık aktif kullanıcı</h2><p class="sub">Alışkanlık için asıl bakılacak grafik: yeşil kısım her hafta geri gelenler. Yeşil büyüyorsa insanlar Courtside\'ı rutinlerine katıyor demektir.</p>' +
+      '<div class="legend"><span><i style="background:var(--c-ret)"></i>Geri dönen</span><span><i style="background:var(--c-new)"></i>O hafta ilk kez kayıt yapan</span></div>' +
+      '<div class="chart" id="cw"><div class="tip"></div>' + weeklyChart(m) + "</div>" +
+      '<details class="tbl"><summary>Tablo olarak göster</summary><div class="scroll"><table><tr><th>Hafta</th><th>Geri dönen</th><th>Yeni</th><th>Toplam</th></tr>' +
+      m.weekly.slice().reverse().map(function (r) { return "<tr><td>" + short(r.ws) + " – " + short(r.we) + "</td><td>" + r.ret + "</td><td>" + r.nw + "</td><td>" + r.n + "</td></tr>"; }).join("") +
+      "</table></div></details></section>";
+
+    h += '<section class="card"><h2>Günlük aktif kullanıcı</h2><p class="sub">Son 42 gün. O gün en az bir kayıt yapan (maç, yoklama, özel ders, turnuva, canlı yayın) kullanıcı sayısı.</p>' +
+      '<div class="chart" id="cd"><div class="tip"></div>' + dailyChart(m) + "</div>" +
+      '<details class="tbl"><summary>Tablo olarak göster</summary><div class="scroll"><table><tr><th>Gün</th><th>Aktif</th>' + FEATS.map(function (f) { return "<th>" + f.label + "</th>"; }).join("") + "</tr>" +
+      m.daily.slice().reverse().filter(function (r) { return r.n; }).map(function (r) { return "<tr><td>" + longDay(r.d) + "</td><td>" + r.n + "</td>" + FEATS.map(function (f) { return "<td>" + (r[f.k] || "") + "</td>"; }).join("") + "</tr>"; }).join("") +
+      "</table></div></details></section>";
+
+    h += '<section class="card"><h2>Hangi özellik kullanılıyor?</h2><p class="sub">Özelliği en az bir kez kullanan hesap oranı ve toplam kayıt.</p>' +
+      m.feats.map(function (f) {
+        var p = m.total ? f.users / m.total : 0;
+        return '<div class="feat"><div>' + f.label + '</div><div class="bar"><i style="width:' + (p * 100).toFixed(1) + '%"></i></div><div class="v"><b>' + f.users + "</b> kişi · " + f.total + " " + f.unit + "</div></div>";
+      }).join("") + "</section>";
+
+    h += '<section class="card"><h2>Geri gelme oranı (kohort)</h2><p class="sub">Satırlar: ilk kaydını o hafta yapanlar. Sütunlar: sonraki haftalarda yine kayıt yapanların oranı. Sağa doğru renk koyu kalıyorsa insanlar bırakmıyor.</p>';
+    if (!m.cohorts.length) h += '<div class="empty">Henüz kayıt yok.</div>';
+    else {
+      h += '<div class="scroll"><table class="coh"><tr><th>İlk hafta</th><th>Kişi</th>' + [0, 1, 2, 3, 4, 5, 6, 7].map(function (k) { return '<th style="text-align:center">' + (k ? k + ". hf" : "İlk") + "</th>"; }).join("") + "</tr>";
+      m.cohorts.forEach(function (c) {
+        h += "<tr><td>" + short(c.ws) + "</td><td>" + c.size + "</td>" + c.cells.map(function (x) {
+          if (!x) return '<td class="c na">·</td>';
+          var a = (0.08 + 0.5 * x.p).toFixed(2);
+          return '<td class="c" style="background:rgba(var(--heat),' + a + ')" title="' + x.n + " / " + c.size + " kişi" + (x.partial ? " (hafta sürüyor)" : "") + '">' + Math.round(x.p * 100) + "%" + (x.partial ? "*" : "") + "</td>";
+        }).join("") + "</tr>";
+      });
+      h += '</table></div><p class="note" style="margin-top:8px">* Bu hafta henüz bitmedi.</p>';
+    }
+    h += "</section>";
+
+    h += '<section class="card"><h2>Kullanıcılar</h2><p class="sub">Son aktif olana göre sıralı. Şerit son 28 günü gösterir, her kutu bir gün.</p><div class="scroll"><table><tr><th>Kullanıcı</th><th>Son 28 gün</th><th>Aktif gün (30g)</th><th>İlk / son</th><th>Kullandıkları</th></tr>';
+    m.users.forEach(function (u, idx) {
+      var strip = "";
+      for (var i = 27; i >= 0; i--) { var d = shift(m.today, -i); strip += "<i" + (u.ev[d] ? ' class="on" title="' + longDay(d) + '"' : "") + "></i>"; }
+      var chips = FEATS.filter(function (f) { return u.cnt[f.k]; }).map(function (f) { return '<span class="chip">' + f.label + " " + u.cnt[f.k] + "</span>"; }).join("");
+      var ex = [];
+      if (u.extra.grup) ex.push(u.extra.grup + " grup");
+      if (u.extra.ogr) ex.push(u.extra.ogr + " özel ders öğrencisi");
+      if (u.extra.oyuncu) ex.push(u.extra.oyuncu + " oyuncu");
+      h += '<tr class="urow"><td class="uname"><b>' + (u.club ? esc(u.club) : "Kullanıcı") + " · " + esc(u.uid.slice(0, 5)) + "</b><span>" + (ex.join(" · ") || "&nbsp;") + "</span></td>" +
+        '<td><div class="strip">' + strip + "</div></td><td>" + u.a30 + "</td>" +
+        '<td style="white-space:nowrap">' + (u.first ? short(u.first) + " → " + short(u.last) : '<span style="color:var(--dim)">Kayıt yok' + (u.lastSync ? " · giriş " + short(dayOf(u.lastSync) || m.today) : "") + "</span>") + "</td>" +
+        '<td><div class="chips">' + (chips || '<span style="color:var(--dim);font-size:12px">—</span>') + "</div></td></tr>";
+    });
+    h += "</table></div></section>";
+    return h + footNote(m);
+  }
+  function footNote() {
+    return '<p class="foot">Sadece Courtside\'a <b>hesapla giriş yapmış</b> kullanıcılar görünür; giriş yapmadan kullananların verisi telefonlarında kalır ve buraya gelmez. ' +
+      "\"Aktif\" = o gün en az bir kayıt yapmış olmak (uygulamayı sadece açıp bakmak sayılmaz). Kişisel isimler gösterilmez; kullanıcılar kulüp adı ve hesap kimliğinin ilk 5 karakteriyle listelenir.</p>";
+  }
+
+  function renderLogin() {
+    return '<div class="auth"><div><h1>Kullanım istatistikleri</h1><p class="lede">Kulüp Paneli\'ndeki sahip hesabınla giriş yap.</p></div>' +
+      '<div class="card" style="display:flex;flex-direction:column;gap:12px">' +
+      '<div class="field"><label for="email">E-posta</label><input id="email" type="email" autocomplete="email"></div>' +
+      '<div class="field"><label for="pass">Şifre</label><input id="pass" type="password" autocomplete="current-password"></div>' +
+      '<p class="msg">' + esc(S.msg) + "</p>" +
+      '<button class="primary" id="login"' + (S.busy ? " disabled" : "") + ">" + (S.busy ? "Giriş yapılıyor…" : "Giriş yap") + "</button></div></div>";
+  }
+
+  function render() {
+    $("app").innerHTML = S.view === "login" ? renderLogin() : renderMain();
+    $("topRight").innerHTML = S.view === "main" ? '<button class="ghost" id="logout">Çıkış</button>' : "";
+    var el;
+    if ((el = $("login"))) el.onclick = login;
+    if ((el = $("pass"))) el.onkeydown = function (e) { if (e.key === "Enter") login(); };
+    if ((el = $("logout"))) el.onclick = function () { try { localStorage.removeItem(AUTH_KEY); } catch (e) {} S.view = "login"; S.users = null; S.msg = ""; render(); };
+    if ((el = $("refresh"))) el.onclick = loadAll;
+    if ((el = $("retry"))) el.onclick = loadAll;
+    if ((el = $("excl"))) el.onchange = function () { S.excludeMe = this.checked; try { localStorage.setItem("courtside-stats-me", S.excludeMe ? "1" : "0"); } catch (e) {} render(); };
+    if (S.view === "main" && S.users && !S.loading) {
+      var mm = analyze();
+      bindTips("cw", mm.weekly, function (r) {
+        return "<b>" + short(r.ws) + " – " + short(r.we) + "</b>" + (r.partial ? ' <span class="k">(sürüyor)</span>' : "") +
+          '<br><span class="k">Geri dönen</span> ' + r.ret + '<br><span class="k">Yeni</span> ' + r.nw + '<br><span class="k">Toplam</span> <b>' + r.n + "</b>";
+      });
+      bindTips("cd", mm.daily, function (r) {
+        var parts = FEATS.filter(function (f) { return r[f.k]; }).map(function (f) { return '<br><span class="k">' + f.label + "</span> " + r[f.k] + " kişi"; }).join("");
+        return "<b>" + longDay(r.d) + "</b><br>" + r.n + " aktif kullanıcı" + parts;
+      });
+    }
+  }
+
+  function login() {
+    var email = ($("email").value || "").trim(), pass = $("pass").value || "";
+    S.busy = true; S.msg = ""; render();
+    authCall("signInWithPassword", { email: email, password: pass, returnSecureToken: true }).then(function (j) {
+      saveAuth({ uid: j.localId, idToken: j.idToken, refreshToken: j.refreshToken, exp: Date.now() + Number(j.expiresIn || 3600) * 1000, email: email, name: j.displayName || "" });
+      S.busy = false; loadAll();
+    }, function (e) { S.busy = false; S.msg = authErr(e); render(); $("email").value = email; });
+  }
+
+  var rsT = null, lastW = window.innerWidth;
+  window.addEventListener("resize", function () {
+    clearTimeout(rsT); rsT = setTimeout(function () { if (Math.abs(window.innerWidth - lastW) > 40 && S.view === "main" && S.users) { lastW = window.innerWidth; render(); } }, 200);
+  });
+  var a = loadAuth();
+  if (a && a.refreshToken) loadAll(); else render();
+})();
+</script>
+</body>
+</html>
