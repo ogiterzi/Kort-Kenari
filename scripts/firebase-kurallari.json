@@ -1,6 +1,7 @@
 {
   "rules": {
     "live": {
+      ".read": "auth != null && root.child('owners/' + auth.uid).val() === true",
       "$code": {
         ".read": true,
         ".write": "auth != null && (!data.exists() || data.child('owner').val() === auth.uid)"
@@ -12,6 +13,7 @@
       }
     },
     "users": {
+      ".read": "auth != null && root.child('owners/' + auth.uid).val() === true",
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
         ".write": "auth != null && auth.uid === $uid",
