@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-09T14:45+03:00",
+ "updated": "2026-11-10T14:23+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -766,6 +766,24 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5802"
+  },
+  {
+   "id": "5811",
+   "name": "8-9-10 Yaş Haftasonu Turnuvası",
+   "start": "2026-12-04",
+   "end": "2026-12-06",
+   "club": "DEMİRCİ BELEDİYE SPOR KULÜBÜ",
+   "city": "MANİSA",
+   "category": "Haftasonu-A",
+   "surface": "Sert Zemin",
+   "deadline": "2026-11-24",
+   "ages": [
+    "8",
+    "9",
+    "10"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5811"
   },
   {
    "id": "5797",
