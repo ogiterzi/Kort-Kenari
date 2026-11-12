@@ -2,6 +2,14 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
+<script>
+// Uygulamadan gelen paylaşım linkleri (#canli=… canlı skor/turnuva, #m=… maç) tanıtım sayfasına değil web uygulamasına (app.html) gitsin.
+// Eski linkler (ogiterzi.github.io/Kort-Kenari/#canli=…) de buraya yönlenip buradan app.html'e geçer.
+(function () {
+  var h = location.hash || "";
+  if (/^#(canli|m)=/i.test(h)) location.replace("/app.html" + h);
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Courtside: Tenis İstatistik</title>
 <meta name="description" content="Skoru sen gir, gerisini Courtside halletsin. Maç takibi, canlı skor, turnuva yönetimi, yoklama ve özel ders takibi. iPhone'da ücretsiz.">
