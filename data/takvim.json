@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-12T14:27+03:00",
+ "updated": "2026-11-13T14:11+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -127,12 +127,12 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5783"
   },
   {
-   "id": "5767",
+   "id": "5768",
    "name": "8-9-10 Yaş Haftasonu Turnuvası",
    "start": "2026-11-13",
    "end": "2026-11-15",
-   "club": "DÜZCE TENİS KULÜBÜ",
-   "city": "DÜZCE",
+   "club": "SAKARYA STAR SPOR KULÜBÜ",
+   "city": "SAKARYA",
    "category": "Haftasonu-A",
    "surface": "Sert Zemin",
    "deadline": "2026-11-03",
@@ -142,7 +142,7 @@
     "10"
    ],
    "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5767"
+   "url": "https://www.ikort.com.tr/turnuva-detay/5768"
   },
   {
    "id": "5770",
@@ -181,12 +181,12 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5769"
   },
   {
-   "id": "5768",
+   "id": "5767",
    "name": "8-9-10 Yaş Haftasonu Turnuvası",
    "start": "2026-11-13",
    "end": "2026-11-15",
-   "club": "SAKARYA STAR SPOR KULÜBÜ",
-   "city": "SAKARYA",
+   "club": "DÜZCE TENİS KULÜBÜ",
+   "city": "DÜZCE",
    "category": "Haftasonu-A",
    "surface": "Sert Zemin",
    "deadline": "2026-11-03",
@@ -196,7 +196,7 @@
     "10"
    ],
    "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5768"
+   "url": "https://www.ikort.com.tr/turnuva-detay/5767"
   },
   {
    "id": "5766",
@@ -886,6 +886,38 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5374"
   },
   {
+   "id": "5812",
+   "name": "DR MEHMET HİLMİ GÜLER T200 MASTERS TURNUVASI",
+   "start": "2026-12-10",
+   "end": "2026-12-19",
+   "club": "ORDU ARMY SPOR KULÜBÜ",
+   "city": "ORDU",
+   "category": "T200",
+   "surface": "Sert Zemin",
+   "deadline": "2026-12-05",
+   "ages": [
+    "M"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5812"
+  },
+  {
+   "id": "5813",
+   "name": "ATİK HAFTASONU A MASTERS TURNUVASI",
+   "start": "2026-12-24",
+   "end": "2026-12-27",
+   "club": "ANTALYA TENİS İHTİSAS SPOR KULÜBÜ",
+   "city": "ANTALYA",
+   "category": "Haftasonu Masters",
+   "surface": "Toprak Zemin",
+   "deadline": "2026-12-19",
+   "ages": [
+    "M"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5813"
+  },
+  {
    "id": "5790",
    "name": "TTF İSTİNYE HAFTASONU A MASTERS TURNUVASI",
    "start": "2026-12-24",
@@ -910,7 +942,7 @@
    "city": "İSTANBUL AVRUPA",
    "category": "MTB",
    "surface": "Toprak Zemin",
-   "deadline": "2026-12-06",
+   "deadline": "2027-01-06",
    "ages": [
     "M55",
     "M60",
