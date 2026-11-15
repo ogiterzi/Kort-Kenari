@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-14T13:38+03:00",
+ "updated": "2026-11-15T14:08+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -37,23 +37,6 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5647"
-  },
-  {
-   "id": "itf-J-J30-TUR-2026-005",
-   "name": "ITF J30 Istanbul",
-   "start": "2026-11-09",
-   "end": "2026-11-14",
-   "club": "MATRIX SAILING ISTANBUL OPTIMUM",
-   "city": "İSTANBUL",
-   "category": "J30",
-   "surface": "Sert Zemin",
-   "deadline": "",
-   "ages": [
-    "18"
-   ],
-   "cancelled": false,
-   "url": "https://www.itftennis.com/en/tournament/j30-istanbul/tur/2026/j-j30-tur-2026-005/",
-   "source": "itf"
   },
   {
    "id": "5788",
