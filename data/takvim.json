@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-23T16:04+03:00",
+ "updated": "2026-11-24T16:53+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -285,14 +285,14 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5556"
   },
   {
-   "id": "5798",
+   "id": "5801",
    "name": "8-9-10 Yaş Haftasonu Turnuvası",
    "start": "2026-12-04",
    "end": "2026-12-06",
-   "club": "BODRUM TENİS AKADEMİSİ SPOR KULÜBÜ",
-   "city": "MUĞLA",
+   "club": "TRABZON BÜYÜKŞEHİR BELEDİYE SPOR KULÜBÜ",
+   "city": "TRABZON",
    "category": "Haftasonu-A",
-   "surface": "",
+   "surface": "Sert Zemin",
    "deadline": "2026-11-24",
    "ages": [
     "8",
@@ -300,7 +300,7 @@
     "10"
    ],
    "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5798"
+   "url": "https://www.ikort.com.tr/turnuva-detay/5801"
   },
   {
    "id": "5811",
@@ -339,24 +339,6 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5802"
   },
   {
-   "id": "5801",
-   "name": "8-9-10 Yaş Haftasonu Turnuvası",
-   "start": "2026-12-04",
-   "end": "2026-12-06",
-   "club": "TRABZON BÜYÜKŞEHİR BELEDİYE SPOR KULÜBÜ",
-   "city": "TRABZON",
-   "category": "Haftasonu-A",
-   "surface": "Sert Zemin",
-   "deadline": "2026-11-24",
-   "ages": [
-    "8",
-    "9",
-    "10"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5801"
-  },
-  {
    "id": "5800",
    "name": "8-9-10 Yaş Haftasonu Turnuvası",
    "start": "2026-12-04",
@@ -391,6 +373,24 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5799"
+  },
+  {
+   "id": "5798",
+   "name": "8-9-10 Yaş Haftasonu Turnuvası",
+   "start": "2026-12-04",
+   "end": "2026-12-06",
+   "club": "BODRUM TENİS AKADEMİSİ SPOR KULÜBÜ",
+   "city": "MUĞLA",
+   "category": "Haftasonu-A",
+   "surface": "",
+   "deadline": "2026-11-24",
+   "ages": [
+    "8",
+    "9",
+    "10"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5798"
   },
   {
    "id": "5797",
