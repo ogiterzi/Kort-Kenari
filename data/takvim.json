@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-25T16:07+03:00",
+ "updated": "2026-11-26T15:47+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -285,14 +285,14 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5556"
   },
   {
-   "id": "5801",
+   "id": "5802",
    "name": "8-9-10 Yaş Haftasonu Turnuvası",
    "start": "2026-12-04",
    "end": "2026-12-06",
-   "club": "TRABZON BÜYÜKŞEHİR BELEDİYE SPOR KULÜBÜ",
-   "city": "TRABZON",
+   "club": "ADANA ATLI SPOR KULÜBÜ",
+   "city": "ADANA",
    "category": "Haftasonu-A",
-   "surface": "Sert Zemin",
+   "surface": "Toprak Zemin",
    "deadline": "2026-11-24",
    "ages": [
     "8",
@@ -300,7 +300,7 @@
     "10"
    ],
    "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5801"
+   "url": "https://www.ikort.com.tr/turnuva-detay/5802"
   },
   {
    "id": "5811",
@@ -321,14 +321,14 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5811"
   },
   {
-   "id": "5802",
+   "id": "5801",
    "name": "8-9-10 Yaş Haftasonu Turnuvası",
    "start": "2026-12-04",
    "end": "2026-12-06",
-   "club": "ADANA ATLI SPOR KULÜBÜ",
-   "city": "ADANA",
+   "club": "TRABZON BÜYÜKŞEHİR BELEDİYE SPOR KULÜBÜ",
+   "city": "TRABZON",
    "category": "Haftasonu-A",
-   "surface": "Toprak Zemin",
+   "surface": "Sert Zemin",
    "deadline": "2026-11-24",
    "ages": [
     "8",
@@ -336,7 +336,7 @@
     "10"
    ],
    "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5802"
+   "url": "https://www.ikort.com.tr/turnuva-detay/5801"
   },
   {
    "id": "5800",
@@ -507,6 +507,22 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5813"
   },
   {
+   "id": "5815",
+   "name": "EA HAFTASONU A MASTERS TURNUVASI",
+   "start": "2026-12-24",
+   "end": "2026-12-27",
+   "club": "ENGİN ARSLAN SPOR KULÜBÜ",
+   "city": "AYDIN",
+   "category": "Haftasonu Masters",
+   "surface": "Sert Zemin",
+   "deadline": "2026-12-19",
+   "ages": [
+    "M"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5815"
+  },
+  {
    "id": "5790",
    "name": "TTF İSTİNYE HAFTASONU A MASTERS TURNUVASI",
    "start": "2026-12-24",
@@ -607,6 +623,40 @@
    ],
    "cancelled": false,
    "url": "https://www.itftennis.com/en/tournament/j60-antalya/tur/2027/j-j60-tur-2027-002/",
+   "source": "itf"
+  },
+  {
+   "id": "itf-J-J100-TUR-2027-002",
+   "name": "ITF J100 Antalya",
+   "start": "2027-03-08",
+   "end": "2027-03-14",
+   "club": "MTA OPEN J100",
+   "city": "ANTALYA",
+   "category": "J100",
+   "surface": "Toprak Zemin",
+   "deadline": "",
+   "ages": [
+    "18"
+   ],
+   "cancelled": false,
+   "url": "https://www.itftennis.com/en/tournament/j100-antalya/tur/2027/j-j100-tur-2027-002/",
+   "source": "itf"
+  },
+  {
+   "id": "itf-J-J60-TUR-2027-004",
+   "name": "ITF J60 Antalya",
+   "start": "2027-03-15",
+   "end": "2027-03-20",
+   "club": "J60 MTA OPEN",
+   "city": "ANTALYA",
+   "category": "J60",
+   "surface": "Toprak Zemin",
+   "deadline": "",
+   "ages": [
+    "18"
+   ],
+   "cancelled": false,
+   "url": "https://www.itftennis.com/en/tournament/j60-antalya/tur/2027/j-j60-tur-2027-004/",
    "source": "itf"
   }
  ]
