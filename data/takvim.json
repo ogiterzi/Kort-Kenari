@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-27T15:39+03:00",
+ "updated": "2026-11-28T14:57+03:00",
  "source": "https://www.ikort.com.tr/turnuvalar",
  "sources": [
   "https://www.ikort.com.tr/turnuvalar",
@@ -24,22 +24,6 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5682"
-  },
-  {
-   "id": "5791",
-   "name": "Büyükler Sonbahar Kupası Türkiye Serisi-3",
-   "start": "2026-11-23",
-   "end": "2026-11-27",
-   "club": "CORENDON SPOR KULÜBÜ",
-   "city": "ANTALYA",
-   "category": "Kategori 1",
-   "surface": "Toprak Zemin",
-   "deadline": "2026-11-10",
-   "ages": [
-    "B"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5791"
   },
   {
    "id": "itf-J-J60-TUR-2026-006",
@@ -285,24 +269,6 @@
    "url": "https://www.ikort.com.tr/turnuva-detay/5556"
   },
   {
-   "id": "5802",
-   "name": "8-9-10 Yaş Haftasonu Turnuvası",
-   "start": "2026-12-04",
-   "end": "2026-12-06",
-   "club": "ADANA ATLI SPOR KULÜBÜ",
-   "city": "ADANA",
-   "category": "Haftasonu-A",
-   "surface": "Toprak Zemin",
-   "deadline": "2026-11-24",
-   "ages": [
-    "8",
-    "9",
-    "10"
-   ],
-   "cancelled": false,
-   "url": "https://www.ikort.com.tr/turnuva-detay/5802"
-  },
-  {
    "id": "5811",
    "name": "8-9-10 Yaş Haftasonu Turnuvası",
    "start": "2026-12-04",
@@ -319,6 +285,24 @@
    ],
    "cancelled": false,
    "url": "https://www.ikort.com.tr/turnuva-detay/5811"
+  },
+  {
+   "id": "5802",
+   "name": "8-9-10 Yaş Haftasonu Turnuvası",
+   "start": "2026-12-04",
+   "end": "2026-12-06",
+   "club": "ADANA ATLI SPOR KULÜBÜ",
+   "city": "ADANA",
+   "category": "Haftasonu-A",
+   "surface": "Toprak Zemin",
+   "deadline": "2026-11-24",
+   "ages": [
+    "8",
+    "9",
+    "10"
+   ],
+   "cancelled": false,
+   "url": "https://www.ikort.com.tr/turnuva-detay/5802"
   },
   {
    "id": "5801",
